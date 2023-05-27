@@ -12,7 +12,8 @@ just by renaming the .jpg file extension to .html
 The image supports Twitter, Reddit & Imgur.  
 This means you can share your image on the above platforms and it will retain the embedded HTML image prompt.
 
-imgprmt works on Linux and Windows. The embedded content is stored within the ICC Profile of the JPG image.
+imgprmt works on Linux and Windows.  
+The embedded content is stored within the ICC Profile of the JPG image.
 
 ![Demo Image](https://github.com/CleasbyCode/jdvrdt/blob/main/demo_image/Demo.jpg)  
 {***Image credit: César Gámez (@cesar20984)***}   
