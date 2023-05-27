@@ -255,19 +255,19 @@ void openFiles(char* argv[]) {
 	void displayInfo() {
 		std::cout << R"(
 		
-		Imgprmt (v1.0) for Twitter, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
+	Imgprmt (v1.0) for Twitter, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
 		
-		This program enables you to embed a prompt/description for your AI images within a JPG image file.
+	This program enables you to embed a prompt/description for your AI images within a JPG image file.
 		
-		JPG / HTML Polyglot File.
+	JPG / HTML Polyglot File.
 		
-		The prompt/description is saved within a default/basic HTML page that you can view just by renaming
-		the .jpg file extension to .html.
+	The prompt/description is saved within a default/basic HTML page that you can view just by renaming
+	the .jpg file extension to .html.
 
-		The image supports Twitter, Reddit & Imgur. 
+	The image supports Twitter, Reddit & Imgur. 
 
-		This means you can share your image on the above platforms and it will retain the embedded image description.
+	This means you can share your image on the above platforms and it will retain the embedded image description.
 
-		This program works on Linux and Windows.
+	This program works on Linux and Windows.
 		)";
 	}
