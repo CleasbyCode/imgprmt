@@ -261,7 +261,7 @@ void openFiles(char* argv[]) {
 		
 	JPG / HTML Polyglot File.
 		
-	The prompt/description is saved within a default/basic HTML page that you can view just by renaming
+	The prompt/description is saved within a basic HTML page that you can view just by renaming
 	the .jpg file extension to .html.
 
 	The image supports Twitter, Reddit & Imgur. 
