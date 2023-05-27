@@ -40,12 +40,12 @@ $ ./imgprmt  demo.jpg
 
 Type / Paste Your Image Description
 
-: A mysterious traveler draped in a hooded cloak, holding an ancient staff adorned with mystical symbols,  
-stands at the edge of a vibrant emerald cliff overlooking a sprawling cityscape, where futuristic skyscrapers  
-blend seamlessly with nature as rivers flow around and between the structures. The clouds above shift with vibrant  
-shades of pink and purple, mirroring the hues of the setting sun in the distance. The traveler gazes upon the city,  
-sensing that their long quest will come to a conclusion within its walls, in the style of CyberFantasyCore,  
-8k resolution --ar 16:9
+: A mysterious traveler draped in a hooded cloak, holding an ancient staff adorned with mystical  
+symbols, stands at the edge of a vibrant emerald cliff overlooking a sprawling cityscape,  
+where futuristic skyscrapers blend seamlessly with nature as rivers flow around and between  
+the structures. The clouds above shift with vibrant shades of pink and purple, mirroring the  
+hues of the setting sun in the distance. The traveler gazes upon the city, sensing that their long  
+quest will come to a conclusion within its walls, in the style of CyberFantasyCore, 8k resolution --ar 16:9
 
 Enter a Link (Image Source, Social Media Page, etc.)
 
