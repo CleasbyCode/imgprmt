@@ -13,7 +13,7 @@ This means you can share your image on the above platforms and it will retain th
 imgprmt works on Linux and Windows.  
 The embedded content is stored within the ICC Profile of the JPG image.
 
-![Demo Image](https://github.com/CleasbyCode/jdvrdt/blob/main/demo_image/Demo.jpg)  
+![Demo Image](https://github.com/CleasbyCode/jdvrdt/blob/main/demo_image/demo.jpg)  
 {***Image credit: César Gámez (@cesar20984)***}   
 
 [**Video_Demo_1 (YouTube) - Insert AI Prompt as HTML Page Within JPG Image**](https://www.youtube.com/watch_popup?v=MiuSlScqcqc)  
