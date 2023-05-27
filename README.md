@@ -17,8 +17,8 @@ The embedded content is stored within the ICC Profile of the JPG image.
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo.jpg)  
 {***Image credit: César Gámez / @cesar20984***}   
 
-[**Video_Demo_1 (YouTube) - Insert AI Prompt as HTML Page Within JPG Image**](https://www.youtube.com/watch_popup?v=MiuSlScqcqc)  
-[**Video_Demo_2 (YouTube) - Downloading from Twitter Image with Embedded Prompt**](https://www.youtube.com/watch_popup?v=OMHyhfDHoUQ)
+[**Video_Demo_1 - Insert AI Prompt as HTML Page Within JPG Image**](https://www.youtube.com/watch_popup?v=MiuSlScqcqc)  
+[**Video_Demo_2 - Downloading from Twitter Image with Embedded Prompt**](https://www.youtube.com/watch_popup?v=OMHyhfDHoUQ)
 
 Compile and run the program under Windows or **Linux**  
 
