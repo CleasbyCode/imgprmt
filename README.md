@@ -1,7 +1,5 @@
 # imgprmt
 
-imgprmt v1.0
-
 This simple program enables you to embed a prompt/description for your AI image within a JPG image file.
 
 JPG / HTML Polyglot File.
