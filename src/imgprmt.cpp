@@ -19,7 +19,6 @@ void openFiles(char* []);
 void displayInfo();
 
 int main(int argc, char** argv) {
-
 	if (argc == 2 && std::string(argv[1]) == "--info") {
 		displayInfo();
 	}
@@ -31,13 +30,10 @@ int main(int argc, char** argv) {
 	}
 	return 0;
 }
-
 void openFiles(char* argv[]) {
-
 	const std::string IMAGE_NAME = argv[1];
-
 	std::ifstream readImage(IMAGE_NAME, std::ios::binary);
-
+	
 	if (!readImage) {
 		std::cerr << "\nRead Error: Unable to open/read file: \"" + IMAGE_NAME + "\"\n\n";
 		std::exit(EXIT_FAILURE);
@@ -46,7 +42,7 @@ void openFiles(char* argv[]) {
 	// This vector contains our JPG header with a basic ICC Profile and HTML page,
 	// currently without the users image prompt/link, which is inserted later.
 	std::vector<unsigned char>ProfileVec = {
-		0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01,
+	0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01,
 	0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0xFF, 0xE2, 0x07, 0x71,
 	0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46, 0x49, 0x4C, 0x45, 0x00,
 	0x01, 0x01, 0x00, 0x00, 0x07, 0x61, 0x3C, 0x21, 0x2D, 0x2D, 0x04, 0x30,
@@ -187,7 +183,7 @@ void openFiles(char* argv[]) {
 	const size_t DQT_POS = search(ImageVec.begin(), ImageVec.end(), DQT_SIG.begin(), DQT_SIG.end()) - ImageVec.begin();
 
 	// Erase the first n bytes of the JPG header before this DQT position. 
-  // We will later replace the erased header with the contents of vector "ProfileVec".
+  	// We will later replace the erased header with the contents of vector "ProfileVec".
 	ImageVec.erase(ImageVec.begin(), ImageVec.begin() + DQT_POS);
 
 	// A bodge-fix for some special characters... Will probably need to add more of these.
@@ -195,9 +191,9 @@ void openFiles(char* argv[]) {
 	char Tag[6] = {39, -29, -96, -112, -126, -94};
   
 	std::string
-    outName = "imgprmt_pic.jpg",
-    link,
-    prompt;
+		outName = "imgprmt_pic.jpg",
+		link,
+		prompt;
   
 	std::cout << "\nType / Paste Your Image Description\n: ";
 	std::getline(std::cin, prompt);
@@ -207,8 +203,8 @@ void openFiles(char* argv[]) {
 
 	// A bodge-fix for some special characters...
 	for (size_t i = prompt.length(); i != -1; i--) {
-    for (int x = 0; x != 6; x++) {      
-      if (prompt[i] == Tag[x]) {
+		for (int x = 0; x != 6; x++) {      
+			if (prompt[i] == Tag[x]) {
 				prompt.erase(prompt.begin() + i);
 				prompt.insert(prompt.begin() + i, TagVec[x].begin(), TagVec[x].end());
 			}
@@ -220,14 +216,14 @@ void openFiles(char* argv[]) {
 	}
 
 	const int
-		PROFILE_MAIN_DIFF = 0x16,		  // Bytes we don't count as part of profile size.
+		PROFILE_MAIN_DIFF = 0x16,	// Bytes we don't count as part of profile size.
 		PROFILE_INTERNAL_DIFF = 0x26,	// Bytes we don't count as part of internal profile size.
 		PROMPT_INSERT_INDEX = 0x539,	// Insert location within ProfileVec of the HTML page for the users's prompt text.
-		LINK_INSERT_INDEX = 0x4f9;		// Insert location within ProfileVec of the HTML page for the user's web link.
+		LINK_INSERT_INDEX = 0x4f9;	// Insert location within ProfileVec of the HTML page for the user's web link.
 
 	int
 		bits = 0x10,
-		profileSizeField = 0x16,			    // Start index location for size field of the main image profile.
+		profileSizeField = 0x16,		// Start index location for size field of the main image profile.
 		profileInternalSizeField = 0x28;	// Start index location for internal size field of the image profile.
 
 	// Insert image description & image link into their relevant index positions within vector ProfileVec.
@@ -253,24 +249,24 @@ void openFiles(char* argv[]) {
 
 	writeFile.write((char*)&ImageVec[0], ImageVec.size());
 	std::cout << "\nCreated output file: \"" + outName + " " << ImageVec.size() << " " << "Bytes\"\n\n"; 
-}
+	}
 
-void displayInfo() {
-	std::cout << R"(
-Imgprmt (v1.0) for Twitter, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
+	void displayInfo() {
+		std::cout << R"(
+		
+		Imgprmt (v1.0) for Twitter, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
+		
+		This program enables you to embed a prompt/description for your AI images within a JPG image file.
+		
+		JPG / HTML Polyglot File.
+		
+		The prompt/description is saved within a default/basic HTML page that you can view just by renaming
+		the .jpg file extension to .html.
 
-This program enables you to embed a prompt/description for your AI images within a JPG image file.
+		The image supports Twitter, Reddit & Imgur. 
 
-JPG / HTML Polyglot File.
+		This means you can share your image on the above platforms and it will retain the embedded image description.
 
-The prompt/description is saved within a default/basic HTML page that you can view just by renaming
-the .jpg file extension to .html.
-
-The image supports Twitter, Reddit & Imgur. 
-
-This means you can share your image on the above platforms and it will retain the embedded image description.
-
-This program works on Linux and Windows.
-
-)";
-}
+		This program works on Linux and Windows.
+		)";
+	}
