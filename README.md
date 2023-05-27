@@ -53,6 +53,7 @@ Enter a Link (Image Source, Social Media Page, etc.)
   
 Created output file: "imgprmt_pic.jpg 425108 Bytes"
 
+
 ```
 
 My other programs you may find useful:-  
