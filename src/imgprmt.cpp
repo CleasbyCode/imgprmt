@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
 	}
 	return 0;
 }
+
 void openFiles(char* argv[]) {
 	const std::string IMAGE_NAME = argv[1];
 	std::ifstream readImage(IMAGE_NAME, std::ios::binary);
