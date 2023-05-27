@@ -19,10 +19,10 @@ The embedded content is stored within the ICC Profile of the JPG image.
 [**Video_Demo_1 (YouTube) - Insert AI Prompt as HTML Page Within JPG Image**](https://www.youtube.com/watch_popup?v=MiuSlScqcqc)  
 [**Video_Demo_2 (YouTube) - Downloading from Twitter Image with Embedded Prompt**](https://www.youtube.com/watch_popup?v=OMHyhfDHoUQ)
 
-Compile and run the program under Windows or **Linux**.
+Compile and run the program under Windows or **Linux**  
 
 Image/Prompt credit:  
-The AI image and prompt used in this repo demo is the work of [**César Gámez (@cesar20984)**](https://twitter.com/cesar20984/status/1662514596765216770)
+The AI image and prompt used in this repo demo is the work of [**César Gámez (@cesar20984)**](https://twitter.com/cesar20984/status/1662514596765216770)  
 
 ## Usage (Linux - Insert AI Prompt in JPG Image)
 
