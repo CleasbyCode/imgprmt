@@ -1,4 +1,4 @@
-//	imgprmt v1.0 for Twitter, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
+//	imgprmt (Windows) v1.0 for Twitter, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
 
 #include <algorithm>
 #include <fstream>
@@ -212,7 +212,7 @@ void openFiles(char* argv[]) {
 		ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
 
 	const std::string
-		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
+		JPG_SIG = "\xFF\xD8\xFF",						// JPG image signature. 
 		JPG_CHECK{ ImageVec.begin(), ImageVec.begin() + JPG_SIG.length() };	// Get image header from vector. 
 
 	// Make sure we are dealing with a valid JPG image file.
@@ -304,8 +304,8 @@ void displayInfo() {
 		
 		JPG / HTML Polyglot File.
 		
-		The prompt/description is saved within a default/basic HTML page that you can view anytime by 
-    		just by renaming the .jpg file extension to .html.
+		The prompt is saved within a basic HTML page that you can view anytime by just renaming the
+    		.jpg file extension to .html.
 
 		The image supports Twitter, Reddit & Imgur. 
 		This means you can share your image on the above platforms and it will retain the embedded image description.
