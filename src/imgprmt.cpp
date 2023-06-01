@@ -22,7 +22,6 @@ void replaceSpecialChars(std::wstring& str) {
 	// For certain characters to display correctly within the html prompt/description, we need to find and replace them with
 	// the html entity codes stored within the string vector CodeVec. For example, in the word "café", the é (Latin small letter e with acute),
 	// is replaced with the html entity code &#233; Note, this is not an exhaustive list.
-
 	std::vector<std::string>CodeVec{
 		"&#960;", "&#255;", "&#254;", "&#253;", "&#252;", "&#251;", "&#250;", "&#249;", "&#248;", "&#247;", "&#246;", "&#245;",
 		"&#244;", "&#243;", "&#242;", "&#241;", "&#240;", "&#239;", "&#238;", "&#237;", "&#236;", "&#235;", "&#234;", "&#233;", 
@@ -34,6 +33,7 @@ void replaceSpecialChars(std::wstring& str) {
 		"&#172;", "&#171;", "&#170;", "&#169;", "&#168;", "&#167;", "&#166;", "&#165;", "&#164;", "&#163;", "&#162;", "&#161;", 
 		"&#39;" 
 	};
+	
 	// Wide character values that are replaced with the above html entity codes.
 	// Character value 39 (apostrophe) is not a wide character, but we still need to replace it with a html entity code
 	// as it will break the html page if inserted in its raw form.
@@ -212,7 +212,7 @@ void openFiles(char* argv[]) {
 		ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
 
 	const std::string
-		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
+		JPG_SIG = "\xFF\xD8\xFF",						// JPG image signature. 
 		JPG_CHECK{ ImageVec.begin(), ImageVec.begin() + JPG_SIG.length() };	// Get image header from vector. 
 
 	// Make sure we are dealing with a valid JPG image file.
@@ -254,7 +254,7 @@ void openFiles(char* argv[]) {
 	// Search the wide string for certain characters and replace them with html entity codes
 	replaceSpecialChars(w_prompt);
 
-		// We have now replaced any found wide characters with the html entity codes, so no wide characters should exist in
+	// We have now replaced any found wide characters with the html entity codes, so no wide characters should exist in
 	// the prompt/description string. Convert the wide string back to a standard string so that we can insert it
 	// into the ProfileVec vector, (ProfileVec, in-turn, will be inserted into ImageVec) and write it out to file.
         std::transform(w_prompt.begin(), w_prompt.end(), std::back_inserter(prompt), [](wchar_t c) {
