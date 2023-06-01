@@ -15,7 +15,7 @@ imgprmt works on Linux and Windows.
 The embedded content is stored within the ICC Profile of the JPG image.
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo.jpg)  
-{***Image credit: César Gámez / @cesar20984***}   
+{***Image credit: Orcton / @OrctonAI***}   
 
 [**Video_Demo_1 - Insert AI Prompt as HTML Page Within JPG Image**](https://www.youtube.com/watch_popup?v=MiuSlScqcqc)  
 [**Video_Demo_2 - Downloading from Twitter Image with Embedded Prompt**](https://www.youtube.com/watch_popup?v=OMHyhfDHoUQ)
@@ -38,22 +38,15 @@ Usage:  imgprmt <jpg-image>
 
 $ ./imgprmt  demo.jpg
 
-Type / Paste Your Image Description
+Enter a URL (Image source, Social media page, etc.)
 
-: A mysterious traveler draped in a hooded cloak, holding an ancient staff adorned with  
-mystical  symbols, stands at the edge of a vibrant emerald cliff overlooking a sprawling  
-cityscape, where futuristic skyscrapers blend seamlessly with nature as rivers flow around  
-and between the structures. The clouds above shift with vibrant shades of pink and purple,  
-mirroring the hues of the setting sun in the distance. The traveler gazes upon the city,  
-sensing that their long quest will come to a conclusion within its walls, in the style  
-of CyberFantasyCore, 8k resolution --ar 16:9
+: https://twitter.com/OrctonAI/status/1664316306529697809
 
-Enter a Link (Image Source, Social Media Page, etc.)
+Type / Paste Your Image Prompt
 
-: https://twitter.com/cesar20984/status/1662514596765216770  
-  
-Created output file: "imgprmt_pic.jpg 425108 Bytes"
+: Create a powerful image from a cyberpunk film. A hacker, her face illuminated by the glow of multiple holographic screens, works in a high-tech lair. Her clothing, a blend of functional tech-wear and neon accents, stands out against the backdrop of the dark room. The room, filled with servers and tangled cables, hums with the sound of data being transferred at breakneck speed. The image captures the hacker's intense focus, her face conveying a myriad of emotions without uttering a single word. The scene is captured in intricate detail and sharp focus, highlighting the actor's expressive performance. 32k.  --ar 3:2 --v 5.1 --s 1000 --q 2
 
+Created output file: "imgprmt_pic.jpg 198721 Bytes"
 
 ```
 
