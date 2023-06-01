@@ -44,7 +44,13 @@ Enter a URL (Image source, Social media page, etc.)
 
 Type / Paste Your Image Prompt
 
-: Create a powerful image from a cyberpunk film. A hacker, her face illuminated by the glow of multiple holographic screens, works in a high-tech lair. Her clothing, a blend of functional tech-wear and neon accents, stands out against the backdrop of the dark room. The room, filled with servers and tangled cables, hums with the sound of data being transferred at breakneck speed. The image captures the hacker's intense focus, her face conveying a myriad of emotions without uttering a single word. The scene is captured in intricate detail and sharp focus, highlighting the actor's expressive performance. 32k.  --ar 3:2 --v 5.1 --s 1000 --q 2
+: Create a powerful image from a cyberpunk film. A hacker, her face illuminated by the glow of multiple  
+holographic screens, works in a high-tech lair. Her clothing, a blend of functional tech-wear and neon  
+accents, stands out against the backdrop of the dark room. The room, filled with servers and tangled  
+cables, hums with the sound of data being transferred at breakneck speed. The image captures the  
+hacker's intense focus, her face conveying a myriad of emotions without uttering a single word.  
+The scene is captured in intricate detail and sharp focus, highlighting the actor's expressive  
+performance. 32k.  --ar 3:2 --v 5.1 --s 1000 --q 2
 
 Created output file: "imgprmt_pic.jpg 198721 Bytes"
 
