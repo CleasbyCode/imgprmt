@@ -260,14 +260,14 @@ void openFiles(char* argv[]) {
 		});
 
 	const int
-		PROFILE_MAIN_DIFF = 0x16,		  // Bytes we don't count as part of profile size.
+		PROFILE_MAIN_DIFF = 0x16,	// Bytes we don't count as part of profile size.
 		PROFILE_INTERNAL_DIFF = 0x26,	// Bytes we don't count as part of internal profile size.
 		PROMPT_INSERT_INDEX = 0x539,	// Insert location within ProfileVec of the HTML page for the users's prompt text.
-		LINK_INSERT_INDEX = 0x4f9;		// Insert location within ProfileVec of the HTML page for the user's web link.
+		LINK_INSERT_INDEX = 0x4f9;	// Insert location within ProfileVec of the HTML page for the user's web link.
 
 	int
 		bits = 0x10,
-		profileSizeField = 0x16,			    // Start index location for size field of the main image profile.
+		profileSizeField = 0x16,		// Start index location for size field of the main image profile.
 		profileInternalSizeField = 0x28;	// Start index location for internal size field of the image profile.
 
 	// Insert image description & image link into their relevant index positions within vector ProfileVec.
@@ -305,7 +305,7 @@ void displayInfo() {
 		JPG / HTML Polyglot File.
 		
 		The prompt/description is saved within a default/basic HTML page that you can view anytime by 
-    just by renaming the .jpg file extension to .html.
+    		just by renaming the .jpg file extension to .html.
 
 		The image supports Twitter, Reddit & Imgur. 
 		This means you can share your image on the above platforms and it will retain the embedded image description.
