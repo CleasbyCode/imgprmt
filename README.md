@@ -5,7 +5,7 @@ This simple program embeds a prompt/description for your AI image within a JPG i
 JPG / HTML Polyglot File.
 
 The prompt text is saved within a basic HTML page inside the image file, which you can view  
-just by renaming the .jpg file extension to .html
+anytime by just renaming the .jpg file extension to .html
 
 The image supports Twitter, Reddit & Imgur.  This means you can share your image on the these  
 platforms and it will retain the embedded HTML image prompt.
