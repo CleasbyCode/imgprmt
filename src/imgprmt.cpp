@@ -1,4 +1,4 @@
-//	imgprmt for Twitter & Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
+//	imgprmt (Linux) v1.0 for Twitter, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
 
 #include <algorithm>
 #include <fstream>
@@ -6,19 +6,61 @@
 #include <string>
 #include <vector>
 
+// Writes updated size values (e.g. Profile chunk) into relevant vector index locations. Overwrites previous size values.
 class ValueUpdater {
 public:
 	void Value(std::vector<unsigned char>& vect, int valueInsertIndex, const size_t VALUE, int bits) {
-			while (bits) {
-				vect[valueInsertIndex++] = (VALUE >> (bits -= 8)) & 0xff;
+		while (bits) {
+			vect[valueInsertIndex++] = (VALUE >> (bits -= 8)) & 0xff;
+		}
+	}
+} *update;
+
+
+void replaceSpecialChars(std::wstring& str) {
+
+	// For certain characters to display correctly within the html prompt/description, we need to find and replace them with
+	// the html entity codes stored within the string vector CodeVec. For example, in the word "café", the é (Latin small letter e with acute),
+	// is replaced with the html entity code &#233; Note, this is not an exhaustive list.
+
+	std::vector<std::string>CodeVec{
+		"&#960;", "&#255;", "&#254;", "&#253;", "&#252;", "&#251;", "&#250;", "&#249;", "&#248;", "&#247;", "&#246;", "&#245;",
+		"&#244;", "&#243;", "&#242;", "&#241;", "&#240;", "&#239;", "&#238;", "&#237;", "&#236;", "&#235;", "&#234;", "&#233;", 
+		"&#232;", "&#231;", "&#230;", "&#229;", "&#228;", "&#227;", "&#226;", "&#225;", "&#224;", "&#223;", "&#222;", "&#221;", 
+		"&#220;", "&#219;", "&#218;", "&#217;", "&#216;", "&#215;", "&#214;", "&#213;", "&#212;", "&#211;", "&#210;", "&#209;",
+		"&#208;", "&#207;", "&#206;", "&#205;", "&#204;", "&#203;", "&#202;", "&#201;", "&#200;", "&#199;", "&#198;", "&#197;",
+		"&#196;", "&#195;", "&#194;", "&#193;", "&#192;", "&#191;", "&#190;", "&#189;", "&#188;", "&#187;", "&#186;", "&#185;", 
+		"&#184;", "&#183;", "&#182;", "&#181;", "&#180;", "&#179;", "&#178;", "&#177;", "&#176;", "&#175;", "&#174;", "&#173;",
+		"&#172;", "&#171;", "&#170;", "&#169;", "&#168;", "&#167;", "&#166;", "&#165;", "&#164;", "&#163;", "&#162;", "&#161;", 
+		"&#39;" 
+	};
+	// Wide character values that are replaced with the above html entity codes.
+	// Character value 39 (apostrophe) is not a wide character, but we still need to replace it with a html entity code
+	// as it will break the html page if inserted in its raw form.
+	wchar_t Tag[97]{ 
+		960, 255, 254, 253, 252, 251, 250, 249, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232,
+		231, 230, 229, 228, 227, 226, 225, 224, 223, 222, 221, 220, 219, 218, 217, 216, 215, 214, 213, 212, 211, 210, 209, 208, 207,
+		206, 205, 204, 203, 202, 201, 200, 199, 198, 197, 196, 195, 194, 193, 192, 191, 190, 189, 188, 187, 186, 185, 184, 183, 182,
+		181, 180, 179, 178, 177, 176, 175, 174, 173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163, 162, 161, 39
+	};
+	
+	// Check each character of the w_prompt string for wide characters and replace them with the corresponding html entity code.
+	for (std::size_t i = str.length(); i != -1; i--) {
+		wchar_t c = str[i];
+		for (int x = 0; x != 97; x++) {
+			if (c == Tag[x]) {
+				str.erase(str.begin() + i);
+				str.insert(str.begin() + i, CodeVec[x].begin(), CodeVec[x].end());
 			}
 		}
-} *update;
+	}
+}
 
 void openFiles(char* []);
 void displayInfo();
 
 int main(int argc, char** argv) {
+
 	if (argc == 2 && std::string(argv[1]) == "--info") {
 		displayInfo();
 	}
@@ -32,9 +74,11 @@ int main(int argc, char** argv) {
 }
 
 void openFiles(char* argv[]) {
+
 	const std::string IMAGE_NAME = argv[1];
+
 	std::ifstream readImage(IMAGE_NAME, std::ios::binary);
-	
+
 	if (!readImage) {
 		std::cerr << "\nRead Error: Unable to open/read file: \"" + IMAGE_NAME + "\"\n\n";
 		std::exit(EXIT_FAILURE);
@@ -164,8 +208,8 @@ void openFiles(char* argv[]) {
 	0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x22, 0x3E
 	},
 
-	// Read and store user JPG image file into vector ImageVec.
-	ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
+		// Read and store user JPG image file into vector ImageVec.
+		ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
 
 	const std::string
 		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
@@ -184,37 +228,43 @@ void openFiles(char* argv[]) {
 	const size_t DQT_POS = search(ImageVec.begin(), ImageVec.end(), DQT_SIG.begin(), DQT_SIG.end()) - ImageVec.begin();
 
 	// Erase the first n bytes of the JPG header before this DQT position. 
-  	// We will later replace the erased header with the contents of vector "ProfileVec".
+	// We will later replace the erased header with the contents of vector "ProfileVec".
 	ImageVec.erase(ImageVec.begin(), ImageVec.begin() + DQT_POS);
+	
+	// This allows for the correct display and input (string variable storage) of wide characters.
+	std::locale::global(std::locale(""));
 
-	// A bodge-fix for some special characters... Will probably need to add more of these.
-	std::vector<std::string>TagVec {"&#39;", "&#960;", "&#225;", "&#201;", "&#233;", "&#243;", "&#227;"};
-	char Tag[6] = {39, -29, -96, -112, -126, -94};
-  
-	std::string
-		outName = "imgprmt_pic.jpg",
+	std::wstring 
+		w_prompt,
+		w_link,
+		w_outName = L"imgprmt_pic.jpg";
+
+	std::string 
+		prompt,
 		link,
-		prompt;
-  
-	std::cout << "\nType / Paste Your Image Description\n: ";
-	std::getline(std::cin, prompt);
-  
-	std::cout << "\n\nEnter a Link (Image Source, Social Media Page, etc.)\n: ";
-	std::getline(std::cin, link);
+		outName = "imgprmt_pic.jpg";
 
-	// A bodge-fix for some special characters...
-	for (size_t i = prompt.length(); i != -1; i--) {
-		for (int x = 0; x != 6; x++) {      
-			if (prompt[i] == Tag[x]) {
-				prompt.erase(prompt.begin() + i);
-				prompt.insert(prompt.begin() + i, TagVec[x].begin(), TagVec[x].end());
-			}
-			if (prompt[i] == 97 && prompt[i - 1] == 'S' && prompt[i + 1] == 'o' && prompt[i + 3] == 'P') {
-				prompt.erase(prompt.begin() + i);
-				prompt.insert(prompt.begin() + i, TagVec[6].begin(), TagVec[6].end());
-			}
-		}
-	}
+	// This allows for the correct display and input (string variable storage) of wide characters.
+	std::wcout << L"\n\nEnter a URL (Image Source, Social Media Page, etc.)\n: ";
+        std::getline(std::wcin, w_link);
+
+	std::wcout << L"\nType / Paste Your Image Prompt\n: "; 	
+	std::getline(std::wcin, w_prompt);
+
+	// Search the wide string for certain characters and replace them with html entity codes
+	replaceSpecialChars(w_prompt);
+
+		// We have now replaced any found wide characters with the html entity codes, so no wide characters should exist in
+	// the prompt/description string. Convert the wide string back to a standard string so that we can insert it
+	// into the ProfileVec vector, (ProfileVec, in-turn, will be inserted into ImageVec) and write it out to file.
+        std::transform(w_prompt.begin(), w_prompt.end(), std::back_inserter(prompt), [](wchar_t c) {
+                return (char)c;
+                });
+
+	// Do the same for w_link string variable.
+	std::transform(w_link.begin(), w_link.end(), std::back_inserter(link), [](wchar_t c) {
+                return (char)c;
+                });
 
 	const int
 		PROFILE_MAIN_DIFF = 0x16,	// Bytes we don't count as part of profile size.
@@ -249,25 +299,25 @@ void openFiles(char* argv[]) {
 	}
 
 	writeFile.write((char*)&ImageVec[0], ImageVec.size());
-	std::cout << "\nCreated output file: \"" + outName + " " << ImageVec.size() << " " << "Bytes\"\n\n"; 
-	}
+	std::wcout << L"\nCreated output file: \"" + w_outName + L" " << ImageVec.size() << " " << "Bytes\"\n\n";
+}
 
-	void displayInfo() {
-		std::cout << R"(
+void displayInfo() {
+	std::cout << R"(
 		
-	Imgprmt (v1.0) for Twitter, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
+		Imgprmt (v1.0) for Twitter, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
 		
-	This program enables you to embed a prompt/description for your AI images within a JPG image file.
+		This program enables you to embed a prompt/description for your AI images within a JPG image file.
 		
-	JPG / HTML Polyglot File.
+		JPG / HTML Polyglot File.
 		
-	The prompt/description is saved within a basic HTML page that you can view just by renaming
-	the .jpg file extension to .html.
+		The prompt is saved within a basic HTML page that you can view anytime by just renaming the
+		.jpg file extension to .html.
 
-	The image supports Twitter, Reddit & Imgur. 
+		The image supports Twitter, Reddit & Imgur. 
 
-	This means you can share your image on the above platforms and it will retain the embedded image description.
+		This means you can share your image on the above platforms and it will retain the embedded image description.
 
-	This program works on Linux and Windows.
+		This program works on Linux and Windows.
 		)";
-	}
+}
