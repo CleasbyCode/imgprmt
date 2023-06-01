@@ -20,7 +20,7 @@ The embedded content is stored within the ICC Profile of the JPG image.
 Compile and run the program under Windows or **Linux**  
 
 Image/Prompt credit:  
-The AI image and prompt used in this repo demo is the work of [**César Gámez (@cesar20984)**](https://twitter.com/cesar20984/status/1662514596765216770)  
+The AI image and prompt used in this repo demo is the work of [**Orcton (@OrctonAI)**](https://twitter.com/OrctonAI)  
 
 ## Usage (Linux - Insert AI Prompt in JPG Image)
 
