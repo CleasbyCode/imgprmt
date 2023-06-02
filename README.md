@@ -15,7 +15,9 @@ imgprmt works on Linux and Windows.
 The embedded content is stored within the ICC Profile of the JPG image.
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo.jpg)  
-{***Image credit: Orcton / @OrctonAI***}   
+{***Image credit: Orcton / @OrctonAI***}  
+
+![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/html.jpg)  
 
 Compile and run the program under Windows or **Linux**  
 
