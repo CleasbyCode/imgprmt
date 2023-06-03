@@ -1,14 +1,12 @@
 # imgprmt
 
-This simple program embeds a prompt/description for your AI image within a JPG image file.
+This program allows you to embed your AI image prompt within the JPG image file.
 
-JPG / HTML Polyglot File.
+This creates a JPG / HTML polyglot file.
 
-The prompt text is saved within a basic HTML page inside the image file, which you can view  
-anytime by just renaming the .jpg file extension to .html
+You can view the embedded prompt anytime by just renaming the .jpg file extension to .html
 
-The image supports Twitter, Reddit & Imgur.  This means you can share your image on the these  
-platforms and it will retain the embedded HTML image prompt.
+The image is shareable via Twitter, Reddit & Imgur.  These platforms will retain the embedded prompt text.
 
 imgprmt works on Linux and Windows.  
 
