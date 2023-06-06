@@ -49,14 +49,14 @@ Enter a URL (Image source, Social media page, etc.)
 
 Type / Paste Your Image Prompt
 
-: A majestically cinematic close up professional photo quality shot of a masked villain at a creepy,  
-abandoned carnival.  The villain's mask stands out against the faded colors of the dilapidated rides,  
-creating a disturbing image. The deserted carnival provides a haunting backdrop. This extremely detailed,  
-magazine-quality photograph showcases expert precision, including intricate examples of undeniably amazing  
+: A majestically cinematic close up professional photo quality shot of a masked villain at a creepy, 
+abandoned carnival.  The villain's mask stands out against the faded colors of the dilapidated rides,
+creating a disturbing image. The deserted carnival provides a haunting backdrop. This extremely detailed, 
+magazine-quality photograph showcases expert precision, including intricate examples of undeniably amazing
 image quality and detailed design. The scene is captured in stunning 8k sharp focus and 32k resolution.
 --ar 3:2 --v 5.1 --s 1000 --q 2
 
-Created output file: "imgprmt_pic.jpg 198721 Bytes"
+Created output file: "imgprmt_pic.jpg 265122 Bytes"
 
 ```
 
