@@ -45,17 +45,15 @@ $ ./imgprmt  demo.jpg
 
 Enter a URL (Image source, Social media page, etc.)
 
-: https://twitter.com/OrctonAI/status/1664316306529697809
+: https://twitter.com/OrctonAI/status/1666119073875345409
 
 Type / Paste Your Image Prompt
 
-: Create a powerful image from a cyberpunk film. A hacker, her face illuminated by the glow of multiple  
-holographic screens, works in a high-tech lair. Her clothing, a blend of functional tech-wear and neon  
-accents, stands out against the backdrop of the dark room. The room, filled with servers and tangled  
-cables, hums with the sound of data being transferred at breakneck speed. The image captures the  
-hacker's intense focus, her face conveying a myriad of emotions without uttering a single word.  
-The scene is captured in intricate detail and sharp focus, highlighting the actor's expressive  
-performance. 32k.  --ar 3:2 --v 5.1 --s 1000 --q 2
+: A majestically cinematic close up professional photo quality shot of a masked villain at a creepy, abandoned carnival.  
+The villain's mask stands out against the faded colors of the dilapidated rides, creating a disturbing image.  
+The deserted carnival provides a haunting backdrop. This extremely detailed, magazine-quality photograph showcases expert  
+precision, including intricate examples of undeniably amazing image quality and detailed design. The scene is captured  
+in stunning 8k sharp focus and 32k resolution.  --ar 3:2 --v 5.1 --s 1000 --q 2
 
 Created output file: "imgprmt_pic.jpg 198721 Bytes"
 
