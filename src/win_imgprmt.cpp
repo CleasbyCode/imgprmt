@@ -7,7 +7,7 @@
 #include <io.h>
 #include <vector>
 
-// Writes updated size values (e.g. Profile chunk) into relevant vector index locations. Overwrites previous size values.
+// Writes updated size values (e.g. ICC Profile length) into relevant vector index locations. Overwrites previous size values.
 class ValueUpdater {
 public:
 	void Value(std::vector<unsigned char>& vect, int valueInsertIndex, const size_t VALUE, int bits) {
