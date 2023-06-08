@@ -243,8 +243,8 @@ void openFiles(char* argv[]) {
 	std::getline(std::cin, link);
 
 	fflush(stdin); fflush(stdout);
-	std::ignore = _setmode(_fileno(stdout), 0x00020000); // Set standard output for Windows to "_O_U16TEXT" so it displays correct wide characters.
-	std::ignore = _setmode(_fileno(stdin), 0x00020000);  // Set standart input for Windows to "_O_U16TEXT" so our wide variables contain correct wide characters.
+	std::ignore = _setmode(_fileno(stdout), 0x00020000); // Set standard output for Windows to "_O_U16TEXT" so that it displays correct wide characters.
+	std::ignore = _setmode(_fileno(stdin), 0x00020000);  // Set standart input for Windows to "_O_U16TEXT" so that our wide variables contain the correct wide characters.
 
 	std::wcout << "\nType / Paste Your Image Prompt\n\n: ";
 	std::getline(std::wcin, w_prompt);
