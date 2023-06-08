@@ -243,12 +243,11 @@ void openFiles(char* argv[]) {
 		prompt,
 		link,
 		outName = "imgprmt_pic.jpg";
-
-	// This allows for the correct display and input (string variable storage) of wide characters.
-	std::wcout << L"\n\nEnter a URL (Image Source, Social Media Page, etc.)\n: ";
+	
+	std::wcout << L"\n\nEnter a URL (Image Source, Social Media Page, etc.)\n\n: ";
         std::getline(std::wcin, w_link);
 
-	std::wcout << L"\nType / Paste Your Image Prompt\n: "; 	
+	std::wcout << L"\nType / Paste Your Image Prompt\n\n: "; 	
 	std::getline(std::wcin, w_prompt);
 
 	// Search the wide string for certain characters and replace them with html entity codes
