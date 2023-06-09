@@ -12,10 +12,10 @@ imgprmt works on Linux and Windows.
 
 The embedded content is stored within the ICC Profile of the JPG image.
 
-![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo.jpg)  
+![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_.jpg)  
 {***Image credit: Orcton / @OrctonAI***}  
 
-![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/html_.jpg)  
+![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/html.jpg)  
 
 [**Video Demo: Embed Prompt in Image**](https://youtu.be/5so1Bts0LFU)  
 
