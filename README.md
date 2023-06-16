@@ -17,7 +17,7 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 
 ![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/html.jpg)  
 
-[**Video Demo: Embed Prompt in Image**](https://youtu.be/5so1Bts0LFU)  
+[**Video Demo: Embed Prompt in Image**](https://youtu.be/eHBGhOngMJo)  
 
 [**Video Demo: Twitter Image with Embedded Prompt**](https://youtu.be/OMHyhfDHoUQ)  
 
