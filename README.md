@@ -21,7 +21,7 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 
 [**Embed Prompt in Image**](https://youtu.be/eHBGhOngMJo)  
 
-[**Twitter Image with Embedded Prompt**](https://youtu.be/OMHyhfDHoUQ)        (Image/Prompt credit: César Gámez / [***@cesar20984***)](https://twitter.com/cesar20984/status/1662514596765216770)
+[**Twitter Image with Embedded Prompt**](https://youtu.be/OMHyhfDHoUQ) 
 
 [**Reddit Image with Embedded Prompt**](https://youtu.be/echWCq8PUxI)  
 
