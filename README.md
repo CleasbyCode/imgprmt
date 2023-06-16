@@ -17,13 +17,15 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 
 ![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/html.jpg)  
 
-[**Video Demo: Embed Prompt in Image**](https://youtu.be/eHBGhOngMJo)  
+**Video Demos**  
 
-[**Video Demo: Twitter Image with Embedded Prompt**](https://youtu.be/OMHyhfDHoUQ)  
+[**Embed Prompt in Image**](https://youtu.be/eHBGhOngMJo)  
 
-[**Video Demo: Reddit Image with Embedded Prompt**](https://youtu.be/echWCq8PUxI)  
+[**Twitter Image with Embedded Prompt**](https://youtu.be/OMHyhfDHoUQ)  
 
-[**Video Demo: Imgur Image with Embedded Prompt**](https://youtu.be/yKaDx8tX1z4)  
+[**Reddit Image with Embedded Prompt**](https://youtu.be/echWCq8PUxI)  
+
+[**Imgur Image with Embedded Prompt**](https://youtu.be/yKaDx8tX1z4)  
 
 Compile and run the program under Windows or **Linux**  
 
