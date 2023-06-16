@@ -8,7 +8,7 @@ You can view the embedded prompt by just renaming the .jpg file extension to .ht
 
 The image is shareable via Twitter, Flickr, Reddit & Imgur.  These platforms will retain the embedded prompt.
 
-imgprmt works on Linux and Windows.  
+*imgprmt* works on Linux and Windows.  
 
 The embedded HTML page with the prompt is stored within the ICC Profile of the JPG image.
 
