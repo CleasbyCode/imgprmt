@@ -1,16 +1,16 @@
 # imgprmt
 
-This program allows you to embed your AI image prompt within the JPG image file.
+imgprmt allows you to embed your AI image prompt within the JPG image file.
 
 This creates a JPG / HTML polyglot file.
 
-You can view the embedded prompt anytime by just renaming the .jpg file extension to .html
+You can view the embedded prompt by just renaming the .jpg file extension to .html
 
 The image is shareable via Twitter, Flickr, Reddit & Imgur.  These platforms will retain the embedded prompt.
 
 imgprmt works on Linux and Windows.  
 
-The embedded content is stored within the ICC Profile of the JPG image.
+The embedded HTML page with the prompt is stored within the ICC Profile of the JPG image.
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_.jpg)  
 {***Image credit: Orcton / @OrctonAI***}  
