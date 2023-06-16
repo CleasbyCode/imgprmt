@@ -6,7 +6,7 @@ This creates a JPG / HTML polyglot file.
 
 You can view the embedded prompt anytime by just renaming the .jpg file extension to .html
 
-The image is shareable via Twitter, Reddit & Imgur.  These platforms will retain the embedded prompt text.
+The image is shareable via Twitter, Flickr, Reddit & Imgur.  These platforms will retain the embedded prompt.
 
 imgprmt works on Linux and Windows.  
 
