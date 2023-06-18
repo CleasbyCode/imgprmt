@@ -321,7 +321,7 @@ JPG / HTML Polyglot File.
 The prompt is saved within a basic HTML page that you can view anytime by just renaming the .jpg file 
 extension to .html.
 
-The image supports Twitter, Reddit & Imgur. 
+The image supports Twitter, Flickr, Reddit & Imgur. 
 This means you can share your image on the above platforms and it will retain the embedded image description.
 
 This program works on Linux and Windows.
