@@ -1,4 +1,4 @@
-//	imgprmt (Linux) v1.0 for Twitter, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
+//	imgprmt (Linux) v1.0 for Twitter, Flickr, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
 
 #include <algorithm>
 #include <fstream>
@@ -316,7 +316,7 @@ void openFiles(char* argv[]) {
 void displayInfo() {
 	std::cout << R"(
 		
-Imgprmt (v1.0) for Twitter, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
+Imgprmt (v1.0) for Twitter, Flickr, Reddit & Imgur. Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
 		
 This program enables you to embed a prompt/description for your AI images within a JPG image file.
 		
