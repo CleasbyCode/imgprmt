@@ -15,7 +15,7 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/imgprmt_pic.jpg)  
 {***Image credit: Orcton / @OrctonAI***}  
 
-![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_pic_b.jpg)
+![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_pic_b.jpg)
 
 **Video Demos**  
 
