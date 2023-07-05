@@ -56,9 +56,9 @@ from a sci-fi film featuring a lone astronaut stranded on an alien planet. very 
 LED’s and advance tech. The astronaut stumbles upon a peculiar yet amazing alien life form, first
 contact with an intelligent alien species. The foreign landscape around them is bathed in the
 eerie glow of the planet's twin moons. extremely detailed magazine quality photograph, cinematic
-lighting, 8k sharp focus. expert precision including intricate examples of undeniably amazing image
-quality and detailed design, stunning unique with intricate details, amazing background detail.
-Sharp focus, intricate detail, 32k --weird 250 --ar 16:9 --s 250
+lighting, 8k sharp focus. expert precision including intricate examples of undeniably amazing
+image quality and detailed design, stunning unique with intricate details, amazing
+background detail. Sharp focus, intricate detail, 32k --weird 250 --ar 16:9 --s 250
 
 Created output file: "imgprmt_pic.jpg 265122 Bytes"
 
