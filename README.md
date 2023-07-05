@@ -47,16 +47,15 @@ $ ./imgprmt  demo.jpg
 
 Enter a URL (Image source, Social media page, etc.)
 
-: https://twitter.com/OrctonAI/status/1666119073875345409
+: https://twitter.com/OrctonAI/status/1672705138132230144 
 
 Type / Paste Your Image Prompt
 
-: A majestically cinematic close up professional photo quality shot of a masked villain at a creepy, 
-abandoned carnival.  The villain's mask stands out against the faded colors of the dilapidated rides,
-creating a disturbing image. The deserted carnival provides a haunting backdrop. This extremely detailed, 
-magazine-quality photograph showcases expert precision, including intricate examples of undeniably amazing
-image quality and detailed design. The scene is captured in stunning 8k sharp focus and 32k resolution.
---ar 3:2 --v 5.1 --s 1000 --q 2
+: majestically cinematic close up professional photo quality shot of a futuristic intense scene from a sci-fi film featuring a lone astronaut stranded on an alien planet.
+very futuristic with LED’s and advance tech .The astronaut stumbles upon a peculiar yet amazing alien life form, first contact with an intelligent alien species.
+The foreign landscape around them is bathed in the eerie glow of the planet's twin moons. extremely detailed magazine quality photograph, cinematic lighting, 8k sharp focus.
+expert precision including intricate examples of undeniably amazing image quality and detailed design, stunning unique with intricate details, amazing background detail.
+Sharp focus, intricate detail, 32k --weird 250 --ar 16:9 --s 250
 
 Created output file: "imgprmt_pic.jpg 265122 Bytes"
 
