@@ -23,7 +23,7 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 
 [***Twitter Image with Embedded Prompt***](https://youtu.be/OMHyhfDHoUQ)  
 
-[***Mastodon Image with Embedded Prompt***](https://youtu.be/7oubrRspm2A)
+[***Mastodon Image with Embedded Prompt***](https://youtu.be/0LcQD-axERg)
 
 [***Reddit Image with Embedded Prompt***](https://youtu.be/echWCq8PUxI)  
 
