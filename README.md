@@ -19,7 +19,7 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 
 **Video Demos**  
 
-[***Embed Prompt in Image***](https://youtu.be/eHBGhOngMJo)  
+[***Insert Prompt Inside JPG Image Using Imprmt***](https://youtu.be/KKpEt6F0r6I)  
 
 [***Twitter Image with Embedded Prompt***](https://youtu.be/TS3mlyBQey4)  
 
