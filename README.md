@@ -12,10 +12,10 @@ The image is shareable via Twitter, Mastodon, Flickr, Reddit & Imgur.  These pla
 
 The embedded HTML page with the prompt is stored within the ICC Profile of the JPG image.
 
-![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/imgprmt_pic.jpg)  
+![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/moon.jpg)  
 {***Image credit: Orcton / @OrctonAI***}  
 
-![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_pic_b.jpg)
+![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/moon_html.png)
 
 **Video Demos**  
 
