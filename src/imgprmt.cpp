@@ -22,7 +22,7 @@ void replaceSpecialChars(std::wstring& str) {
 	// the html entity codes stored within the string vector CodeVec. For example, in the word "café", the é (Latin small letter e with acute),
 	// is replaced with the html entity code &#233; Note, this is not an exhaustive list.
 	std::vector<std::string>CodeVec{
-		"&#8217", "&#960;", "&#255;", "&#254;", "&#253;", "&#252;", "&#251;", "&#250;", "&#249;", "&#248;", "&#247;", "&#246;", "&#245;",
+		"&#8217", "&#8211", "&#960;", "&#255;", "&#254;", "&#253;", "&#252;", "&#251;", "&#250;", "&#249;", "&#248;", "&#247;", "&#246;", "&#245;",
 		"&#244;", "&#243;", "&#242;", "&#241;", "&#240;", "&#239;", "&#238;", "&#237;", "&#236;", "&#235;", "&#234;", "&#233;", 
 		"&#232;", "&#231;", "&#230;", "&#229;", "&#228;", "&#227;", "&#226;", "&#225;", "&#224;", "&#223;", "&#222;", "&#221;", 
 		"&#220;", "&#219;", "&#218;", "&#217;", "&#216;", "&#215;", "&#214;", "&#213;", "&#212;", "&#211;", "&#210;", "&#209;",
@@ -36,8 +36,8 @@ void replaceSpecialChars(std::wstring& str) {
 	// Wide character values that are replaced with the above html entity codes.
 	// Character value 39 (apostrophe) is not a wide character, but we still need to replace it with a html entity code
 	// as it will break the html page if inserted in its raw form.
-	wchar_t Tag[98]{ 
-		8217, 960, 255, 254, 253, 252, 251, 250, 249, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232,
+	wchar_t Tag[99]{ 
+		8217, 8211, 960, 255, 254, 253, 252, 251, 250, 249, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232,
 		231, 230, 229, 228, 227, 226, 225, 224, 223, 222, 221, 220, 219, 218, 217, 216, 215, 214, 213, 212, 211, 210, 209, 208, 207,
 		206, 205, 204, 203, 202, 201, 200, 199, 198, 197, 196, 195, 194, 193, 192, 191, 190, 189, 188, 187, 186, 185, 184, 183, 182,
 		181, 180, 179, 178, 177, 176, 175, 174, 173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163, 162, 161, 39
@@ -46,7 +46,7 @@ void replaceSpecialChars(std::wstring& str) {
 	// Check each character of the w_prompt string for wide characters and replace them with the corresponding html entity code.
 	for (std::size_t i = str.length(); i != -1; i--) {
 		wchar_t c = str[i];
-		for (int x = 0; x != 98; x++) {
+		for (int x = 0; x != 99; x++) {
 			if (c == Tag[x]) {
 				str.erase(str.begin() + i);
 				str.insert(str.begin() + i, CodeVec[x].begin(), CodeVec[x].end());
