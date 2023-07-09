@@ -47,20 +47,19 @@ $ ./imgprmt  demo.jpg
 
 Enter a URL (Image source, Social media page, etc.)
 
-: https://twitter.com/OrctonAI/status/1672705138132230144 
+: https://twitter.com/OrctonAI/status/1669135118806441987
 
 Type / Paste Your Image Prompt
 
-: majestically cinematic close up professional photo quality shot of a futuristic intense scene
-from a sci-fi film featuring a lone astronaut stranded on an alien planet. very futuristic with
-LED’s and advance tech. The astronaut stumbles upon a peculiar yet amazing alien life form, first
-contact with an intelligent alien species. The foreign landscape around them is bathed in the
-eerie glow of the planet's twin moons. extremely detailed magazine quality photograph, cinematic
-lighting, 8k sharp focus. expert precision including intricate examples of undeniably amazing
-image quality and detailed design, stunning unique with intricate details, amazing
-background detail. Sharp focus, intricate detail, 32k --weird 250 --ar 16:9 --s 250
+: A majestically cinematic professional photo quality shot of a beautiful space explorer on an alien planet
+at high noon. Her semi-clothed form, accentuated by her tight-fitting space suit, adds to the sense of
+adventure and exploration. The midday alien sun casts a dramatic light on her face, highlighting her stunning
+eyes and the sense of wonder and discovery. The alien landscape, the strange flora and fauna, and the distant
+mountains provide an epic backdrop to this scene. This extremely detailed, magazine-quality photograph showcases
+expert precision, including intricate examples of undeniably amazing image quality and detailed design.
+The scene is captured in stunning 8k sharp focus and 32k resolution.  --ar 3:2 --v 5.1 --s 1000 --q 2
 
-Created output file: "imgprmt_pic.jpg 265122 Bytes"
+Created output file: "imgprmt_pic.jpg 189627 Bytes"
 
 ```
 
