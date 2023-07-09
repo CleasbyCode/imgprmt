@@ -22,7 +22,8 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 * [***Insert Prompt Inside JPG Image Using Imprmt***](https://youtu.be/KKpEt6F0r6I)  /  {***Image/Prompt credit: [César Gámez](https://twitter.com/cesar20984/status/1674478616019607565)***}
 
 * [***Images from Reddit, Twitter & Mastodon with Embedded Prompts***](https://youtu.be/M5ozdH2FJYo)
-***Image/Prompt credits:***
+
+  ***Image/Prompt credits:***
   ***[Óscar Bartolomé](https://twitter.com/Artedeingenio/status/1671079440107929602)***
   ***[@PhletchyIRL](https://twitter.com/PhletchyIRL/status/1678056416509034502)***
   ***[@OrctonAI](https://twitter.com/OrctonAI/status/1669135118806441987)***
