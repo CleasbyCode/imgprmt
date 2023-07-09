@@ -21,11 +21,11 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 
 * [***Insert Prompt Inside JPG Image Using Imprmt***](https://youtu.be/KKpEt6F0r6I)  /  {***Image/Prompt credit: [César Gámez](https://twitter.com/cesar20984/status/1674478616019607565)***}
 
-* [***Twitter Image with Embedded Prompt***](https://youtu.be/TS3mlyBQey4)  
-
-* [***Mastodon Image with Embedded Prompt***](https://youtu.be/0LcQD-axERg)  /  {***Image/Prompt credit: [Óscar Bartolomé](https://twitter.com/Artedeingenio/status/1671079440107929602)***}
-
-* [***Reddit Image with Embedded Prompt***](https://youtu.be/y4PvmON7Pzw)  
+* [***Images from Reddit, Twitter & Mastodon with Embedded Prompts***](https://youtu.be/M5ozdH2FJYo)
+***Image/Prompt credits:***
+  ***[Óscar Bartolomé](https://twitter.com/Artedeingenio/status/1671079440107929602)***
+  ***[@PhletchyIRL](https://twitter.com/PhletchyIRL/status/1678056416509034502)***
+  ***[@OrctonAI](https://twitter.com/OrctonAI/status/1669135118806441987)***
 
 Compile and run the program under Windows or **Linux**  
 
