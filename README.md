@@ -30,7 +30,7 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 Compile and run the program under Windows or **Linux**  
 
 Image/Prompt credit:  
-The ai image and prompt used in this repo demo is the work of [**@OrctonAI**](https://twitter.com/OrctonAI)  
+The AI image and prompt used in the following demo is the work of [**@OrctonAI**](https://twitter.com/OrctonAI)  
 
 ## Usage (Linux - Insert AI Prompt in JPG Image)
 
