@@ -12,13 +12,14 @@ The image is shareable via Twitter, Mastodon, Flickr, Reddit & Imgur.  These pla
 
 The embedded HTML page with the prompt is stored within the ICC Profile of the JPG image.
 
-![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/screen1.jpg)  {***Image credit: Orcton / [@OrctonAI](https://twitter.com/OrctonAI)***}  
+![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/screen1.jpg)  
+{***Image credit: Orcton / [@OrctonAI](https://twitter.com/OrctonAI)***}  
 
 ![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/screen.jpg)
 
 **Video Demos**  
 
-* [***Insert Prompt Inside JPG Image Using Imprmt***](https://youtu.be/KKpEt6F0r6I)  {***Image/Prompt credit: [César Gámez](https://twitter.com/cesar20984/status/1674478616019607565)***}
+* [***Insert Prompt Inside JPG Image Using Imprmt***](https://youtu.be/KKpEt6F0r6I) / {***Image/Prompt credit: [César Gámez](https://twitter.com/cesar20984/status/1674478616019607565)***}
 
 * [***Twitter Image with Embedded Prompt***](https://youtu.be/TS3mlyBQey4)  
 
