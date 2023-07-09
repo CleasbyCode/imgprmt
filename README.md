@@ -53,11 +53,12 @@ Type / Paste Your Image Prompt
 
 : A majestically cinematic professional photo quality shot of a beautiful space explorer on an alien planet
 at high noon. Her semi-clothed form, accentuated by her tight-fitting space suit, adds to the sense of
-adventure and exploration. The midday alien sun casts a dramatic light on her face, highlighting her stunning
-eyes and the sense of wonder and discovery. The alien landscape, the strange flora and fauna, and the distant
-mountains provide an epic backdrop to this scene. This extremely detailed, magazine-quality photograph showcases
-expert precision, including intricate examples of undeniably amazing image quality and detailed design.
-The scene is captured in stunning 8k sharp focus and 32k resolution.  --ar 3:2 --v 5.1 --s 1000 --q 2
+adventure and exploration. The midday alien sun casts a dramatic light on her face, highlighting her
+stunning eyes and the sense of wonder and discovery. The alien landscape, the strange flora and fauna,
+and the distant mountains provide an epic backdrop to this scene. This extremely detailed, magazine-quality
+photograph showcases expert precision, including intricate examples of undeniably amazing image quality and
+detailed design. The scene is captured in stunning 8k sharp focus and 32k resolution.
+--ar 3:2 --v 5.1 --s 1000 --q 2
 
 Created output file: "imgprmt_pic.jpg 189627 Bytes"
 
