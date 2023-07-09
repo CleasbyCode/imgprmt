@@ -23,7 +23,7 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 
 * [***Images from Reddit, Twitter & Mastodon with Embedded Prompts***](https://youtu.be/M5ozdH2FJYo)
 
-  ***{Image/Prompt credits:
+  ***{Image credits:
   [Óscar Bartolomé](https://twitter.com/Artedeingenio/status/1671079440107929602)  /  [@PhletchyIRL](https://twitter.com/PhletchyIRL/status/1678056416509034502)  /  [@OrctonAI](https://twitter.com/OrctonAI/status/1669135118806441987)}***
 
 Compile and run the program under Windows or **Linux**  
