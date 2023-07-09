@@ -25,7 +25,7 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 
 * [***Mastodon Image with Embedded Prompt***](https://youtu.be/0LcQD-axERg)
 
-* [***Reddit Image with Embedded Prompt***](https://youtu.be/aM5sFTyG2no)  
+* [***Reddit Image with Embedded Prompt***](https://youtu.be/y4PvmON7Pzw)  
 
 Compile and run the program under Windows or **Linux**  
 
