@@ -20,7 +20,7 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 
 * [***Insert Prompt Inside JPG Image Using Imprmt***](https://youtu.be/KKpEt6F0r6I)
 
-<span style="font-size:20px">{***Image/Prompt credit: César Gámez / [@cesar20984](https://twitter.com/cesar20984/status/1674478616019607565)***}</span>
+<span style="font-size:15px">{***Image/Prompt credit: César Gámez / [@cesar20984](https://twitter.com/cesar20984/status/1674478616019607565)***}</span>
 
 * [***Twitter Image with Embedded Prompt***](https://youtu.be/TS3mlyBQey4)  
 
