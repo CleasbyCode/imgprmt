@@ -13,7 +13,7 @@ The image is shareable via Twitter, Mastodon, Flickr, Reddit & Imgur.  These pla
 The embedded HTML page with the prompt is stored within the ICC Profile of the JPG image.
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/screen1.jpg)  
-{***Image credit: Orcton / @OrctonAI***}  
+{***Image credit: Orcton / [@OrctonAI](https://twitter.com/OrctonAI)***}  
 
 ![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/screen.jpg)
 
@@ -30,7 +30,7 @@ The embedded HTML page with the prompt is stored within the ICC Profile of the J
 Compile and run the program under Windows or **Linux**  
 
 Image/Prompt credit:  
-The AI image and prompt used in this repo demo is the work of [**@OrctonAI**](https://twitter.com/OrctonAI)  
+The ai image and prompt used in this repo demo is the work of [**@OrctonAI**](https://twitter.com/OrctonAI)  
 
 ## Usage (Linux - Insert AI Prompt in JPG Image)
 
