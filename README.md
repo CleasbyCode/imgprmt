@@ -23,8 +23,8 @@ Orcton [(@OrctonAI)](https://twitter.com/OrctonAI) & Phletchy [(@PhletchyIRL)](h
 
 **Video Demos**  
 
-* [***Insert Prompt Inside JPG Image Using Imgprmt***](https://youtu.be/6G-6DYFh8Pw)
-* [***Images from Reddit, Twitter & Mastodon with Embedded Prompts***](https://youtu.be/M5ozdH2FJYo)
+* [***Insert Prompt Inside JPG Image Using Imgprmt***](https://youtu.be/vrb-cRl34LI)
+* [***Images from Reddit, Twitter & Mastodon with Embedded Prompts***](https://youtu.be/jAH-Ru3l57o)
 
 Compile and run the program under Windows or **Linux**  
 
