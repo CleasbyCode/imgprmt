@@ -12,11 +12,11 @@ These platforms will retain the embedded prompt, so it's available to anyone sav
 Also, \*in many cases, the embedded prompt is also preserved when someone edits the image.  
 *(\*not guaranteed / depends on image editor).*
 
-The embedded HTML page with the prompt is stored within the ICC Profile of the JPG image.
+The embedded HTML page with the prompt is stored within the *ICC Profile* of the JPG image.
 
 *imgprmt* works on Linux and Windows.  
 
-**AI images & prompts used as examples in this repo are the works of:-**
+**AI images & prompts used as examples in this repo are the works of:**
 
 *Óscar Bartolomé [(@Artedeingenio)](https://twitter.com/Artedeingenio/status/1671079440107929602), César Gámez [(@cesar20984)](https://twitter.com/cesar20984/status/1674961601101799430),  
 Orcton [(@OrctonAI)](https://twitter.com/OrctonAI) & Phletchy [(@PhletchyIRL)](https://twitter.com/PhletchyIRL/status/1678056416509034502)*
