@@ -6,7 +6,8 @@ This creates a JPG / HTML polyglot file.
 
 You can view the embedded prompt by just renaming the .jpg file extension to .html
 
-The image is shareable via Twitter, Mastodon, Flickr, Reddit & Imgur.  These platforms will retain the embedded prompt.  
+The image is shareable via Twitter, Mastodon, Flickr, Reddit & Imgur.  
+These platforms will retain the embedded prompt, so it's available to anyone saving the image.
 
 The embedded HTML page with the prompt is stored within the ICC Profile of the JPG image.
 
