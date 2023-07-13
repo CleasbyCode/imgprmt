@@ -29,7 +29,8 @@ Orcton [(@OrctonAI)](https://twitter.com/OrctonAI) & Phletchy [(@PhletchyIRL)](h
 
 * [***Insert Prompt Inside JPG Image Using Imgprmt***](https://youtu.be/vrb-cRl34LI)
 * [***Images from Reddit, Twitter & Mastodon with Embedded Prompts***](https://youtu.be/jAH-Ru3l57o)
-
+* [***Edit Image with Embedded Prompt***](https://youtu.be/0jo69weeJtk)
+  
 Compile and run the program under Windows or **Linux**  
 
 ## Usage (Linux - Insert AI Prompt in JPG Image)
