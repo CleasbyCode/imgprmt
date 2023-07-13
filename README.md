@@ -2,7 +2,7 @@
 
 *imgprmt* is a simple command line tool, which will embed your AI image prompt in the JPG image file.
 
-This creates a seperate JPG + HTML polyglot file.
+This creates a separate JPG + HTML polyglot file.
 
 You can view the embedded prompt by just renaming the .jpg file extension to .html
 
