@@ -10,7 +10,7 @@ The image is shareable via Twitter, Mastodon, Flickr, Reddit & Imgur.
 These platforms will retain the embedded prompt, so it's available to anyone saving the image.  
 
 Also, \*in many cases, the embedded prompt is also preserved when someone edits the image.  
-(\*not guaranteed / depends on image editor).
+*(\*not guaranteed / depends on image editor).*
 
 The embedded HTML page with the prompt is stored within the ICC Profile of the JPG image.
 
