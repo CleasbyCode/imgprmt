@@ -6,7 +6,7 @@ This creates a separate JPG + HTML polyglot file.
 
 You can view the embedded prompt by just renaming the .jpg file extension to .html
 
-Image is shareable via Twitter, Mastodon, Flickr, *Reddit (Does not work with mobile app) & Imgur.  
+Image is shareable via Twitter, Mastodon, Flickr, *Reddit (*Does not work with mobile app*) & Imgur.  
 These platforms will retain the embedded prompt, so it's available to anyone saving the image.  
 
 Also, \*in many cases, the embedded prompt is also preserved when someone edits the image.  
