@@ -1,4 +1,4 @@
-//	imgprmt v1.0 (Windows). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
+//	imgprmt v1.1 (Windows Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
 
 #include <algorithm>
 #include <fstream>
@@ -7,7 +7,7 @@
 #include <io.h>
 #include <vector>
 
-// Writes updated size values (e.g. ICC Profile length) into relevant vector index locations. Overwrites previous size values.
+// Writes updated size values (e.g. iCC Profile length) into relevant vector index locations. Overwrites previous size values.
 class ValueUpdater {
 public:
 	void Value(std::vector<unsigned char>& vect, int valueInsertIndex, const size_t VALUE, int bits) {
@@ -20,7 +20,7 @@ public:
 void replaceSpecialChars(std::wstring& str) {
 
 	// For certain characters to display correctly within the html prompt/description, we need to find and replace them with
-	// the corrent html entity code. For example, for the word "café", the é (Latin small letter e with acute),
+	// the corrent html entity code. For example, for the word "café", the é (Latin small letter e with Acute character),
 	// is replaced with the html entity code "&#233"; Note, this is not an exhaustive list.
 	
 	// Current wide character values that are replaced with the html entity codes.
@@ -34,7 +34,7 @@ void replaceSpecialChars(std::wstring& str) {
 		183, 182, 181, 180, 179, 178, 177, 176, 175, 174, 173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163, 162, 161, 39
 	};
 
-	// Check each character of the w_prompt string for wide characters and replace them with the html entity string.
+	// Check each character of the w_prompt (str) string for wide characters and replace them with the html entity string.
 	for (std::size_t i = str.length(); i != -1; i--) {
 		wchar_t c = str[i];
 		for (int x = 0; x != 112; x++) {
@@ -76,7 +76,7 @@ void openFiles(char* argv[]) {
 	}
 
 	// This vector contains our JPG header with a basic ICC Profile and HTML page,
-	// currently without the users image prompt/url, which is inserted later.
+	// currently without the users image prompt & url, which is inserted later.
 	std::vector<unsigned char>ProfileVec = {
 	0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01,
 	0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0xFF, 0xE2, 0x0C, 0x4C,
@@ -284,14 +284,14 @@ void openFiles(char* argv[]) {
 	0x61, 0x76, 0x61, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x22, 0x3E
 	},
 
-		// Read and store user JPG image file into vector ImageVec.
+		// Read and store user JPG image file into vector "ImageVec".
 		ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
 
 	const std::string
-		JPG_SIG = "\xFF\xD8\xFF",						// JPG image signature. 
+		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
 		JPG_CHECK{ ImageVec.begin(), ImageVec.begin() + JPG_SIG.length() };	// Get image header from vector. 
 
-	// Make sure we are dealing with a valid JPG image file.
+	// Make sure we have a valid JPG image file.
 	if (JPG_CHECK != JPG_SIG) {
 		std::cerr << "\nImage Error: File does not appear to be a valid JPG image.\n\n";
 		std::exit(EXIT_FAILURE);
@@ -299,56 +299,69 @@ void openFiles(char* argv[]) {
 
 	// Signature for Define Quantization Table(s) 
 	const auto DQT_SIG = { 0xFF, 0xDB };
-
+	
 	// Find location in vector "ImageVec" of first DQT index location of the image file.
 	const size_t DQT_POS = search(ImageVec.begin(), ImageVec.end(), DQT_SIG.begin(), DQT_SIG.end()) - ImageVec.begin();
 
-	// Erase the first n bytes of the JPG header before this DQT position. 
-	// We will later replace the erased header with the contents of vector "ProfileVec".
+	// Erase the first n bytes of the JPG header before the DQT position. 
+	// Later, we will replace the erased header with the contents of vector "ProfileVec".
 	ImageVec.erase(ImageVec.begin(), ImageVec.begin() + DQT_POS);
 	
-	std::wstring
-		w_prompt,
-		outName = L"imgprmt_pic.jpg";  
+	std::wstring outName = L"imgprmt_pic.jpg";
 
-	std::string 
+	std::string
 		prompt,
 		link;
-
+	
 	std::cout << "\n\nEnter a URL (Image source, Social media page, etc.)\n\n: ";
 	std::getline(std::cin, link);
 
 	fflush(stdin); fflush(stdout);
-	std::ignore = _setmode(_fileno(stdout), 0x00020000); // Set standard output for Windows to "_O_U16TEXT" so that it displays correct wide characters.
-	std::ignore = _setmode(_fileno(stdin), 0x00020000);  // Set standart input for Windows to "_O_U16TEXT" so that our wide variables contain the correct wide characters.
+	std::ignore = _setmode(_fileno(stdin), 0x20000);  // Set standard input for Windows to "_O_U16TEXT" so our wide variables contain correct wide characters.
+	std::ignore = _setmode(_fileno(stdout), 0x20000); // Set standard output for Windows to "_O_U16TEXT" so the console displays correct wide characters.
+	
+	std::wcout << "\nType or Paste in Your Image Prompt / Description\n\n: ";
 
-	std::wcout << "\nType / Paste Your Image Prompt\n\n: ";
-	std::getline(std::wcin, w_prompt);
+	const size_t wcinBufferSize = 8000;  	// The default string length in Windows console for "wcin" when "_O_U16TEXT" is set, 
+						// seems to be just over 2000 characters. So we increase it here to 8000 to provide a more flexible size.
 
-	// Search the wide string for certain characters and replace them with html entity codes
+	wchar_t wcinBuffer[wcinBufferSize] = { 0 };
+	std::wcin.rdbuf()->pubsetbuf(wcinBuffer, wcinBufferSize); // Set the new buffer size limit for "wcin", as above.
+
+	std::wcin.getline(wcinBuffer, wcinBufferSize);
+	std::wstring w_prompt(wcinBuffer);
+	
+	// Search the wide string for certain characters and replace them with html entity codes.
 	replaceSpecialChars(w_prompt);
 
-	// We have now replaced any found wide characters with the html entity codes, so no wide characters should exist in 
+	// We have now replaced the wide characters with the html entity codes, so no wide characters should exist in 
 	// the prompt/description string. Convert the wide string back to a standard string so that we can insert it
-	// into the ProfileVec vector, (ProfileVec, in-turn, will be inserted into ImageVec) and write it out to file.
+	// into the vector "ProfileVec", in-turn, "ProfileVec" will be inserted into the vector "ImageVec", then written out to file.
+
 	std::transform(w_prompt.begin(), w_prompt.end(), std::back_inserter(prompt), [](wchar_t c) {
 		return (char)c;
 		});
 
 	const int
-		PROFILE_MAIN_DIFF = 0x16,	// Bytes we don't count as part of profile size.
-		PROFILE_INTERNAL_DIFF = 0x26,	// Bytes we don't count as part of internal profile size.
-		PROMPT_INSERT_INDEX = 0x910,	// Insert location within ProfileVec of the HTML page for the users's prompt text.
-		LINK_INSERT_INDEX = 0x8D0;	// Insert location within ProfileVec of the HTML page for the user's web link.
+		MAX_PROFILE_SIZE = 10000,		// For Twitter compatibility. Twitter only allows one ICC Profile, with a max size of 10KB. 
+		PROFILE_MAIN_DIFF = 0x16,		// Bytes we don't count as part of profile size.
+		PROFILE_INTERNAL_DIFF = 0x26,		// Bytes we don't count as part of internal profile size.
+		PROMPT_INSERT_INDEX = 0x910,		// Insert location within ProfileVec of the HTML page for the users's prompt text.
+		LINK_INSERT_INDEX = 0x8D0;		// Insert location within ProfileVec of the HTML page for the user's web link (url).
 
 	int
 		bits = 0x10,
-		profileSizeField = 0x16,		// Start index location for size field of the main image profile.
-		profileInternalSizeField = 0x28;	// Start index location for internal size field of the image profile.
+		profileSizeField = 0x16,		// Start index location for size field of the main image icc profile. (Max two bytes)
+		profileInternalSizeField = 0x28;	// Start index location for internal size field of the image icc profile.(Max four bytes, only two used).
 
-	// Insert image description & image link into their relevant index positions within vector ProfileVec.
+	// Insert image prompt/description & url link into their relevant index positions within vector "ProfileVec".
 	ProfileVec.insert(ProfileVec.begin() + PROMPT_INSERT_INDEX, prompt.begin(), prompt.end());
 	ProfileVec.insert(ProfileVec.begin() + LINK_INSERT_INDEX, link.begin(), link.end());
+
+	if (ProfileVec.size() > MAX_PROFILE_SIZE) {
+		std::wcerr << "\nFile Size Error: Data content size exceeds the maximum limit of 10KB.\n\n";
+		std::exit(EXIT_FAILURE);
+	}
 
 	// Update main profile size 
 	update->Value(ProfileVec, profileSizeField, ProfileVec.size() - PROFILE_MAIN_DIFF, bits);
@@ -374,7 +387,7 @@ void openFiles(char* argv[]) {
 void displayInfo() {
 	std::cout << R"(
 		
-Imgprmt v1.0 (Windows). Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
+Imgprmt v1.1 (Windows). Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
 		
 This program enables you to insert a prompt/description for your AI images within a JPG image file.
 		
@@ -383,7 +396,7 @@ The program will create a JPG / HTML polyglot file.
 Your prompt text is saved within a basic HTML page embedded within the image, that you can view by renaming
 the ".jpg" file extension to a ".html" extension.
 
-The image supports Twitter, Mastodon, Flickr, Imgur & *Reddit (*Desktop only. Does not work with mobile app). 
+The image supports Twitter, Mastodon, Flickr, Imgur & *Reddit (*Desktop only. Does not work with Reddit mobile app). 
 
 This means the image can be shared on these platforms & it will retain the embedded HTML page with your prompt text.
 
