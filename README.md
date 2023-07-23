@@ -1,13 +1,13 @@
 # imgprmt
 
-*imgprmt* is a simple command line tool, which will embed an image prompt/description within a JPG image file.
+A simple command line tool, which will embed an image prompt/description within a JPG image file.
 
 This creates a separate JPG + HTML polyglot file.
 
-View the embedded prompt as a basic Web page, by just renaming the .jpg file extension to .html
+View the embedded prompt as a basic Web page, by just renaming the *.jpg* file extension to *.html*
 
-The embedded image can be shared on a number of social media sites, such as, Twitter, Mastodon, Flickr,  
-Imgur & *Reddit (*Desktop only. Does not work with mobile app*).  
+The embedded image can be shared on a number of social media sites, such as Twitter, Mastodon,  
+Flickr, Imgur & *Reddit (*Desktop only. Does not work with mobile app*).  
 
 These platforms will retain the embedded prompt, so it's available to anyone downloads / saves the image.  
 
