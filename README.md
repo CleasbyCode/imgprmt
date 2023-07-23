@@ -7,7 +7,7 @@ This creates a separate JPG + HTML polyglot file.
 View the embedded prompt as a basic Web page, by just renaming the *.jpg* file extension to *.html*
 
 The embedded image can be shared on a number of social media sites, such as Twitter, Mastodon,  
-Flickr, Imgur & *Reddit (*Desktop only. Does not work with mobile app*).  
+Flickr, Imgur & \*Reddit (\**Desktop only. Does not work with the Reddit mobile app*).  
 
 These platforms will retain the embedded prompt, so it's available to anyone downloads / saves the image.  
 
