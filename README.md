@@ -1,13 +1,13 @@
 # imgprmt
 
-*imgprmt* is a simple command line tool, which will embed your AI image prompt in the JPG image file.
+*imgprmt* is a simple command line tool, which will embed an image prompt / description in a JPG image file.
 
 This creates a separate JPG + HTML polyglot file.
 
-You can view the embedded prompt by just renaming the .jpg file extension to .html
+View the embedded prompt as a basic Web page, by just renaming the .jpg file extension to .html
 
-Image is shareable via Twitter, Mastodon, Flickr, *Reddit (*Does not work with mobile app*) & Imgur.  
-These platforms will retain the embedded prompt, so it's available to anyone saving the image.  
+The embedded image is shareable via Twitter, Mastodon, Flickr, Imgur & *Reddit (*Desktop only. Does not work with mobile app*).  
+These platforms will retain the embedded prompt, so it's available to anyone downloads / saves the image.  
 
 Also, \*in many cases, the embedded prompt is also preserved when someone edits the image.  
 *(\*not guaranteed / depends on image editor).*
