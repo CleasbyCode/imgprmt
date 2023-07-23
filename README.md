@@ -14,7 +14,7 @@ These platforms will retain the embedded prompt, so it's available to anyone who
 Also, \*in many cases, the embedded prompt is also preserved when someone edits the image.  
 *(\*not guaranteed / depends on image editor).*
 
-The embedded HTML page with the prompt is stored within the *ICC Profile* of the JPG image.
+The embedded Web page with the prompt / description is stored within the *ICC Profile* of the JPG image.
 
 *imgprmt* works on Linux and Windows.  
 
