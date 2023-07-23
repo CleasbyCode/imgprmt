@@ -9,7 +9,7 @@ View the embedded prompt as a basic Web page, by just renaming the *.jpg* file e
 The embedded image can be shared on a number of social media sites, such as Twitter, Mastodon,  
 Flickr, Imgur & \*Reddit (\**Desktop only. Does not work with the Reddit mobile app*).  
 
-These platforms will retain the embedded prompt, so it's available to anyone downloads / saves the image.  
+These platforms will retain the embedded prompt, so it's available to anyone who downloads / saves the image.  
 
 Also, \*in many cases, the embedded prompt is also preserved when someone edits the image.  
 *(\*not guaranteed / depends on image editor).*
