@@ -386,6 +386,35 @@ void openFiles(char* argv[]) {
 		std::exit(EXIT_FAILURE);
 	};
 
+	const std::string
+		EXIF_SIG = "Exif\x00\x00II",
+		EXIF_END_SIG = "xpacket end",
+		ICC_PROFILE_SIG = "ICC_PROFILE";
+
+	// An embedded jpg thumbnail will cause problems with this program. So search and remove blocks that may contain a jpg thumbnail.
+
+	// Check for a ICC_PROFILE and delete all content before the beginning of Profile. This removes any embedded jpg thumbnail. Profile will get deleted later.
+	const size_t ICC_PROFILE_POS = search(ImageVec.begin(), ImageVec.end(), ICC_PROFILE_SIG.begin(), ICC_PROFILE_SIG.end()) - ImageVec.begin();
+	if (ImageVec.size() > ICC_PROFILE_POS) {
+		ImageVec.erase(ImageVec.begin(), ImageVec.begin() + ICC_PROFILE_POS);
+	}
+
+	// If no Profile found, search for Exif block (look for end signature "xpacket end") and remove the block.
+	const size_t EXIF_END_POS = search(ImageVec.begin(), ImageVec.end(), EXIF_END_SIG.begin(), EXIF_END_SIG.end()) - ImageVec.begin();
+	if (ImageVec.size() > EXIF_END_POS) {
+		ImageVec.erase(ImageVec.begin(), ImageVec.begin() + (EXIF_END_POS + 17));
+	}
+
+	// Remove Exif block that has no "xpacket end" signature.
+	const size_t EXIF_START_POS = search(ImageVec.begin(), ImageVec.end(), EXIF_SIG.begin(), EXIF_SIG.end()) - ImageVec.begin();
+	if (ImageVec.size() > EXIF_START_POS) {
+		// get size of Exif block
+		const size_t EXIF_BLOCK_SIZE = ImageVec[EXIF_START_POS - 2] << 8 | ImageVec[EXIF_START_POS - 1];
+		ImageVec.erase(ImageVec.begin(), ImageVec.begin() + EXIF_BLOCK_SIZE - 2);
+	}
+
+	// ^ Any jpg embedded thumbnail should have now been removed...
+	
 	// Signature for Define Quantization Table(s) 
 	const auto DQT_SIG = { 0xFF, 0xDB };
 	
