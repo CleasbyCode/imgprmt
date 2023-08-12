@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
 		openFiles(argv);
 	}
 	else {
-		std::cout << "\nUsage:\t\bimgprmt <jpg-image>\n\t\bimgprmt --info\n\n";
+		std::cout << "\nUsage:\timgprmt <jpg-image>\n\timgprmt --info\n\n";
 	}
 	return 0;
 }
