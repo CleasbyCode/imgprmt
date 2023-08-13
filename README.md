@@ -27,11 +27,9 @@ Orcton [(@OrctonAI)](https://twitter.com/OrctonAI) & Phletchy [(@PhletchyIRL)](h
 
 ![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/screenb.png)
 
-**Video Demos**  
+**Video Demo**  
 
-* [***Insert Prompt Inside JPG Image Using Imgprmt***](https://youtu.be/vrb-cRl34LI)
-* [***Images from Reddit, Twitter & Mastodon with Embedded Prompts***](https://youtu.be/jAH-Ru3l57o)
-* [***Edit Image with Embedded Prompt***](https://youtu.be/0jo69weeJtk)
+* [***Insert Prompt Inside JPG Image Using Imgprmt***](https://youtu.be/sslNEuk3wz4)
   
 Compile and run the program under Windows or **Linux**  
 
