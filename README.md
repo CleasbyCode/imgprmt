@@ -27,7 +27,7 @@ Orcton [(@OrctonAI)](https://twitter.com/OrctonAI) & Phletchy [(@PhletchyIRL)](h
 
 ![Html Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/screenb.png)
 
-***[Video Demo (YouTube)]***(https://youtu.be/sslNEuk3wz4)
+***[Video Demo]***(https://youtu.be/sslNEuk3wz4)
   
 Compile and run the program under Windows or **Linux**  
 
