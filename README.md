@@ -20,7 +20,7 @@ The embedded Web page with the prompt / description is stored within the *ICC Pr
 
 **AI images & prompts used as examples in this repo are the works of:**
 
-*Óscar Bartolomé [(@Artedeingenio)](https://twitter.com/Artedeingenio/status/1671079440107929602), César Gámez [(@cesar20984)](https://twitter.com/cesar20984/status/1674961601101799430) &  Orcton [(@OrctonAI)](https://twitter.com/OrctonAI)*
+*César Gámez [(@cesar20984)](https://twitter.com/cesar20984/status/1674961601101799430), Óscar Bartolomé [(@Artedeingenio)](https://twitter.com/Artedeingenio/status/1671079440107929602) & Orcton [(@OrctonAI)](https://twitter.com/OrctonAI)*
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/screena.png)  
 
