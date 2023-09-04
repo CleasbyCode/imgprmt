@@ -1,6 +1,6 @@
 # imgprmt
 
-Command-line tool, which will embed an image prompt / description within a JPG image file.
+Command-line tool for embedding an image prompt / description within a JPG image file.
 
 This creates a separate JPG + HTML polyglot file.
 
