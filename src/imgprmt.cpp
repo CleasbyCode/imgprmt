@@ -545,7 +545,7 @@ This program enables you to insert a prompt/description for your AI images withi
 The program will create a JPG / HTML polyglot file.
 		
 Your prompt text is saved within a basic HTML page embedded within the image, that you can view by renaming
-the ".jpg" file extension to a ".html" extension.
+the ".jpg" file extension to a ".htm" extension.
 
 The image supports Twitter, Mastodon, Flickr, Imgur & *Reddit (*Desktop only. Does not work with mobile app).
 
