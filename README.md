@@ -43,7 +43,7 @@ $ ./imgprmt  demo.jpg
 
 Enter a URL (Image source, Social media page, etc.)
 
-: https://twitter.com/OrctonAI/status/1669135118806441987
+: https://twitter.com/cesar20984/status/1690816072306282497
 
 Type / Paste Your Image Prompt
 
