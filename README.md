@@ -31,7 +31,7 @@ Compile and run the program under Windows or **Linux**
 
 ## Usage (Linux - Insert AI Prompt in JPG Image)
 
-```c
+```bash
 
 $ g++ imgprmt.cpp -s -o imgprmt
 $
