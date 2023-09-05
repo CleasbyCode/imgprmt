@@ -12,8 +12,7 @@ View the embedded prompt as a basic Web page just by renaming the *.jpg* file ex
 The embedded image can be shared on a number of social media sites, such as Twitter, Mastodon,  
 Flickr, Imgur & \*Reddit (\**Desktop only. Does not work with the Reddit mobile app*).  
 
-These platforms will retain the embedded prompt, so that it's available to anyone who downloads the image.  
-
+These platforms retain the embedded prompt, so that it's available to anyone who downloads your image.  
 In many cases, the embedded prompt is also preserved when someone edits the image.  
 
 The embedded Web page with your image prompt is stored within the *ICC Profile* of the JPG image file.  
