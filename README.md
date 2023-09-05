@@ -45,7 +45,7 @@ Enter a URL (Image source, Social media page, etc.)
 
 : https://twitter.com/cesar20984/status/1690816072306282497
 
-Type / Paste Your Image Prompt
+Type or Paste in Your Image Prompt / Description
 
 : A woman adorned with pink and purple botanical designs, resonating the style of
   rainforest-inspired, deep green and bright yellow, organically crafted body prints,
