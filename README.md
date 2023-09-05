@@ -4,7 +4,7 @@ Command-line tool for embedding an image prompt / description within a JPG image
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/purple.jpg)  
 
-This creates a separate JPG + HTML polyglot file.  
+This creates a separate JPG + HTML polyglot image file.  
 View the embedded prompt as a basic Web page just by renaming the *.jpg* file extension to *.htm*  
 
 ![Demo Image2](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/purple_html.png) 
