@@ -14,10 +14,9 @@ Flickr, Imgur & \*Reddit (\**Desktop only. Does not work with the Reddit mobile 
 
 These platforms will retain the embedded prompt, so it's available to anyone who downloads the image.  
 
-Also, \*in many cases, the embedded prompt is also preserved when someone edits the image.  
-*(\*not guaranteed / depends on image editor).*
+In many cases, the embedded prompt is also preserved when someone edits the image.  
 
-The embedded Web page with the prompt / description is stored within the *ICC Profile* of the JPG image.
+The embedded Web page with your image prompt is stored within the *ICC Profile* of the JPG image file.
 
 *imgprmt* works on Linux and Windows.  
 
