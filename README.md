@@ -15,6 +15,17 @@ Flickr, Imgur & \*Reddit (\**Desktop only. Does not work with the Reddit mobile 
 These platforms retain the embedded prompt, so that it's available to anyone who downloads your image.  
 In many cases, the embedded prompt is also preserved when someone edits the image.  
 
+Alternative Twitter download and display of image prompt using wget command (Linux).  
+
+````bash
+$ wget "https://pbs.twimg.com/media/F3mGDGAXEAA8lJS?format=jpg";mv "F3mGDGAXEAA8lJS?format=jpg" imgprmt_purple.htm;xdg-open imgprmt_purple.htm
+````
+Alternative Twitter download and display of image prompt using curl command (Windows).  
+
+````bash
+PS C:\Users\Nick\Desktop\Demo> curl -o imgprmt_purple.htm "https://pbs.twimg.com/media/F3mGDGAXEAA8lJS?format=jpg";.\imgprmt_purple.htm
+````
+
 The embedded Web page with your image prompt is stored within the *ICC Profile* of the JPG image file.  
 
 ![Demo Image3](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/profile.png) 
