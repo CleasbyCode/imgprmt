@@ -17,13 +17,13 @@ In many cases, the embedded prompt is also preserved when someone edits the imag
 
 Alternative Twitter download and display of image prompt using ***curl*** command (Windows).  
 
-````bash
+````console
 PS C:\Users\Nick\Desktop\Demo> curl -o imgprmt_purple.htm "https://pbs.twimg.com/media/F3mGDGAXEAA8lJS?format=jpg";.\imgprmt_purple.htm
 ````
 
 Alternative Twitter download and display of image prompt using ***wget*** command (Linux).  
 
-````bash
+````console
 $ wget "https://pbs.twimg.com/media/F3mGDGAXEAA8lJS?format=jpg";mv "F3mGDGAXEAA8lJS?format=jpg" imgprmt_purple.htm;xdg-open imgprmt_purple.htm
 ````
 
@@ -43,7 +43,7 @@ Compile and run the program under Windows or **Linux**
 
 ## Usage (Linux - Insert AI Prompt in JPG Image)
 
-```bash
+```console
 
 $ g++ imgprmt.cpp -s -o imgprmt
 $
