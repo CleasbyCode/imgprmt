@@ -15,10 +15,10 @@ Flickr, Imgur & \*Reddit (\**Desktop only. Does not work with the Reddit mobile 
 These platforms retain the embedded prompt, so that it's available to anyone who downloads your image.  
 In many cases, the embedded prompt is also preserved when someone edits the image.  
 
-Alternative Twitter download and display of image prompt using ***curl*** command (Windows).  
+Alternative Twitter download and display of image prompt using ***iwr*** command (Windows).  
 
 ````console
-PS C:\Users\Nick\Desktop\Demo> curl -o imgprmt_purple.htm "https://pbs.twimg.com/media/F3mGDGAXEAA8lJS?format=jpg";.\imgprmt_purple.htm
+PS C:\Users\Nick\Desktop\Demo> iwr -o imgprmt_purple.htm "https://pbs.twimg.com/media/F3mGDGAXEAA8lJS?format=jpg";.\imgprmt_purple.htm
 ````
 
 Alternative Twitter download and display of image prompt using ***wget*** command (Linux).  
