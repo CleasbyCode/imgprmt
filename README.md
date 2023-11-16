@@ -5,7 +5,7 @@ Command-line tool for embedding an image prompt / description within a JPG image
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/purple.jpg)  
 
 This creates a separate JPG + HTML polyglot image file.  
-View the embedded prompt as a basic Web page just by renaming the *.jpg* file extension to *.htm*  
+View the embedded prompt as a basic Web page by renaming the *.jpg* file extension to *.htm*  
 
 ![Demo Image2](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/purple_html.png) 
 
@@ -49,10 +49,10 @@ $ g++ imgprmt.cpp -s -o imgprmt
 $
 $ ./imgprmt 
 
-Usage:  imgprmt <jpg-image>  
-        imgprmt --info
+Usage: imgprmt <jpg-image>  
+       imgprmt --info
 
-$ ./imgprmt  demo.jpg
+$ ./imgprmt demo.jpg
 
 Enter a URL (Image source, Social media page, etc.)
 
