@@ -29,7 +29,7 @@ $ wget "https://pbs.twimg.com/media/F3mGDGAXEAA8lJS?format=jpg";mv "F3mGDGAXEAA8
 
 The embedded Web page with your image prompt is stored within the *ICC Profile* of the JPG image file.  
 
-![Demo Image3](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/profile.png) 
+![Demo Image3](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/icc_img.png) 
 
 *imgprmt* works on Linux and Windows.  
 
