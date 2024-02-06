@@ -23,7 +23,7 @@ public:
 void Replace_Special_Chars(std::wstring& str) {
 
 	// For certain characters to display correctly within the html prompt/description, we need to find and replace them with
-	// the corrent html entity code. For example, for the word "café", the é (Latin small letter e with Acute character),
+	// the correct html entity code. For example, for the word "café", the é (Latin small letter e with Acute character),
 	// is replaced with the html entity code "&#233"; Note, this is not an exhaustive list.
 	
 	// Current wide character values that are replaced with the html entity codes.
