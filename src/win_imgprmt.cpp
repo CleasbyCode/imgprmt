@@ -1,57 +1,32 @@
+
 //	imgprmt v1.1 (Windows Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
 
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <cstdint>
 #include <io.h>
 #include <vector>
 
-typedef unsigned char BYTE;
+typedef unsigned char Byte;
 
-// Writes updated size values (e.g. iCC Profile length) into relevant vector index locations. Overwrites previous size values.
-class Value_Updater {
-public:
-	void Value(std::vector<BYTE>& vect, size_t value_insert_index, const size_t& VALUE, uint_fast8_t bits) {
-		while (bits) {
-			vect[value_insert_index++] = (VALUE >> (bits -= 8)) & 0xff;
-		}
-	}
-} *update;
-
-void Replace_Special_Chars(std::wstring& str) {
-
-	// For certain characters to display correctly within the html prompt/description, we need to find and replace them with
-	// the correct html entity code. For example, for the word "café", the é (Latin small letter e with Acute character),
-	// is replaced with the html entity code "&#233"; Note, this is not an exhaustive list.
+void 
+	Open_Files(char* []),
 	
+	// For certain characters to display correctly within the html prompt/description, we need to find and replace them with
+	// the corrent html entity code. For example, for the word "café", the é (Latin small letter e with Acute character),
+	// is replaced with the html entity code "&#233"; Note, this is not an exhaustive list.
+
 	// Current wide character values that are replaced with the html entity codes.
 	// Character value 39 (apostrophe) is not a wide character, but we still need to replace it with a html entity code
 	// as it will break the html page if inserted in its raw form.
-	wchar_t Tag[118]{
-		11013, 11014, 11015, 11157, 10145, 8592, 8593, 8594, 8595, 8596, 8597, 8217, 8211, 8212, 960, 351, 324, 322, 287, 263, 255, 254, 253, 252, 251, 250,
-		249, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231, 230, 229, 228, 227, 226, 225, 224, 223, 222, 221,
-		220, 219, 218, 217, 216, 215, 214, 213, 212, 211, 210, 209, 208, 207, 206, 205, 204, 203, 202, 201, 200, 199, 198, 197, 196, 195, 194, 193, 192,
-		191, 190, 189, 188, 187, 186, 185, 184, 183, 182, 181, 180, 179, 178, 177, 176, 175, 174, 173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163,
-		162, 161, 144, 142, 39
-	};
+	Replace_Special_Chars(std::wstring& str),
 
-	// Check each character of the w_prompt (str) string for wide characters and replace them with the html entity string.
-	for (std::size_t i = str.length(); i != -1; i--) {
-		wchar_t c = str[i];
-		for (uint_fast8_t x = 0; x != 118; x++) {
-			if (c == Tag[x]) {
-				std::string html_entity = "&#" + std::to_string(Tag[x]);
-				str.erase(str.begin() + i);
-				str.insert(str.begin() + i, html_entity.begin(), html_entity.end());
-			}
-		}
-	}
-}
+	// Writes updated size values (e.g. iCC Profile length) into relevant vector index locations. Overwrites previous size values.
+	Value_Updater(std::vector<Byte>&, size_t, const size_t&, int),
 
-void Open_Files(char* []);
-void Display_Info();
+	// Program information.
+	Display_Info();
 
 int main(int argc, char** argv) {
 
@@ -71,16 +46,16 @@ void Open_Files(char* argv[]) {
 
 	const std::string IMAGE_NAME = argv[1];
 
-	std::ifstream read_image_fs(IMAGE_NAME, std::ios::binary);
+	std::ifstream image_ifs(IMAGE_NAME, std::ios::binary);
 
-	if (!read_image_fs) {
+	if (!image_ifs) {
 		std::cerr << "\nRead Error: Unable to open/read file: \"" + IMAGE_NAME + "\"\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
 	// This vector contains our JPG header with a basic ICC Profile and HTML page,
 	// currently without the users image prompt & url, which is inserted later.
-	std::vector<BYTE>Profile_Vec = {
+	std::vector<Byte>Profile_Vec = {
 	0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0xFF, 0xE2, 0x0F, 0xF8,
 	0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46, 0x49, 0x4C, 0x45, 0x00, 0x01, 0x01, 0x00, 0x00, 0x0F, 0xE8, 0x3C, 0x21, 0x2D, 0x2D, 0x04, 0x30,
 	0x00, 0x00, 0x6D, 0x6E, 0x74, 0x72, 0x52, 0x47, 0x42, 0x20, 0x58, 0x59, 0x5A, 0x20, 0x07, 0xE0, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00,
@@ -230,8 +205,8 @@ void Open_Files(char* argv[]) {
 	0x6D, 0x6C, 0x3E
 	},
 
-		// Read and store user JPG image file into vector "Image_Vec".
-		Image_Vec((std::istreambuf_iterator<char>(read_image_fs)), std::istreambuf_iterator<char>());
+	// Read and store user JPG image file into vector "Image_Vec".
+	Image_Vec((std::istreambuf_iterator<char>(image_ifs)), std::istreambuf_iterator<char>());
 
 	const std::string
 		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
@@ -266,7 +241,7 @@ void Open_Files(char* argv[]) {
 	const size_t EXIF_START_POS = std::search(Image_Vec.begin(), Image_Vec.end(), EXIF_SIG.begin(), EXIF_SIG.end()) - Image_Vec.begin();
 	if (Image_Vec.size() > EXIF_START_POS) {
 		// get size of Exit block
-		const uint_fast16_t EXIF_BLOCK_SIZE = Image_Vec[EXIF_START_POS - 2] << 8 | Image_Vec[EXIF_START_POS - 1];
+		const int EXIF_BLOCK_SIZE = Image_Vec[EXIF_START_POS - 2] << 8 | Image_Vec[EXIF_START_POS - 1];
 		Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + EXIF_BLOCK_SIZE - 2);
 	}
 
@@ -274,38 +249,39 @@ void Open_Files(char* argv[]) {
 
 	// Signature for Define Quantization Table(s) 
 	const auto DQT_SIG = { 0xFF, 0xDB };
-	
+
 	// Find location in vector "ImageVec" of first DQT index location of the image file.
 	const size_t DQT_POS = std::search(Image_Vec.begin(), Image_Vec.end(), DQT_SIG.begin(), DQT_SIG.end()) - Image_Vec.begin();
 
 	// Erase the first n bytes of the JPG header before the DQT position. 
 	// Later, we will replace the erased header with the contents of vector "ProfileVec".
 	Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + DQT_POS);
-	
+
 	std::wstring out_name = L"imgprmt_pic.jpg";
 
 	std::string
 		prompt,
 		url_link;
-	
+
 	std::cout << "\n\nEnter a URL (Image source, Social media page, etc.)\n\n: ";
 	std::getline(std::cin, url_link);
 
 	fflush(stdin); fflush(stdout);
+
 	std::ignore = _setmode(_fileno(stdin), 0x20000);  // Set standard input for Windows to "_O_U16TEXT" so our wide variables contain correct wide characters.
 	std::ignore = _setmode(_fileno(stdout), 0x20000); // Set standard output for Windows to "_O_U16TEXT" so the console displays correct wide characters.
-	
+
 	std::wcout << "\nType or Paste in Your Image Prompt / Description\n\n: ";
 
-	const size_t wcin_buffer_size = 8000;  	// The default string length in Windows console for "wcin" when "_O_U16TEXT" is set, 
-						// seems to be just over 2000 characters. So we increase it here to 8000 to provide a more flexible size.
+	constexpr size_t wcin_buffer_size = 8000;  	// The default string length in Windows console for "wcin" when "_O_U16TEXT" is set, 
+							// seems to be just over 2000 characters. So we increase it here to 8000 to provide a more flexible size.
 
 	wchar_t wcin_buffer[wcin_buffer_size] = { 0 };
 	std::wcin.rdbuf()->pubsetbuf(wcin_buffer, wcin_buffer_size); // Set the new buffer size, as above.
 
 	std::wcin.getline(wcin_buffer, wcin_buffer_size);
 	std::wstring wide_prompt(wcin_buffer);
-	
+
 	// Search the wide string for certain characters and replace them with html entity codes.
 	Replace_Special_Chars(wide_prompt);
 
@@ -317,14 +293,14 @@ void Open_Files(char* argv[]) {
 		return (char)c;
 		});
 
-	const uint_fast16_t
+	constexpr int
 		MAX_PROFILE_SIZE = 10000,	// For Twitter compatibility. Twitter only allows one ICC Profile, with a max size of 10KB. 
 		PROFILE_MAIN_DIFF = 22,		// Bytes we don't count as part of profile size.
 		PROFILE_INTERNAL_DIFF = 38,	// Bytes we don't count as part of internal profile size.
 		PROMPT_INSERT_INDEX = 2468,	// Insert location within ProfileVec of the HTML page for the users's prompt text.
 		LINK_INSERT_INDEX = 2334;	// Insert location within ProfileVec of the HTML page for the user's web link (url).
 
-	uint_fast8_t
+	int
 		bits = 16,
 		profile_size_field = 22,		// Start index location for size field of the main image icc profile. (Max two bytes)
 		profile_internal_size_field = 40;	// Start index location for internal size field of the image icc profile.(Max four bytes, only two used).
@@ -339,24 +315,53 @@ void Open_Files(char* argv[]) {
 	}
 
 	// Update main profile size 
-	update->Value(Profile_Vec, profile_size_field, Profile_Vec.size() - PROFILE_MAIN_DIFF, bits);
+	Value_Updater(Profile_Vec, profile_size_field, Profile_Vec.size() - PROFILE_MAIN_DIFF, bits);
 
 	// Update internal profile size
-	update->Value(Profile_Vec, profile_internal_size_field, Profile_Vec.size() - PROFILE_INTERNAL_DIFF, bits);
+	Value_Updater(Profile_Vec, profile_internal_size_field, Profile_Vec.size() - PROFILE_INTERNAL_DIFF, bits);
 
 	// Insert contents of vector ProfileVec into vector ImageVec, combining the profile, html and prompt/link text with JPG image file.
 	Image_Vec.insert(Image_Vec.begin(), Profile_Vec.begin(), Profile_Vec.end());
 
 	// Write the complete JPG / HTML polyglot out to file.
-	std::ofstream write_file_fs(out_name, std::ios::binary);
+	std::ofstream file_ofs(out_name, std::ios::binary);
 
-	if (!write_file_fs) {
+	if (!file_ofs) {
 		std::cerr << "\nWrite Error: Unable to write to file.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
-	write_file_fs.write((char*)&Image_Vec[0], Image_Vec.size());
+	file_ofs.write((char*)&Image_Vec[0], Image_Vec.size());
 	std::wcout << L"\nCreated output file: \"" + out_name + L" " << Image_Vec.size() << " " << "Bytes\"\n\n";
+}
+
+void Replace_Special_Chars(std::wstring& str) {
+
+	constexpr wchar_t Tag[118]{
+		11013, 11014, 11015, 11157, 10145, 8592, 8593, 8594, 8595, 8596, 8597, 8217, 8211, 8212, 960, 351, 324, 322, 287, 263, 255, 254, 253, 252, 251, 250,
+		249, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231, 230, 229, 228, 227, 226, 225, 224, 223, 222, 221,
+		220, 219, 218, 217, 216, 215, 214, 213, 212, 211, 210, 209, 208, 207, 206, 205, 204, 203, 202, 201, 200, 199, 198, 197, 196, 195, 194, 193, 192,
+		191, 190, 189, 188, 187, 186, 185, 184, 183, 182, 181, 180, 179, 178, 177, 176, 175, 174, 173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163,
+		162, 161, 144, 142, 39
+	};
+
+	// Check each character of the w_prompt (str) string for wide characters and replace them with the html entity string.
+	for (int i = static_cast<int>(str.length()); i != -1; i--) {
+		wchar_t c = str[i];
+		for (int x = 0; x != 118; x++) {
+			if (c == Tag[x]) {
+				std::string html_entity = "&#" + std::to_string(Tag[x]);
+				str.erase(str.begin() + i);
+				str.insert(str.begin() + i, html_entity.begin(), html_entity.end());
+			}
+		}
+	}
+}
+
+void Value_Updater(std::vector<Byte>& vec, size_t value_insert_index, const size_t& VALUE, int bits) {
+	while (bits) {
+		static_cast<size_t>(vec[value_insert_index++] = (VALUE >> (bits -= 8)) & 0xff);
+	}
 }
 
 void Display_Info() {
