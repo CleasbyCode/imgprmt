@@ -4,7 +4,7 @@ Command-line tool for embedding an image prompt / description within a JPG image
 
 This creates a separate JPG + HTML polyglot image file. 
 
-Demo Videos:***[Imgprmt Windows CLI Demo](https://youtu.be/sslNEuk3wz4) / [Imgprmt Web Demo](https://youtu.be/FAKAwUJc-_Y)***  
+Demo Videos: ***[Imgprmt Windows CLI Demo](https://youtu.be/sslNEuk3wz4) / [Imgprmt Web Demo](https://youtu.be/FAKAwUJc-_Y)***  
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/purple.jpg)  
  
