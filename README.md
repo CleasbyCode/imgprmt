@@ -23,7 +23,6 @@ The embedded Web page with your image prompt is stored within the *ICC Profile* 
 
 *César Gámez [(@cesar20984)](https://twitter.com/cesar20984/status/1674961601101799430), Óscar Bartolomé [(@Artedeingenio)](https://twitter.com/Artedeingenio/status/1671079440107929602) & Orcton [(@OrctonAI)](https://twitter.com/OrctonAI)*
 
-***[Imgprmt Windows CLI Demo](https://youtu.be/sslNEuk3wz4) / [Imgprmt Web Demo](https://youtu.be/FAKAwUJc-_Y)***
   
 *(You can try **imgprmt** from this [**site**](https://cleasbycode.co.uk/imgprmt/index/) if you don't want to download & compile the source code.)*  
 
