@@ -196,7 +196,7 @@ void Open_Files(char* argv[]) {
 		Image_Vec((std::istreambuf_iterator<char>(read_image_fs)), std::istreambuf_iterator<char>());
 
 	const std::string
-		JPG_SIG = "\xFF\xD8\xFF",						// JPG image signature. 
+		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
 		GET_JPG_SIG{ Image_Vec.begin(), Image_Vec.begin() + JPG_SIG.length() };	// Get image header from vector. 
 
 	// Make sure we are dealing with a valid JPG image file.
@@ -248,18 +248,18 @@ void Open_Files(char* argv[]) {
 	// Set the global C++ locale to en_US.UTF-8
 	 std::locale::global(std::locale("en_US.UTF-8"));
 
-  // Update the locale settings according to the global locale
-  std::cout.imbue(std::locale());
+  	// Update the locale settings according to the global locale
+  	std::cout.imbue(std::locale());
 
 	// Open the saved user text files created by the imgprmt web form.
 	std::wifstream url_ifs("uploads/url.txt");
 	std::wifstream prompt_ifs("uploads/prompt.txt");
 
-	 // Check if the files opened successfully
-   if (!url_ifs || !prompt_ifs) {
-     std::wcerr << L"Error opening text files (url or prompt)." << std::endl;
-     std::exit(EXIT_FAILURE);
-   }
+	// Check if the files opened successfully
+   	if (!url_ifs || !prompt_ifs) {
+		std::wcerr << L"Error opening text files (url or prompt)." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
 	 
 	// Read the text files into vectors.
 	std::vector<wchar_t>Prompt_Vec((std::istreambuf_iterator<wchar_t>(prompt_ifs)), std::istreambuf_iterator<wchar_t>());
@@ -286,15 +286,15 @@ void Open_Files(char* argv[]) {
 		});
 
 	constexpr int
-		MAX_PROFILE_SIZE = 10000,	  // Twitter only allows one ICC Profile, with a max size of 10KB.
-		PROFILE_MAIN_DIFF = 22,		  // Bytes we don't count as part of profile size.
+		MAX_PROFILE_SIZE = 10000,	// Twitter only allows one ICC Profile, with a max size of 10KB.
+		PROFILE_MAIN_DIFF = 22,		// Bytes we don't count as part of profile size.
 		PROFILE_INTERNAL_DIFF = 38,	// Bytes we don't count as part of internal profile size.
 		PROMPT_INSERT_INDEX = 2468,	// Insert location within ProfileVec of the HTML page for the users's prompt text.
-		LINK_INSERT_INDEX = 2334;	  // Insert location within ProfileVec of the HTML page for the user's web link.
+		LINK_INSERT_INDEX = 2334;	// Insert location within ProfileVec of the HTML page for the user's web link.
 
 	int
 		bits = 16,
-		profile_size_field = 22,		      // Start index location for size field of the main image profile.
+		profile_size_field = 22,		// Start index location for size field of the main image profile.
 		profile_internal_size_field = 40;	// Start index location for internal size field of the image profile.
 
 	// Insert image prompt & URL link into their relevant index positions within vector ProfileVec.
@@ -327,7 +327,7 @@ void Open_Files(char* argv[]) {
 
 void Replace_Special_Chars(std::vector<wchar_t>& str) {
 
-	      // Current wide character values that are replaced with the html entity codes.
+	// Current wide character values that are replaced with the html entity codes.
         // Character value 39 (apostrophe) for example, is not a wide character, but we still need to replace it with a html entity code
         // as it will break the html page if inserted in its raw form.
 
