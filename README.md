@@ -37,20 +37,17 @@ The embedded Web page with your image prompt is stored within the *ICC Profile* 
 
 ***[Video Demo](https://youtu.be/sslNEuk3wz4)***
   
-Compile and run the program under Windows or **Linux**  
 
-## Usage (Linux - Insert AI Prompt in JPG Image)
+## Usage (Windows - Insert AI Prompt in JPG Image)
 
 ```console
 
-$ g++ imgprmt.cpp -s -o imgprmt
-$
-$ ./imgprmt 
+PS G:\imgprmpt\demo> .\imgprmt.exe
 
 Usage: imgprmt <jpg-image>  
        imgprmt --info
 
-$ ./imgprmt demo.jpg
+PS G:\imgprmpt\demo> .\imgprmt demo.jpg
 
 Enter a URL (Image source, Social media page, etc.)
 
