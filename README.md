@@ -1,6 +1,7 @@
 # imgprmt
 
-Command-line tool for embedding an image prompt / description within a JPG image file. 
+Command-line tool for embedding an image prompt / description within a JPG image file.  
+
 This creates a separate JPG + HTML polyglot image file. 
 
 ***[Imgprmt Windows CLI Demo](https://youtu.be/sslNEuk3wz4) / [Imgprmt Web Demo](https://youtu.be/FAKAwUJc-_Y)***  
