@@ -260,7 +260,17 @@ void Open_Files(char* argv[]) {
 		std::wcerr << L"Error opening text files (url or prompt)." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	 
+	
+	 // Get image file size.
+        prompt_ifs.seekg(0, prompt_ifs.end);
+        const size_t PROMPT_SIZE = prompt_ifs.tellg();
+        prompt_ifs.seekg(0, prompt_ifs.beg);
+
+        if (!PROMPT_SIZE){
+                std::wcerr << L"File Size Error: Prompt text file is empty!\n";
+                std::exit(EXIT_FAILURE);
+        }
+
 	// Read the text files into vectors.
 	std::vector<wchar_t>Prompt_Vec((std::istreambuf_iterator<wchar_t>(prompt_ifs)), std::istreambuf_iterator<wchar_t>());
 	std::vector<wchar_t>Url_Vec((std::istreambuf_iterator<wchar_t>(url_ifs)), std::istreambuf_iterator<wchar_t>());
