@@ -40,13 +40,13 @@ Usage: imgprmt <jpg-image>
 
 PS G:\imgprmpt\demo> .\imgprmt demo.jpg
 
-Enter a URL (Image source, Social media page, etc.)
+Enter a Web link (Image source, Social media page, etc.)
 
-: https://twitter.com/cesar20984/status/1690816072306282497
+URL: https://twitter.com/cesar20984/status/1690816072306282497
 
-Type or Paste in Your Image Prompt / Description
+Type or paste in your prompt as one long sentence. Add <br> tags for new lines.
 
-: A woman adorned with pink and purple botanical designs, resonating the style of
+Image Decription: A woman adorned with pink and purple botanical designs, resonating the style of
   rainforest-inspired, deep green and bright yellow, organically crafted body prints,
   impeccably detailed, utilizing flowers and vines, extremely meticulous,
   ultra-real patterns - ar 7:10
