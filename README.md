@@ -4,7 +4,7 @@ Command-line tool for embedding an image prompt / description within a JPG image
 
 This creates a separate JPG + HTML polyglot image file. 
 
-Demo Videos: ***[Imgprmt Windows CLI Demo](https://youtu.be/sslNEuk3wz4) / [Imgprmt Web Demo](https://youtu.be/e4TdAxSCbCk)***  
+Demo Videos: ***[Imgprmt Windows CLI Demo](https://youtu.be/sslNEuk3wz4) / [Imgprmt Web App](https://youtu.be/e4TdAxSCbCk)***  
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/purple.jpg)  
  
@@ -29,7 +29,7 @@ The embedded Web page with your image prompt is stored within the *ICC Profile* 
   
 *(You can try **imgprmt** from this [**site**](https://cleasbycode.co.uk/imgprmt/index/) if you don't want to download & compile the source code.)*  
 
-## Usage (Windows - Insert AI Prompt in JPG Image)
+## Usage (Windows - Insert Prompt in JPG Image)
 
 ```console
 
