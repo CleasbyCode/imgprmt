@@ -52,7 +52,7 @@ void Open_Files(char* argv[]) {
 	}
 
 	// This vector contains our JPG header with a basic ICC Profile and HTML page,
-	// currently without the users image prompt & url, which is inserted later.
+	// currently without the users image prompt & URL, which is inserted later.
 	std::vector<Byte>Profile_Vec = {
 	0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0xFF, 0xE2, 0x0F, 0xF8,
 	0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46, 0x49, 0x4C, 0x45, 0x00, 0x01, 0x01, 0x00, 0x00, 0x0F, 0xE8, 0x3C, 0x21, 0x2D, 0x2D, 0x04, 0x30,
@@ -259,11 +259,11 @@ void Open_Files(char* argv[]) {
 	// Signature for Define Quantization Table(s) 
 	const auto DQT_SIG = { 0xFF, 0xDB };
 
-	// Find location in vector "ImageVec" of first DQT index location of the image file.
+	// Find location in vector "Image_Vec" of first DQT index location of the image file.
 	const size_t DQT_POS = std::search(Image_Vec.begin(), Image_Vec.end(), DQT_SIG.begin(), DQT_SIG.end()) - Image_Vec.begin();
 
 	// Erase the first n bytes of the JPG header before the DQT position. 
-	// Later, we will replace the erased header with the contents of vector "ProfileVec".
+	// Later, we will replace the erased header with the contents of vector "Profile_Vec".
 	Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + DQT_POS);
 
 	std::string
@@ -317,15 +317,15 @@ void Open_Files(char* argv[]) {
 		MAX_PROFILE_SIZE = 10000,	// For Twitter compatibility. Twitter only allows one ICC Profile, with a max size of 10KB. 
 		PROFILE_MAIN_DIFF = 22,		// Bytes we don't count as part of profile size.
 		PROFILE_INTERNAL_DIFF = 38,	// Bytes we don't count as part of internal profile size.
-		PROMPT_INSERT_INDEX = 2490,	// Insert location within ProfileVec of the HTML page for the users's prompt text.
-		LINK_INSERT_INDEX = 2356;	// Insert location within ProfileVec of the HTML page for the user's web link (url).
+		PROMPT_INSERT_INDEX = 2490,	// Insert location within Profile_Vec of the HTML page for the users's prompt text.
+		LINK_INSERT_INDEX = 2356;	// Insert location within Profile_Vec of the HTML page for the user's web link (URL).
 
 	int
 		bits = 16,
 		profile_size_field = 22,		// Start index location for size field of the main image icc profile. (Max two bytes)
 		profile_internal_size_field = 40;	// Start index location for internal size field of the image icc profile.(Max four bytes, only two used).
 
-	// Insert image prompt/description & url link into their relevant index positions within vector "ProfileVec".
+	// Insert image prompt/description & url link into their relevant index positions within vector "Profile_Vec".
 	Profile_Vec.insert(Profile_Vec.begin() + PROMPT_INSERT_INDEX, multiByteString, multiByteString + bufferSize -1);
 	Profile_Vec.insert(Profile_Vec.begin() + LINK_INSERT_INDEX, url_link.begin(), url_link.end());
 
@@ -342,7 +342,7 @@ void Open_Files(char* argv[]) {
 	// Update internal profile size
 	Value_Updater(Profile_Vec, profile_internal_size_field, Profile_Vec.size() - PROFILE_INTERNAL_DIFF, bits);
 
-	// Insert contents of vector ProfileVec into vector ImageVec, combining the profile, html and prompt/link text with JPG image file.
+	// Insert contents of vector Profile_Vec into vector Image_Vec, combining the profile, html and prompt/link text with JPG image file.
 	Image_Vec.insert(Image_Vec.begin(), Profile_Vec.begin(), Profile_Vec.end());
 
 	srand((unsigned)time(NULL));  // For output filename.
