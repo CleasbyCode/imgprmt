@@ -17,7 +17,6 @@ void
 	// Writes updated size values (e.g. iCC Profile length) into relevant vector index locations. Overwrites previous size values.
 	Value_Updater(std::vector<Byte>&, size_t, const size_t&, int);
 
-
 int main(int argc, char** argv) {
 
 	if (argc > 1 && argc < 3) {
