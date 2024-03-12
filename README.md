@@ -18,9 +18,6 @@ These platforms retain the embedded prompt, so that it's available to anyone who
 In many cases, the embedded prompt is also preserved when someone edits the image.  
 
 **Images & prompts used as examples in this repo are the works of:**
-
-*César Gámez [(@cesar20984)](https://twitter.com/cesar20984/status/1674961601101799430), Óscar Bartolomé [(@Artedeingenio)](https://twitter.com/Artedeingenio/status/1671079440107929602) & Orcton [(@OrctonAI)](https://twitter.com/OrctonAI)*
-
   
 *(You can try **imgprmt** from this [**site**](https://cleasbycode.co.uk/imgprmt/index/) if you don't want to download & compile the source code.)*  
 
