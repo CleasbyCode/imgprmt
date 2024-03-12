@@ -6,7 +6,7 @@ This creates a separate JPG + HTML polyglot image file.
 
 Demo Videos: ***[Imgprmt Windows CLI Demo](https://youtu.be/sslNEuk3wz4) / [Imgprmt Web App](https://youtu.be/e4TdAxSCbCk)***  
 
-![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/imgprmt_70440.jpg)  
+![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/dem_70440.jpg)  
  
 View the embedded prompt as a basic Web page by renaming the *.jpg* file extension to *.htm*  
 
