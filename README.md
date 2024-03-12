@@ -37,7 +37,7 @@ PS G:\imgprmpt\demo> .\imgprmt demo.jpg
 
 Enter a Web link (Image source, Social media page, etc.)
 
-URL: https://twitter.com/cesar20984/status/1690816072306282497
+URL: https://twitter.com/OrctonAI/status/1767377042029338722
 
 Type or paste in your prompt as one long sentence. Add <br> tags for new lines.
 
