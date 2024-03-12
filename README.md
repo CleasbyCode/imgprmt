@@ -11,7 +11,7 @@ Demo Videos: ***[Imgprmt Windows CLI Demo](https://youtu.be/sslNEuk3wz4) / [Imgp
 
 View the embedded prompt as a basic Web page by renaming the *.jpg* file extension to *.htm*  
 
-![Demo Image2](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/purple_html.png) 
+![Demo Image2](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/dem2_70440.jpg) 
 
 The embedded image can be shared on a number of social media sites, such as Twitter, Mastodon,  
 Flickr, etc.  
