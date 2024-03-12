@@ -33,7 +33,7 @@ PS G:\imgprmpt\demo> .\imgprmt.exe
 Usage: imgprmt <jpg-image>  
        imgprmt --info
 
-PS G:\imgprmpt\demo> .\imgprmt demo.jpg
+PS G:\imgprmpt\demo> .\imgprmt dem_image.jpg
 
 Enter a Web link (Image source, Social media page, etc.)
 
