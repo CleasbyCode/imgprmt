@@ -18,10 +18,6 @@ Flickr, etc.
 These platforms retain the embedded prompt, so that it's available to anyone who downloads your image.  
 In many cases, the embedded prompt is also preserved when someone edits the image.  
 
-The embedded Web page with your image prompt is stored within the *ICC Profile* of the JPG image file.  
-
-![Demo Image3](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/icc_img.png) 
-
 **Images & prompts used as examples in this repo are the works of:**
 
 *César Gámez [(@cesar20984)](https://twitter.com/cesar20984/status/1674961601101799430), Óscar Bartolomé [(@Artedeingenio)](https://twitter.com/Artedeingenio/status/1671079440107929602) & Orcton [(@OrctonAI)](https://twitter.com/OrctonAI)*
