@@ -20,7 +20,7 @@ Flickr, etc.
 These platforms retain the embedded prompt, so that it's available to anyone who downloads your image.  
 In many cases, the embedded prompt is also preserved when someone edits the image.  
 
-*(You can try **imgprmt** from this [**site**](https://cleasbycode.co.uk/imgprmt/index/) if you don't want to download & compile the source code.)*  
+*(You can try **imgprmt** from this [**site**](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download & compile the source code.)*  
 
 ## Usage (Windows Cli - Insert Prompt in JPG Image)
 
