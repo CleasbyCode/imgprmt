@@ -4,7 +4,7 @@ Command-line tool for embedding an AI image prompt within a JPG image.
 
 This creates a separate JPG + HTML polyglot image file. 
 
-Demo Videos: ***[Imgprmt Windows](https://youtu.be/sslNEuk3wz4) / [Imgprmt Web App](https://youtu.be/e4TdAxSCbCk)***  
+Demo Videos: ***[Imgprmt Command Line Edition](https://youtu.be/KrvIeSeYgog) / [Imgprmt Web Edition](https://youtu.be/5K56VJMlapg)***  
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/dem_70440.jpg)  
 *Image credit: Orcton [(@OrctonAI)](https://twitter.com/OrctonAI)*  
