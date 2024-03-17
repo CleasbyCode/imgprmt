@@ -22,7 +22,7 @@ In many cases, the embedded prompt is also preserved when someone edits the imag
 
 *(You can try **imgprmt** from this [**site**](https://cleasbycode.co.uk/imgprmt/index/) if you don't want to download & compile the source code.)*  
 
-## Usage (Windows - Insert Prompt in JPG Image)
+## Usage (Windows Cli - Insert Prompt in JPG Image)
 
 ```console
 
