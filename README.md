@@ -1,6 +1,6 @@
 # imgprmt
 
-Command-line tool for embedding an AI image prompt within a JPG image.  
+Store / embed an AI image prompt within a JPG image.  
 
 This creates a separate JPG + HTML polyglot image file. 
 
