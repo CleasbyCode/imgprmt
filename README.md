@@ -4,7 +4,7 @@ Store / embed an AI image prompt within a JPG image.
 
 This creates a separate JPG + HTML polyglot image file. 
 
-Demo Videos: ***[Imgprmt Command Line Edition](https://youtu.be/KrvIeSeYgog) / [Imgprmt Web Edition](https://youtu.be/5K56VJMlapg)***  
+Demo Videos: ***[Command Line Edition](https://youtu.be/KrvIeSeYgog) / [Web Edition](https://youtu.be/5K56VJMlapg)***  
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/dem_70440.jpg)  
 *Image credit: Orcton [(@OrctonAI)](https://twitter.com/OrctonAI)*  
