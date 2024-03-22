@@ -124,7 +124,7 @@ void Open_Files(char* argv[]) {
 	std::ignore = _setmode(_fileno(stdin), 0x20000);  // Set standard input for Windows to "_O_U16TEXT" so our wide variables contain correct wide characters.
 	std::ignore = _setmode(_fileno(stdout), 0x20000); // Set standard output for Windows to "_O_U16TEXT" so the console displays correct wide characters.
 
-	std::wcout << L"\nType or paste in your prompt as one long sentence. Add <br> tags for new lines.\n\nImage Description: ";
+	std::wcout << L"\nType or paste in your prompt as one long sentence. Add <br> tags for new lines, if required.\n\nImage Description: ";
 
 	constexpr size_t wcin_buffer_size = 8000;  	// The default string length in Windows console for "wcin" when "_O_U16TEXT" is set, 
 							// seems to be just over 2000 characters. So we increase it here to 8000 to provide a more flexible size.
