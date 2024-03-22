@@ -37,9 +37,9 @@ Enter a Web link (Image source, Social media page, etc.)
 
 URL: https://twitter.com/OrctonAI/status/1767377042029338722
 
-Type or paste in your prompt as one long sentence. Add <br> tags for new lines.
+Type or paste in your prompt as one long sentence. Add <br> tags for new lines, if required.
 
-Image Decription: A portrait of an enchanting young woman with long, wavy red hair standing in front of a field of colorful flowers at sunset.
+Image Description: A portrait of an enchanting young woman with long, wavy red hair standing in front of a field of colorful flowers at sunset.
  She has piercing blue eyes and is wearing a floral blouse. The sky above her features dark storm clouds, adding to the dramatic effect.
  Her expression is serene yet captivating as she gazes directly into the camera lens.
  The portrait is painted in the style of an artist known for dramatic lighting and expressive subjects. --ar 16:9 --stylize 125
