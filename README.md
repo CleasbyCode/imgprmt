@@ -48,7 +48,7 @@ Created output file: "imgprmt_5326.jpg 187573 Bytes"
 
 ```
 ## Usage (Web - Insert Prompt in JPG Image)  
-![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/web2.png) 
+![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/web_demo.png) 
 
 My other programs you may find useful:-  
 
