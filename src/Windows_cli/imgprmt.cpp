@@ -51,14 +51,12 @@ void Open_Files(char* argv[]) {
 		std::exit(EXIT_FAILURE);
 	}
 
-	// Read and store user JPG image file into vector "Image_Vec".
 	std::vector<Byte>Image_Vec((std::istreambuf_iterator<char>(image_ifs)), std::istreambuf_iterator<char>());
 
 	const std::string
-		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
-		GET_JPG_SIG{ Image_Vec.begin(), Image_Vec.begin() + JPG_SIG.length() };	// Get image header from vector. 
+		JPG_SIG = "\xFF\xD8\xFF",	
+		GET_JPG_SIG{ Image_Vec.begin(), Image_Vec.begin() + JPG_SIG.length() };	
 
-	// Make sure we have a valid JPG image file.
 	if (GET_JPG_SIG != JPG_SIG) {
 		std::cerr << "\nImage Error: File does not appear to be a valid JPG image.\n\n";
 		std::exit(EXIT_FAILURE);
@@ -694,7 +692,6 @@ constexpr int
 		Profile_Vec.insert(Profile_Vec.begin() + PROFILE_INSERT_INDEX, Default_Profile_Vec.begin(), Default_Profile_Vec.end());
 	}
 
-	// Clean-up, no longer needed.
 	Kodak_Profile_Vec.clear();	
 	Default_Profile_Vec.clear();
 
@@ -730,7 +727,6 @@ constexpr int
 
 	std::wstring output_name = L"imgprmt_" + TIME_VALUE.substr(0, 5) + L".jpg";
 
-	// Write the complete JPG / HTML polyglot out to file.
 	std::ofstream file_ofs(output_name, std::ios::binary);
 
 	if (!file_ofs) {
@@ -738,6 +734,7 @@ constexpr int
 		std::exit(EXIT_FAILURE);
 	}
 
+	// Write the complete JPG / HTML polyglot out to file.
 	file_ofs.write((char*)&Image_Vec[0], Image_Vec.size());
 	std::wcout << L"\nCreated output file: \"" + output_name + L" " << Image_Vec.size() << " " << "Bytes\"\n\n";
 }
