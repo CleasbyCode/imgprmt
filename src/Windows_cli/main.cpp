@@ -1,5 +1,4 @@
-﻿
-//	imgprmt v1.3 (Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
+﻿//	imgprmt v1.3 (Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
 
 #include "imgprmt.h"
 
@@ -19,8 +18,7 @@ int main(int argc, char** argv) {
 
 		if (file_extension == ".jpg" && regex_match(IMAGE_FILENAME, REG_EXP) && std::filesystem::exists(IMAGE_FILENAME)) {
 			startImgprmt(IMAGE_FILENAME);
-		}
-		else {
+		} else {
 			std::cerr << (file_extension != ".jpg"
 				? "\nFile Type Error: Invalid file extension found. Expecting only \"jpg\""
 				: !regex_match(IMAGE_FILENAME, REG_EXP)
@@ -32,4 +30,3 @@ int main(int argc, char** argv) {
 		}
 	}
 }
-
