@@ -20,7 +20,7 @@ void
 
 int main(int argc, char** argv) {
 
-	if (argc > 1 && argc < 3) {
+	if (argc == 2) {
 		Open_Files(argv);
 	}
 	return 0;
