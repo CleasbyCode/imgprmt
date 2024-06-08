@@ -10,8 +10,7 @@ Demo Videos: ***[Command Line](https://youtu.be/kzRwriXhPQE) / [Web](https://www
 
 View the embedded prompt as a basic web page by renaming the *.jpg* file extension to *.htm*  
 
-![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/web_screen.png)  
-*Image/prompt credit: Orcton [(@OrctonAI)](https://twitter.com/OrctonAI)*  
+![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_image6.png)   
 
 The embedded image can be shared on a number of social media sites, such as Twitter, Mastodon,  
 Flickr, etc.  
