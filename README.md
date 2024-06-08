@@ -6,8 +6,7 @@ This creates a separate JPG + HTML polyglot image file.
 
 Demo Videos: ***[Command Line](https://youtu.be/kzRwriXhPQE) / [Web](https://www.youtube.com/watch?v=vPGI48P9BtQ) / [Twitter](https://youtu.be/lJXOh-Zv9KQ)***  
 
-![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/dem_70440.jpg)  
-*Image credit: Orcton [(@OrctonAI)](https://twitter.com/OrctonAI)*  
+![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_image4.jpg)  
 
 View the embedded prompt as a basic web page by renaming the *.jpg* file extension to *.htm*  
 
