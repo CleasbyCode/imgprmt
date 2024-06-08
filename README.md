@@ -45,7 +45,7 @@ Image Description: A portrait of an enchanting young woman with long, wavy red h
 Created output file: "imgprmt_5326.jpg 187573 Bytes"
 
 ```
-## Usage (Web - Insert Prompt in JPG Image)  
+## Usage (Web Tool)  
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/imgprmt_screen.png) 
 
 My other programs you may find useful:-  
