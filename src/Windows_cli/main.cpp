@@ -22,9 +22,9 @@ int main(int argc, char** argv) {
 			std::cerr << (file_extension != ".jpg"
 				? "\nFile Type Error: Invalid file extension found. Expecting only \"jpg\""
 				: !regex_match(IMAGE_FILENAME, REG_EXP)
-				? "\nInvalid Input Error: Characters not supported by this program found within filename arguments"
-				: "\nImage File Error: File not found. Check the filename and try again")
-				<< ".\n\n";
+					? "\nInvalid Input Error: Characters not supported by this program found within filename arguments"
+					: "\nImage File Error: File not found. Check the filename and try again")
+			<< ".\n\n";
 
 			std::exit(EXIT_FAILURE);
 		}
