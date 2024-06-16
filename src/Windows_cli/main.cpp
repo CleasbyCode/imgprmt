@@ -1,4 +1,4 @@
-﻿//	imgprmt v1.3 (Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
+﻿//	imgprmt v1.0.4 (Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
 
 #include "imgprmt.h"
 
