@@ -1,6 +1,6 @@
 void displayInfo() {
 	std::cout << R"(
-Imgprmt v1.3 (Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
+Imgprmt v1.0.4 (Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
 		
 This program enables you to insert a prompt/description for your AI images within a JPG image file.
 		
