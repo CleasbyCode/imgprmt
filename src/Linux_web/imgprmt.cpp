@@ -9,47 +9,44 @@ void startImgprmt(const std::string& IMAGE_FILENAME) {
 
 	std::vector<uint_fast8_t>Image_Vec((std::istreambuf_iterator<char>(image_file_ifs)), std::istreambuf_iterator<char>());
 
+	bool isKdak_Profile = false;
+	
 	constexpr uint_fast8_t
-		JPG_SIG[]		{ 0xFF, 0xD8, 0xFF },
-		JPG_END_SIG[]		{ 0xFF, 0xD9 },
-		DQT_SIG[]		{ 0xFF, 0xDB },
-		EXIF_SIG[]		{ 0x45, 0x78, 0x69, 0x66, 0x00, 0x00, 0x49, 0x49 },
-		XPACKET_SIG[]		{ 0x78, 0x70, 0x61, 0x63, 0x6B, 0x65, 0x74, 0x20, 0x65, 0x6E, 0x64 },
-		ICC_KODAK_SIG[]		{ 0x4B, 0x4F, 0x44, 0x41, 0x52, 0x4F, 0x4D },
-		ICC_PROFILE_SIG[]	{ 0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46, 0x49, 0x4C, 0x45 };
+		SOI_SIG[]	{ 0xFF, 0xD8 },
+		EOI_SIG[] 	{ 0xFF, 0xD9 },
+		APP1_SIG[] 	{ 0xFF, 0xE1 },
+		APP2_SIG[]	{ 0xFF, 0xE2 },
+		DQT1_SIG[]  	{ 0xFF, 0xDB, 0x00, 0x43 },
+		DQT2_SIG[]	{ 0xFF, 0xDB, 0x00, 0x84 },
+		KDAK_SIG[]	{ 0x4B, 0x4F, 0x44, 0x41, 0x52, 0x4F, 0x4D };
 	
-	if (!std::equal(std::begin(JPG_SIG), std::end(JPG_SIG), std::begin(Image_Vec)) || !std::equal(std::begin(JPG_END_SIG), std::end(JPG_END_SIG), std::end(Image_Vec) - 2)) {
-		std::cerr << "\nImage File Error: This is not a valid JPG image.\n\n";
-		std::exit(EXIT_FAILURE);
+	if (!std::equal(std::begin(SOI_SIG), std::end(SOI_SIG), std::begin(Image_Vec)) 
+				|| !std::equal(std::begin(EOI_SIG), std::end(EOI_SIG), std::end(Image_Vec) - 2)) {
+        		std::cerr << "\nImage File Error: This is not a valid JPG image.\n\n";
+			std::exit(EXIT_FAILURE);
+	}
+	
+	const uint_fast32_t APP1_POS = searchFunc(Image_Vec, 0, 0, APP1_SIG);
+	if (Image_Vec.size() > APP1_POS) {
+		const uint_fast16_t APP1_BLOCK_SIZE = (static_cast<uint_fast16_t>(Image_Vec[APP1_POS + 2]) << 8) | static_cast<uint_fast16_t>(Image_Vec[APP1_POS + 3]);
+		Image_Vec.erase(Image_Vec.begin() + APP1_POS, Image_Vec.begin() + APP1_POS + APP1_BLOCK_SIZE + 2);
 	}
 
-	bool isKodak_Profile = false;
-
-	const uint_fast32_t ICC_PROFILE_POS = searchFunc(Image_Vec, 0, 0, ICC_PROFILE_SIG);
-
-	if (Image_Vec.size() > ICC_PROFILE_POS) {	
-		const uint_fast32_t ICC_KODAK_POS = searchFunc(Image_Vec, ICC_PROFILE_POS, 0, ICC_KODAK_SIG);
-		if (Image_Vec.size() > ICC_KODAK_POS) {
-			isKodak_Profile = true;	// If an image has this profile, we need to put it back later, so as to retain image color quality.
+	const uint_fast32_t APP2_POS = searchFunc(Image_Vec, 0, 0, APP2_SIG);
+	if (Image_Vec.size() > APP2_POS) {
+		const uint_fast32_t KDAK_POS = searchFunc(Image_Vec, APP2_POS, 0, KDAK_SIG);
+		if (Image_Vec.size() > KDAK_POS) {
+			isKdak_Profile = true;	
 		}
-		Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + ICC_PROFILE_POS);
+		const uint_fast16_t APP2_BLOCK_SIZE = (static_cast<uint_fast16_t>(Image_Vec[APP2_POS + 2]) << 8) | static_cast<uint_fast16_t>(Image_Vec[APP2_POS + 3]);
+		Image_Vec.erase(Image_Vec.begin() + APP2_POS, Image_Vec.begin() + APP2_POS + APP2_BLOCK_SIZE + 2);
 	}
 
-	const uint_fast32_t XPACKET_SIG_POS = searchFunc(Image_Vec, 0, 0, XPACKET_SIG);
-
-	if (Image_Vec.size() > XPACKET_SIG_POS) {
-		Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + (XPACKET_SIG_POS + 0x11));
-	}
-
-	const uint_fast32_t EXIF_POS = searchFunc(Image_Vec, 0, 0, EXIF_SIG);
-
-	if (Image_Vec.size() > EXIF_POS) {
-		const uint_fast16_t EXIF_BLOCK_SIZE = (static_cast<uint_fast16_t>(Image_Vec[EXIF_POS - 2]) << 8) | static_cast<uint_fast16_t>(Image_Vec[EXIF_POS - 1]);
-		Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + EXIF_BLOCK_SIZE - 2);
-	}
+	const uint_fast32_t
+		DQT1_POS = searchFunc(Image_Vec, 0, 0, DQT1_SIG),
+		DQT2_POS = searchFunc(Image_Vec, 0, 0, DQT2_SIG),
+		DQT_POS = DQT1_POS > DQT2_POS ? DQT2_POS : DQT1_POS;
 	
-	const uint_fast32_t DQT_POS = searchFunc(Image_Vec, 0, 0, DQT_SIG);
-
 	Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + DQT_POS);
 	
 	// This "locale" setting in Linux allows for the correct display and input (string variable storage) of wide characters.
@@ -78,38 +75,37 @@ void startImgprmt(const std::string& IMAGE_FILENAME) {
 	std::vector<uint_fast8_t>Prompt_Vec((std::istreambuf_iterator<char>(prompt_file_ifs)), std::istreambuf_iterator<char>());
 	std::vector<uint_fast8_t>Url_Vec((std::istreambuf_iterator<char>(url_file_ifs)), std::istreambuf_iterator<char>());
 
- constexpr uint_fast16_t
-		MAX_PROFILE_SIZE = 10000,	// X(Twitter) size limit ~10KB.	
-		PROMPT_INSERT_INDEX = 3900,	// (Default Profile) Insert location within Profile_Vec of the HTML page for the users's prompt text.
-		LINK_INSERT_INDEX = 3757,	// (Default Profile) Insert location within Profile_Vec of the HTML page for the user's web link.
-		KODAK_PROFILE_SIZE_DIFF = 775,	// Kodak Profile is 775 bytes greater than the Default Profile.
-		KODAK_PROMPT_INSERT_INDEX = PROMPT_INSERT_INDEX + KODAK_PROFILE_SIZE_DIFF, // (Kodak Profile) Insert location within Profile_Vec of the HTML page for the users's prompt text.
-		KODAK_LINK_INSERT_INDEX = LINK_INSERT_INDEX + KODAK_PROFILE_SIZE_DIFF;	   // (Kodak Profile) Insert location within Profile_Vec of the HTML page for the user's web link (url).
+ 	constexpr uint_fast16_t
+		MAX_PROFILE_SIZE = 10000,	// X/Twitter ICC Profile size limit.	
+		PROMPT_INSERT_INDEX = 0xF3C,	// (Default Profile) Insert location within Profile_Vec of the HTML page for the users's prompt text.
+		LINK_INSERT_INDEX = 0xEAD,	// (Default Profile) Insert location within Profile_Vec of the HTML page for the user's web link.
+		KDAK_PROFILE_SIZE_DIFF = 60,	// Kdak Profile is 60 bytes greater than the Default Profile.
+		KDAK_PROMPT_INSERT_INDEX = PROMPT_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF, // (Kdak Profile) Insert location within Profile_Vec of the HTML page for the users's prompt text.
+		KDAK_LINK_INSERT_INDEX = LINK_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF;	 // (Kdak Profile) Insert location within Profile_Vec of the HTML page for the user's web link (url).
 
 	constexpr uint_fast8_t
 		PROFILE_INTERNAL_DIFF = 38,	// Bytes we don't count as part of internal profile size.
 		PROFILE_MAIN_DIFF = 22,		// Bytes we don't count as part of profile size.
-		PROFILE_INSERT_INDEX = 20;	// Insert location within Profile_Vec for the ICC Profile (Default or Kodak).
+		PROFILE_INSERT_INDEX = 0x14;	// Insert location within Profile_Vec for the ICC Profile (Default or Kdak).
 
 	uint_fast8_t
-		profile_internal_size_field = 40,	// Start index location for internal size field of the image icc profile.(Max four bytes, only two used).
-		profile_size_field = 22,		// Start index location for size field of the main image icc profile. (Max two bytes)
+		profile_internal_size_field_index = 0x28,	// Start index location for internal size field of the image icc profile.(Max four bytes, only two used).
+		profile_size_field_index = 0x16,		// Start index location for size field of the main image icc profile. (Max two bytes)
 		bits = 16;
 		
-	isKodak_Profile 
-		? Profile_Vec.insert(Profile_Vec.begin() + PROFILE_INSERT_INDEX, Kodak_Profile_Vec.begin(), Kodak_Profile_Vec.end()) 
+	isKdak_Profile 
+		? Profile_Vec.insert(Profile_Vec.begin() + PROFILE_INSERT_INDEX, Kdak_Profile_Vec.begin(), Kdak_Profile_Vec.end()) 
 		: Profile_Vec.insert(Profile_Vec.begin() + PROFILE_INSERT_INDEX, Default_Profile_Vec.begin(), Default_Profile_Vec.end());
-					 
-	// Clean-up, no longer needed.
-	Kodak_Profile_Vec.clear();	
+	
+	Kdak_Profile_Vec.clear();
 	Default_Profile_Vec.clear();
-					 
-	Kodak_Profile_Vec.shrink_to_fit();
+
+	Kdak_Profile_Vec.shrink_to_fit();
 	Default_Profile_Vec.shrink_to_fit();
 
 	// Insert image prompt & URL link into their relevant index positions within vector Profile_Vec.
-	Profile_Vec.insert(Profile_Vec.begin() + (isKodak_Profile ? PROMPT_INSERT_INDEX + KODAK_PROFILE_SIZE_DIFF : PROMPT_INSERT_INDEX), Prompt_Vec.begin(), Prompt_Vec.end());
-	Profile_Vec.insert(Profile_Vec.begin() + (isKodak_Profile ? LINK_INSERT_INDEX + KODAK_PROFILE_SIZE_DIFF : LINK_INSERT_INDEX), Url_Vec.begin(), Url_Vec.end());
+	Profile_Vec.insert(Profile_Vec.begin() + (isKdak_Profile ? PROMPT_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF : PROMPT_INSERT_INDEX), Prompt_Vec.begin(), Prompt_Vec.end());
+	Profile_Vec.insert(Profile_Vec.begin() + (isKdak_Profile ? LINK_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF : LINK_INSERT_INDEX), Url_Vec.begin(), Url_Vec.end());
 
 	const uint_fast32_t PROFILE_VEC_SIZE = static_cast<uint_fast32_t>(Profile_Vec.size());
 					 
@@ -119,8 +115,8 @@ void startImgprmt(const std::string& IMAGE_FILENAME) {
 	}
 
 	// Update main profile size & internal profile length fields
-	valueUpdater(Profile_Vec, profile_size_field, PROFILE_VEC_SIZE - PROFILE_MAIN_DIFF, bits);
-	valueUpdater(Profile_Vec, profile_internal_size_field, PROFILE_VEC_SIZE - PROFILE_INTERNAL_DIFF, bits);
+	valueUpdater(Profile_Vec, profile_size_field_index, PROFILE_VEC_SIZE - PROFILE_MAIN_DIFF, bits);
+	valueUpdater(Profile_Vec, profile_internal_size_field_index, PROFILE_VEC_SIZE - PROFILE_INTERNAL_DIFF, bits);
 
 	Image_Vec.insert(Image_Vec.begin(), Profile_Vec.begin(), Profile_Vec.end());
 	const uint_fast32_t IMAGE_VEC_SIZE = static_cast<uint_fast32_t>(Image_Vec.size());
@@ -143,4 +139,3 @@ void startImgprmt(const std::string& IMAGE_FILENAME) {
 	write_file_fs.write((char*)&Image_Vec[0], IMAGE_VEC_SIZE);
 	std::cout << "\nCreated output file: " + OUTPUT_FILENAME + " " << IMAGE_VEC_SIZE << " " << "Bytes\n\n";
 }
-
