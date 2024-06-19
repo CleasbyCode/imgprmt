@@ -12,7 +12,7 @@ View the embedded prompt as a basic web page by renaming the *.jpg* file extensi
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_image6.png)   
 
-The embedded image can be shared on a number of social media sites, such as Twitter, Mastodon,  
+The embedded image can be shared on a number of social media sites, such as Twitter, Tumblr, Mastodon,  
 Flickr, etc.  
 
 These platforms retain the embedded prompt, so that it's available to anyone who downloads your image.  
