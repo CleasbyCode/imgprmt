@@ -81,12 +81,12 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 		? Profile_Vec.insert(Profile_Vec.begin() + PROFILE_INSERT_INDEX, Kdak_Profile_Vec.begin(), Kdak_Profile_Vec.end()) 
 		: Profile_Vec.insert(Profile_Vec.begin() + PROFILE_INSERT_INDEX, Default_Profile_Vec.begin(), Default_Profile_Vec.end());
 	
-	std::vector<uint8_t>().swap(Kdat_Profile_Vec);
+	std::vector<uint8_t>().swap(Kdak_Profile_Vec);
 	std::vector<uint8_t>().swap(Default_Profile_Vec);
 	
 	// Insert image prompt & URL link into their relevant index positions within vector Profile_Vec.
-	Profile_Vec.insert(Profile_Vec.begin() + (isKdakProfile ? PROMPT_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF : PROMPT_INSERT_INDEX), Prompt_Vec.begin(), Prompt_Vec.end());
-	Profile_Vec.insert(Profile_Vec.begin() + (isKdakProfile ? LINK_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF : LINK_INSERT_INDEX), Url_Vec.begin(), Url_Vec.end());
+	Profile_Vec.insert(Profile_Vec.begin() + (isKdakProfile ? KDAK_PROMPT_INSERT_INDEX : PROMPT_INSERT_INDEX), Prompt_Vec.begin(), Prompt_Vec.end());
+	Profile_Vec.insert(Profile_Vec.begin() + (isKdakProfile ? KDAK_LINK_INSERT_INDEX : LINK_INSERT_INDEX), Url_Vec.begin(), Url_Vec.end());
 
 	const uint_fast32_t PROFILE_VEC_SIZE = static_cast<uint_fast32_t>(Profile_Vec.size());
 					 
