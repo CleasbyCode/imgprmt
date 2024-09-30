@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <filesystem>
 #include <cstdint>
-#include <regex>
 #include <fstream>
 #include <iostream>
 #include <string>
