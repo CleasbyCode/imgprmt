@@ -1,6 +1,6 @@
 # imgprmt
 
-Embed an AI image prompt within a JPG image file.  
+Embed an AI image text prompt within a JPG image file.  
 
 This creates a separate JPG + HTML polyglot image file. 
 
