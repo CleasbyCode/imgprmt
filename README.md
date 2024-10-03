@@ -4,21 +4,11 @@ Use the command-line tool ***imgprmt*** to embed an AI image ***text prompt*** w
 
 The program outputs a separate ***JPG+HTML*** polyglot image file. You can then share the image on a number of social media sites, such as ***X/Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr***, etc.  
 
-These platforms retain the embedded prompt, so that it's available to anyone who downloads your image. In many cases, the embedded prompt is also preserved when someone edits the image.  
+These platforms will retain the embedded prompt, so that it's available to anyone who downloads your image. In many cases, the embedded prompt is also preserved when someone edits the image.  
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_image4.jpg)  
 
-View the embedded prompt as a basic web page by renaming the *.jpg* file extension to *.htm*  
-
-![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_image6.png)   
-
-The embedded image can be shared on a number of social media sites, such as X/Twitter, Tumblr, Mastodon,  
-Flickr, etc.  
-
-These platforms retain the embedded prompt, so that it's available to anyone who downloads your image.  
-In many cases, the embedded prompt is also preserved when someone edits the image.  
-
-*(You can try **imgprmt** from this [**site**](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download & compile the source code.)*  
+View the embedded prompt as a basic web page by renaming the ***.jpg**** file extension to ***.htm****  
 
 ## Usage (Windows Command Line - Insert Prompt in JPG Image)
 
@@ -45,6 +35,8 @@ Image Description: A portrait of an enchanting young woman with long, wavy red h
 Created output file: "imgprmt_5326.jpg 187573 Bytes"
 
 ```
+*(You can try **imgprmt** from this [**site**](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download & compile the source code.)*  
+
 ## Usage (Web Tool)  
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/imgprmt_screen.png) 
 
