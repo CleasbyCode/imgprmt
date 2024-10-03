@@ -19,20 +19,17 @@ PS G:\imgprmpt\demo> .\imgprmt.exe
 Usage: imgprmt <jpg-image>  
        imgprmt --info
 
-PS G:\imgprmpt\demo> .\imgprmt Woman.jpg
+PS G:\imgprmpt\demo> .\imgprmt Mansion_Monster.jpg
 
 Enter a Web link (Image source, Social media page, etc.)
 
-URL: https://twitter.com/OrctonAI/status/1767377042029338722
+URL: https://x.com/CleasbyCode
 
 Type or paste in your prompt as one long sentence. Add <br> tags for new lines, if required.
 
-Image Description: A portrait of an enchanting young woman with long, wavy red hair standing in front of a field of colorful flowers at sunset.
- She has piercing blue eyes and is wearing a floral blouse. The sky above her features dark storm clouds, adding to the dramatic effect.
- Her expression is serene yet captivating as she gazes directly into the camera lens.
- The portrait is painted in the style of an artist known for dramatic lighting and expressive subjects. --ar 16:9 --stylize 125
+Image Description: In a grand yet dilapidated mansion interior with intricate wooden wall panelling and a majestic staircase, an eerie, imposing figure standing on the stairs, lunges forward.<br><br>This character is a blend of historical and fantastical elements, wearing a mask that evokes the textures of burlap and bandages, accentuated with metal rivets and a sinister, grill-like mouthpiece.<br><br>The eyes behind the mask are obscured by a cross-hatch pattern, enhancing its mysterious aura. The attire is composed of ragged, earth-toned fabrics, suggesting a bygone era or a post-apocalyptic world.<br><br>In one hand, it holds a blade, stained with blood, while the other hand reaches out toward the viewer with a bloodied finger, threateningly pointed. The setting’s opulence clashes with the figure's menace, creating a stark juxtaposition between the lavish environment and the character's foreboding presence.<br><br>The lighting casts dramatic shadows, emphasizing the cinematic quality of the scene. Cinematic and photographic styles. --ar 16:9
 
-Created output file: "imgprmt_5326.jpg 187573 Bytes"
+Created output file: "imgprmt_2547.jpg 401529 Bytes"
 
 ```
 *(You can try **imgprmt** from this [**site**](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download & compile the source code.)*  
