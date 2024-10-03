@@ -4,7 +4,7 @@ Use the command-line tool ***imgprmt*** to embed an AI image ***text prompt*** w
 
 The program outputs a separate ***JPG+HTML*** polyglot image file. You can then share the image on a number of social media sites, such as ***X/Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr***, etc.  
 
-These platforms will retain the embedded prompt, so that it's available to anyone who downloads your image. In many cases, the embedded prompt is also preserved when someone edits the image.  
+These platforms will retain the embedded prompt, so that it's available to anyone who downloads your image.   
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_image4.jpg)  
 
