@@ -14,11 +14,11 @@
 #include "valueUpdater.cpp"
 #include "imgprmt.cpp"
 
-template <uint_fast8_t N>
-uint_fast32_t searchFunc(std::vector<uint8_t>&, uint_fast32_t, uint_fast8_t, const uint_fast8_t (&)[N]);
+template <uint8_t N>
+uint32_t searchFunc(std::vector<uint8_t>&, uint32_t, uint8_t, const uint8_t (&)[N]);
 
 void	
 	eraseSegments(std::vector<uint8_t>&, bool&),
-	valueUpdater(std::vector<uint8_t>&, uint_fast32_t, const uint_fast32_t, uint_fast8_t);
+	valueUpdater(std::vector<uint8_t>&, uint32_t, const uint32_t, uint8_t);
 
-uint_fast8_t imgPrmt(const std::string&);
+uint8_t imgPrmt(const std::string&);
