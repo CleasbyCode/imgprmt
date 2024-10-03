@@ -1,4 +1,5 @@
 ﻿//	imgprmt v1.4 (Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
+//	Open imgprmt.sln file in Visual Studio, then from the Build menu, select build solution.
 
 #include "imgprmt.h"
 
