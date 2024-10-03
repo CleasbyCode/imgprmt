@@ -8,6 +8,7 @@ These platforms will retain the embedded prompt, so that it's available to anyon
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_image4.jpg)  
 
+To correctly download images from X/Twitter, click the image in the post to fully expand it, before saving.  
 View the embedded prompt as a basic web page by renaming the ***.jpg**** file extension to ***.htm****  
 
 ## Usage (Windows Command Line - Insert Prompt in JPG Image)
