@@ -1,6 +1,5 @@
-uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
-
-	constexpr uint_fast32_t MAX_FILE_SIZE = 20971520; // 20MB.
+uint8_t imgPrmt(const std::string& IMAGE_FILENAME) {
+	constexpr uint32_t MAX_FILE_SIZE = 20971520; // 20MB.
 
 	const size_t TMP_IMAGE_FILE_SIZE = std::filesystem::file_size(IMAGE_FILENAME);
 	
@@ -19,13 +18,12 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 
 	std::copy(std::istreambuf_iterator<char>(image_ifs), std::istreambuf_iterator<char>(), std::back_inserter(Image_Vec));	
 
-	constexpr uint_fast8_t
+	constexpr uint8_t
 		SOI_SIG[]	{ 0xFF, 0xD8 },
 		EOI_SIG[] 	{ 0xFF, 0xD9 };
 
-	if (!std::equal(std::begin(SOI_SIG), std::end(SOI_SIG), std::begin(Image_Vec)) 
-		|| !std::equal(std::begin(EOI_SIG), std::end(EOI_SIG), std::end(Image_Vec) - 2)) {
-        		std::cerr << "\nImage File Error: This is not a valid JPG image.\n\n";
+	if (!std::equal(std::begin(SOI_SIG), std::end(SOI_SIG), std::begin(Image_Vec)) || !std::equal(std::begin(EOI_SIG), std::end(EOI_SIG), std::end(Image_Vec) - 2)) {
+		std::cerr << "\nImage File Error: This is not a valid JPG image.\n\n";
 		return 1;
 	}
 	
@@ -59,7 +57,7 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 	std::vector<uint8_t>Prompt_Vec((std::istreambuf_iterator<char>(prompt_file_ifs)), std::istreambuf_iterator<char>());
 	std::vector<uint8_t>Url_Vec((std::istreambuf_iterator<char>(url_file_ifs)), std::istreambuf_iterator<char>());
 
- 	constexpr uint_fast16_t
+ 	constexpr uint16_t
 		MAX_PROFILE_SIZE = 10000,	// X/Twitter ICC Profile size limit.	
 		PROMPT_INSERT_INDEX = 0xF3C,	// (Default Profile) Insert location within Profile_Vec of the HTML page for the users's prompt text.
 		LINK_INSERT_INDEX = 0xEAD,	// (Default Profile) Insert location within Profile_Vec of the HTML page for the user's web link.
@@ -67,12 +65,12 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 		KDAK_PROMPT_INSERT_INDEX = PROMPT_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF, // (Kdak Profile) Insert location within Profile_Vec of the HTML page for the users's prompt text.
 		KDAK_LINK_INSERT_INDEX = LINK_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF;	 // (Kdak Profile) Insert location within Profile_Vec of the HTML page for the user's web link (url).
 
-	constexpr uint_fast8_t
+	constexpr uint8_t
 		PROFILE_INTERNAL_DIFF = 38,	// Bytes we don't count as part of internal profile size.
 		PROFILE_MAIN_DIFF = 22,		// Bytes we don't count as part of profile size.
 		PROFILE_INSERT_INDEX = 0x14;	// Insert location within Profile_Vec for the ICC Profile (Default or Kdak).
 
-	uint_fast8_t
+	uint8_t
 		profile_internal_size_field_index = 0x28,	// Start index location for internal size field of the image icc profile.(Max four bytes, only two used).
 		profile_size_field_index = 0x16,		// Start index location for size field of the main image icc profile. (Max two bytes)
 		bits = 16;
@@ -88,7 +86,7 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 	Profile_Vec.insert(Profile_Vec.begin() + (isKdakProfile ? KDAK_PROMPT_INSERT_INDEX : PROMPT_INSERT_INDEX), Prompt_Vec.begin(), Prompt_Vec.end());
 	Profile_Vec.insert(Profile_Vec.begin() + (isKdakProfile ? KDAK_LINK_INSERT_INDEX : LINK_INSERT_INDEX), Url_Vec.begin(), Url_Vec.end());
 
-	const uint_fast32_t PROFILE_VEC_SIZE = static_cast<uint_fast32_t>(Profile_Vec.size());
+	const uint32_t PROFILE_VEC_SIZE = static_cast<uint32_t>(Profile_Vec.size());
 					 
 	if (PROFILE_VEC_SIZE > MAX_PROFILE_SIZE) {
 		std::cerr << "\nFile Size Error: Data content size exceeds the maximum limit of 10KB.\n\n";
@@ -100,7 +98,7 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 	valueUpdater(Profile_Vec, profile_internal_size_field_index, PROFILE_VEC_SIZE - PROFILE_INTERNAL_DIFF, bits);
 
 	Image_Vec.insert(Image_Vec.begin(), Profile_Vec.begin(), Profile_Vec.end());
-	const uint_fast32_t IMAGE_VEC_SIZE = static_cast<uint_fast32_t>(Image_Vec.size());
+	const uint32_t IMAGE_VEC_SIZE = static_cast<uint32_t>(Image_Vec.size());
 					 
 	std::vector<uint8_t>().swap(Profile_Vec);
 
