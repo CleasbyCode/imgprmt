@@ -1,6 +1,6 @@
-uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
+uint8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 
-	constexpr uint_fast32_t MAX_FILE_SIZE = 20971520; // 20MB.
+	constexpr uint32_t MAX_FILE_SIZE = 20971520; // 20MB.
 
 	const size_t TMP_IMAGE_FILE_SIZE = std::filesystem::file_size(IMAGE_FILENAME);
 	
@@ -19,13 +19,12 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 
 	std::copy(std::istreambuf_iterator<char>(image_ifs), std::istreambuf_iterator<char>(), std::back_inserter(Image_Vec));	
 
-	constexpr uint_fast8_t
+	constexpr uint8_t
 		SOI_SIG[]	{ 0xFF, 0xD8 },
 		EOI_SIG[] 	{ 0xFF, 0xD9 };
 
-	if (!std::equal(std::begin(SOI_SIG), std::end(SOI_SIG), std::begin(Image_Vec)) 
-		|| !std::equal(std::begin(EOI_SIG), std::end(EOI_SIG), std::end(Image_Vec) - 2)) {
-        		std::cerr << "\nImage File Error: This is not a valid JPG image.\n\n";
+	if (!std::equal(std::begin(SOI_SIG), std::end(SOI_SIG), std::begin(Image_Vec)) || !std::equal(std::begin(EOI_SIG), std::end(EOI_SIG), std::end(Image_Vec) - 2)) {
+        	std::cerr << "\nImage File Error: This is not a valid JPG image.\n\n";
 		return 1;
 	}
 	
@@ -47,8 +46,8 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 
 	std::wcout << L"\nType or paste in your prompt as one long sentence. Add <br> tags for new lines, if required.\n\nImage Description: ";
 
-	constexpr uint_fast32_t wcin_buffer_size = 8000;  	// The default string length in Windows console for "wcin" when "_O_U16TEXT" is set, 
-								// seems to be just over 2000 characters. So we increase it here to 8000 to provide a more flexible size.
+	constexpr uint32_t wcin_buffer_size = 8000;  	// The default string length in Windows console for "wcin" when "_O_U16TEXT" is set, 
+							// seems to be just over 2000 characters. So we increase it here to 8000 to provide a more flexible size.
 
 	wchar_t* wcin_buffer = new wchar_t[wcin_buffer_size]();
 
@@ -61,9 +60,9 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 	replaceProblemChars(wide_prompt);
 
 	// Determine the required buffer size for the multibyte string
-	uint_fast32_t bufferSize = WideCharToMultiByte(CP_UTF8, 0, wide_prompt.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	uint32_t bufferSize = WideCharToMultiByte(CP_UTF8, 0, wide_prompt.c_str(), -1, nullptr, 0, nullptr, nullptr);
 
-	if (bufferSize == 0) {
+	if (!bufferSize) {
 		std::wcerr << L"Error: Unable to determine buffer size\n";
 		return 1;
 	}
@@ -80,7 +79,7 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 
 	delete[] wcin_buffer;
 
-	constexpr uint_fast16_t
+	constexpr uint16_t
 		MAX_PROFILE_SIZE 	= 10000,	// X/Twitter ICC Profile size limit.	
 		PROMPT_INSERT_INDEX 	= 0xF3C,	// (Default Profile) Insert location within Profile_Vec of the HTML page for the users's prompt text.
 		LINK_INSERT_INDEX 	= 0xEAD,	// (Default Profile) Insert location within Profile_Vec of the HTML page for the user's web link.
@@ -88,12 +87,12 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 		KDAK_PROMPT_INSERT_INDEX = PROMPT_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF, // (Kdak Profile) Insert location within Profile_Vec of the HTML page for the users's prompt text.
 		KDAK_LINK_INSERT_INDEX 	= LINK_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF;	 // (Kdak Profile) Insert location within Profile_Vec of the HTML page for the user's web link (url).
 
-	constexpr uint_fast8_t
+	constexpr uint8_t
 		PROFILE_INTERNAL_DIFF 	= 38,	// Bytes we don't count as part of internal profile size.
 		PROFILE_MAIN_DIFF 	= 22,	// Bytes we don't count as part of profile size.
 		PROFILE_INSERT_INDEX 	= 0x14;	// Insert location within Profile_Vec for the ICC Profile (Default or Kdak).
 
-	uint_fast8_t
+	uint8_t
 		profile_internal_size_field_index = 0x28,	// Start index location for internal size field of the image icc profile.(Max four bytes, only two used).
 		profile_size_field_index = 0x16,		// Start index location for size field of the main image icc profile. (Max two bytes)
 		bits = 16;
@@ -116,7 +115,7 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 		return 1;
 	}
 
-	const uint_fast32_t PROFILE_SIZE = static_cast<uint_fast32_t>(Profile_Vec.size());
+	const uint32_t PROFILE_SIZE = static_cast<uint32_t>(Profile_Vec.size());
 
 	// Update main profile size 
 	valueUpdater(Profile_Vec, profile_size_field_index, PROFILE_SIZE - PROFILE_MAIN_DIFF, bits);
@@ -125,7 +124,7 @@ uint_fast8_t imgPrmt(const std::string& IMAGE_FILENAME) {
 	valueUpdater(Profile_Vec, profile_internal_size_field_index, PROFILE_SIZE - PROFILE_INTERNAL_DIFF, bits);
 
 	Image_Vec.insert(Image_Vec.begin(), Profile_Vec.begin(), Profile_Vec.end());
-	const uint_fast32_t IMAGE_SIZE = static_cast<uint_fast32_t>(Image_Vec.size());
+	const uint32_t IMAGE_SIZE = static_cast<uint32_t>(Image_Vec.size());
 
 	std::vector<uint8_t>().swap(Profile_Vec);
 
