@@ -11,6 +11,8 @@ These platforms will retain the embedded prompt, so that it's available to anyon
 To correctly download images from ***X/Twitter***, click the image in the post to ***fully expand*** it, before saving.  
 View the embedded prompt as a basic web page by renaming the ***.jpg*** file extension to ***.htm***  
 
+https://github.com/user-attachments/assets/7fb4832c-f404-4e7a-8d2b-ea3ef1a4bf49
+
 ## Usage (Windows Command Line - Insert Prompt in JPG Image)
 
 ```console
