@@ -47,8 +47,7 @@ Created output file: "imgprmt_2547.jpg 401529 Bytes"
 ```
 You can try **imgprmt** from this [***this site***](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download and compile the source code.
 
-## Usage (Web Tool)  
-![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/imgprmt_screen.png) 
+https://github.com/user-attachments/assets/ce42af4a-4c88-4364-8842-a01bae39d523
 
 My other programs you may find useful:-  
 
