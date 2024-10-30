@@ -1,6 +1,6 @@
 int imgPrmt(const std::string& IMAGE_FILENAME) {
 
-	constexpr uint32_t MAX_FILE_SIZE = 20971520; // 20MB.
+	constexpr uint32_t MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB.
 
 	const size_t TMP_IMAGE_FILE_SIZE = std::filesystem::file_size(IMAGE_FILENAME);
 	
