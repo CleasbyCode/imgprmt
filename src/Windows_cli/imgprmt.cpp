@@ -139,8 +139,7 @@ int imgPrmt(const std::string& IMAGE_FILENAME) {
 		std::wcerr << L"\nWrite Error: Unable to write to file.\n\n";
 		return 1;
 	}
-	
-	file_ofs.write((char*)&Image_Vec[0], IMAGE_SIZE);
+	file_ofs.write(reinterpret_cast<const char*>(Image_Vec.data()), IMAGE_SIZE);
 	std::vector<uint8_t>().swap(Image_Vec);
 	std::wcout << L"\nCreated output file: \"" + OUTPUT_FILENAME + L" " << IMAGE_SIZE << " " << "Bytes\"\n\n";
         return 0;
