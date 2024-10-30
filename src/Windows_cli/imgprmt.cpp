@@ -1,4 +1,4 @@
-uint8_t imgPrmt(const std::string& IMAGE_FILENAME) {
+int imgPrmt(const std::string& IMAGE_FILENAME) {
 
 	constexpr uint32_t MAX_FILE_SIZE = 20971520; // 20MB.
 
