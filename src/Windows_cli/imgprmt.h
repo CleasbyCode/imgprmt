@@ -28,4 +28,4 @@ void
 	valueUpdater(std::vector<uint8_t>&, uint32_t, const uint32_t, uint8_t),
 	displayInfo();
 
-uint8_t imgPrmt(const std::string&);
+int imgPrmt(const std::string&);
