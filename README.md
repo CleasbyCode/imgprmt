@@ -13,7 +13,7 @@ View the embedded prompt as a basic web page by renaming the ***.jpg*** file ext
 
 https://github.com/user-attachments/assets/7fb4832c-f404-4e7a-8d2b-ea3ef1a4bf49
 
-## Usage (Windows Command Line - Insert Prompt in JPG Image)
+## Usage (Windows CLI)
 
 ```console
 
