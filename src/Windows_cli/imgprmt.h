@@ -8,7 +8,10 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+
+#define NOMINMAX
 #include <windows.h>
+
 #include <io.h>
 
 #include "searchFunc.cpp"
