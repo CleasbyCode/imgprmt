@@ -13,11 +13,10 @@ int imgPrmt(const std::string& IMAGE_FILENAME) {
 		<< ".\n\n";
 		return 1;
 	}
-
 	std::vector<uint8_t> Image_Vec;
-	Image_Vec.reserve(TMP_IMAGE_FILE_SIZE);
-
-	std::copy(std::istreambuf_iterator<char>(image_ifs), std::istreambuf_iterator<char>(), std::back_inserter(Image_Vec));	
+	Image_Vec.resize(TMP_IMAGE_FILE_SIZE); 
+	
+	image_ifs.read(reinterpret_cast<char*>(Image_Vec.data()), TMP_IMAGE_FILE_SIZE);
 
 	constexpr uint8_t
 		SOI_SIG[]	{ 0xFF, 0xD8 },
