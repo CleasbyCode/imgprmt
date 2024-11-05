@@ -17,6 +17,7 @@ int imgPrmt(const std::string& IMAGE_FILENAME) {
 	Image_Vec.resize(TMP_IMAGE_FILE_SIZE); 
 	
 	image_ifs.read(reinterpret_cast<char*>(Image_Vec.data()), TMP_IMAGE_FILE_SIZE);
+	image_ifs.close();
 
 	constexpr uint8_t
 		SOI_SIG[]	{ 0xFF, 0xD8 },
