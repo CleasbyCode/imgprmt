@@ -45,7 +45,7 @@ Cinematic and photographic styles. --ar 16:9
 Created output file: "imgprmt_2547.jpg 401529 Bytes"
 
 ```
-(*You can try the [***imgprmt Web App, here,***](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download and compile the source code.*)  
+(*You can try the [***imgprmt Web App, here,***](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download and compile the CLI source code.*)  
 
 https://github.com/user-attachments/assets/d7b88adc-6ebe-4b85-a6e6-0a9dde1409a7
 
