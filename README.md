@@ -8,7 +8,7 @@ These platforms will retain the embedded prompt, so that it's available to anyon
 
 *You can try the [***imgprmt Web App, here,***](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download and compile the CLI source code.*  
 
-*If you intend to share your prompt embedded image on ***Bluesky***, you must first add the -b option to the CLI arguments (*PS G:\demo> .\imgprmt -b my_image.jpg*). Secondly, to post the image to ***Bluesky***, you must use the ***bsky_post.py*** python script (*located in the repo src folder*). Embedded images created with the -b (Bluesky) option, are only compatible for posting on the ***Bluesky*** platform. 
+**If you intend to share your prompt embedded image on ***Bluesky***, you ***must*** first add the ***-b*** option to the CLI arguments (*PS G:\demo> .\imgprmt -b my_image.jpg*). Secondly, to post the image to ***Bluesky***, you ***must*** use the ***bsky_post.py*** python script (*located in the repo src folder*). Embedded images created with the -b (Bluesky) option, are only compatible for posting on the ***Bluesky*** platform.* 
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_image4.jpg)  
 
