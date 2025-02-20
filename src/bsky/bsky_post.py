@@ -3,6 +3,8 @@
 """
 Script demonstrating how to create posts using the Bluesky API, covering most of the features and embed options.
 
+https://gist.github.com/bnewbold/ebc172c927b6a64d536bdf46bd5c2925
+
 To run this Python script, you need the 'requests' and 'bs4' (BeautifulSoup) packages installed.
 """
 
