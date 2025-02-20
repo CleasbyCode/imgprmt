@@ -6,6 +6,8 @@ The program outputs a separate ***JPG+HTML*** polyglot image file. You can then 
 
 These platforms will retain the embedded prompt, so that it's available to anyone who downloads your image.   
 
+*You can try the [***imgprmt Web App, here,***](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download and compile the CLI source code.*
+
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_image4.jpg)  
 
 To correctly download images from ***X/Twitter***, click the image in the post to ***fully expand*** it, before saving.  
@@ -45,7 +47,6 @@ Cinematic and photographic styles. --ar 16:9
 Created output file: "imgprmt_2547.jpg 401529 Bytes"
 
 ```
-(*You can try the [***imgprmt Web App, here,***](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download and compile the CLI source code.*)  
 
 https://github.com/user-attachments/assets/d7b88adc-6ebe-4b85-a6e6-0a9dde1409a7
 
