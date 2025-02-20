@@ -16,7 +16,7 @@ View the embedded prompt as a basic web page by renaming the ***.jpg*** file ext
 
 https://github.com/user-attachments/assets/7fb4832c-f404-4e7a-8d2b-ea3ef1a4bf49
 
-## Usage (Windows CLI)
+## Usage (Windows CLI default)
 
 ```console
 
@@ -48,7 +48,30 @@ Cinematic and photographic styles. --ar 16:9
 Created output file: "imgprmt_2547.jpg 401529 Bytes"
 
 ```
+## Usage (Windows CLI Bluesky Option and Upload Script)
 
+```console
+
+PS G:\imgprmpt\demo> .\imgprmt.exe
+
+Usage: imgprmt [-b] <jpg-image>  
+       imgprmt --info
+
+PS G:\imgprmpt\demo> .\imgprmt -b Mansion_Monster.jpg
+
+Enter a Web link (Image source, Social media page, etc.)
+
+URL: https://x.com/CleasbyCode
+
+Type or paste in your prompt as one long sentence. Add <br> tags for new lines, if required.
+
+Image Description: In a grand yet dilapidated mansion...... 
+
+Created output file: "imgprmt_21195.jpg 401529 Bytes"
+
+PS G:\imgprmpt\demo> python3 .\bsky_post.py --handle cleasbycode.bsky.social --password ****-****-****-**** --image imgprmt_21195.jpg --alt-text "Testing prompt embedded image. To view the embedded prompt, save image, then change the .jpg file extension to .htm" Image_Test
+
+```
 https://github.com/user-attachments/assets/d7b88adc-6ebe-4b85-a6e6-0a9dde1409a7
 
 ##
