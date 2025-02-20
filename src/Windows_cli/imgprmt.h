@@ -17,7 +17,7 @@
 #include "searchFunc.cpp"
 #include "eraseSegments.cpp"
 #include "replaceChars.cpp"
-#include "profileData.cpp"
+#include "segmentData.cpp"
 #include "valueUpdater.cpp"
 #include "information.cpp"
 #include "imgprmt.cpp"
@@ -26,9 +26,9 @@ template <uint8_t N>
 uint32_t searchFunc(std::vector<uint8_t>&, uint32_t, uint8_t, const uint8_t (&)[N]);
 
 void
-	eraseSegments(std::vector<uint8_t>&, bool&),
+	eraseSegments(std::vector<uint8_t>&),
 	replaceProblemChars(std::wstring& str),
 	valueUpdater(std::vector<uint8_t>&, uint32_t, const uint32_t, uint8_t),
 	displayInfo();
 
-int imgPrmt(const std::string&);
+int imgPrmt(const std::string&, ArgOption);

@@ -1,4 +1,4 @@
-int imgPrmt(const std::string& IMAGE_FILENAME) {
+int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 
 	constexpr uint32_t MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB.
 
@@ -17,7 +17,6 @@ int imgPrmt(const std::string& IMAGE_FILENAME) {
 	Image_Vec.resize(TMP_IMAGE_FILE_SIZE); 
 	
 	image_ifs.read(reinterpret_cast<char*>(Image_Vec.data()), TMP_IMAGE_FILE_SIZE);
-	image_ifs.close();
 
 	constexpr uint8_t
 		SOI_SIG[]	{ 0xFF, 0xD8 },
@@ -28,9 +27,11 @@ int imgPrmt(const std::string& IMAGE_FILENAME) {
 		return 1;
 	}
 	
-	bool isKdakProfile = false;
+	const bool 
+		hasBlueSkyOption = (platformOption == ArgOption::BlueSky),
+		hasDefaultOption = !hasBlueSkyOption;
 
-	eraseSegments(Image_Vec, isKdakProfile);
+	eraseSegments(Image_Vec);
 	
 	std::string
 		prompt,
@@ -79,54 +80,78 @@ int imgPrmt(const std::string& IMAGE_FILENAME) {
 
 	delete[] wcin_buffer;
 
-	constexpr uint16_t
-		MAX_PROFILE_SIZE 	= 10000,	// X/Twitter ICC Profile size limit.	
-		PROMPT_INSERT_INDEX 	= 0xF3C,	// (Default Profile) Insert location within Profile_Vec of the HTML page for the users's prompt text.
-		LINK_INSERT_INDEX 	= 0xEAD,	// (Default Profile) Insert location within Profile_Vec of the HTML page for the user's web link.
-		KDAK_PROFILE_SIZE_DIFF 	= 60,		// Kdak Profile is 60 bytes greater than the Default Profile.
-		KDAK_PROMPT_INSERT_INDEX = PROMPT_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF, // (Kdak Profile) Insert location within Profile_Vec of the HTML page for the users's prompt text.
-		KDAK_LINK_INSERT_INDEX 	= LINK_INSERT_INDEX + KDAK_PROFILE_SIZE_DIFF;	 // (Kdak Profile) Insert location within Profile_Vec of the HTML page for the user's web link (url).
+	constexpr uint16_t MAX_SEGMENT_SIZE = 10000;				// Segment size limit.
 
-	constexpr uint8_t
-		PROFILE_INTERNAL_DIFF 	= 38,	// Bytes we don't count as part of internal profile size.
-		PROFILE_MAIN_DIFF 	= 22,	// Bytes we don't count as part of profile size.
-		PROFILE_INSERT_INDEX 	= 0x14;	// Insert location within Profile_Vec for the ICC Profile (Default or Kdak).
+	const uint16_t
+		PROMPT_INSERT_INDEX 	= hasBlueSkyOption ? 0xE24 : 0xF3C,	// Insert location within Segment containing HTML page for the user's prompt text.
+		LINK_INSERT_INDEX 	= hasBlueSkyOption ? 0xD95 : 0xEAD;	// Insert location within Segment containing HTML page for the user's web link.
 
+	// For X/Twitter, Mastodon, Tumblr, Flickr.
+	constexpr uint8_t 
+		PROFILE_INTERNAL_DIFF 	= 38,	 // Bytes we don't count as part of internal profile size.
+		PROFILE_MAIN_DIFF 	= 22,	 // Bytes we don't count as part of profile size.
+		PROFILE_INSERT_INDEX 	= 0x14;	 // Insert location within Default_Vec for the color profile (Segment_Vec). X/Twitter, Mastodon, Tumblr, Flickr.
+	
 	uint8_t
-		profile_internal_size_field_index = 0x28,	// Start index location for internal size field of the image icc profile.(Max four bytes, only two used).
-		profile_size_field_index = 0x16,		// Start index location for size field of the main image icc profile. (Max two bytes)
+		// For Twitter, Mastodon, Tumblr, Flickr.
+		profile_size_field_index = 0x28, // Start index location for internal size field of the image color profile.(Max four bytes, only two used).
+
+		segment_size_field_index = hasBlueSkyOption ? 0x04 : 0x16,  // Start index location for size field of the main segment EXIF or color profile. (Max two bytes)
+		exif_segment_comment_size_field_index = 0x4A,
+		exif_segment_size_diff = 0x90, // EXIF segment size - comment section size
+		exif_segment_dims_offset_index = 0x5A,
+		exif_segment_dims_offset_size_diff = 0x66, // Always a 0x66 size difference between exif comment size and exif dimms offset.
 		bits = 16;
 		
-	isKdakProfile 
-		? Profile_Vec.insert(Profile_Vec.begin() + PROFILE_INSERT_INDEX, Kdak_Profile_Vec.begin(), Kdak_Profile_Vec.end()) 
-		: Profile_Vec.insert(Profile_Vec.begin() + PROFILE_INSERT_INDEX, Default_Profile_Vec.begin(), Default_Profile_Vec.end());
-	
-	std::vector<uint8_t>().swap(Kdak_Profile_Vec);
-	std::vector<uint8_t>().swap(Default_Profile_Vec);
+	if (hasDefaultOption) {
+		Segment_Vec.insert(Segment_Vec.begin() + PROFILE_INSERT_INDEX, Profile_Vec.begin(), Profile_Vec.end());
+	}
 
-	// Insert image prompt/description & url link into their relevant index positions within vector "Profile_Vec".
-	Profile_Vec.insert(Profile_Vec.begin() + (isKdakProfile ? KDAK_PROMPT_INSERT_INDEX : PROMPT_INSERT_INDEX), multiByteString, multiByteString + bufferSize - 1);
-	Profile_Vec.insert(Profile_Vec.begin() + (isKdakProfile ? KDAK_LINK_INSERT_INDEX : LINK_INSERT_INDEX), url_link.begin(), url_link.end());
+	if (hasBlueSkyOption) {
+		Segment_Vec.swap(BlueSky_Vec);	
+	}
+
+	// Insert prompt & the url link into their relevant index positions of the html section, within vector Segment_Vec.
+	Segment_Vec.insert(Segment_Vec.begin() + PROMPT_INSERT_INDEX, multiByteString, multiByteString + bufferSize - 1);
+	Segment_Vec.insert(Segment_Vec.begin() + LINK_INSERT_INDEX, url_link.begin(), url_link.end());
 
 	delete[] multiByteString;
 
-	if (Profile_Vec.size() > MAX_PROFILE_SIZE) {
+	if (Segment_Vec.size() > MAX_SEGMENT_SIZE) {
 		std::wcerr << L"\nFile Size Error: Data content size exceeds the maximum limit of 10KB.\n\n";
 		return 1;
 	}
 
-	const uint32_t PROFILE_SIZE = static_cast<uint32_t>(Profile_Vec.size());
+	const uint32_t SEGMENT_SIZE = static_cast<uint32_t>(Segment_Vec.size() - 4); // Don't count the APP ID "FFE1" (4 bytes).
 
-	// Update main profile size 
-	valueUpdater(Profile_Vec, profile_size_field_index, PROFILE_SIZE - PROFILE_MAIN_DIFF, bits);
+	if (hasBlueSkyOption) {
+		// Update EXIF segment size field (FFE1xxxx)
+		valueUpdater(Segment_Vec, segment_size_field_index, SEGMENT_SIZE, bits);
+		
+		bits = 32;
+		uint32_t 
+			exif_comment_size = (SEGMENT_SIZE - exif_segment_size_diff) + 4, // Include the APP ID "FFE1" (4 bytes).
+			exif_dims_offset = exif_comment_size + exif_segment_dims_offset_size_diff;
 
-	// Update internal profile size
-	valueUpdater(Profile_Vec, profile_internal_size_field_index, PROFILE_SIZE - PROFILE_INTERNAL_DIFF, bits);
+		valueUpdater(Segment_Vec, exif_segment_comment_size_field_index, exif_comment_size, bits); 
+		valueUpdater(Segment_Vec, exif_segment_dims_offset_index, exif_dims_offset, bits);
+	} else {
+		// Update color profile segment size field (FFE2xxxx)
+		valueUpdater(Segment_Vec, segment_size_field_index, SEGMENT_SIZE - PROFILE_MAIN_DIFF, bits);
 
-	Image_Vec.insert(Image_Vec.begin(), Profile_Vec.begin(), Profile_Vec.end());
+		// Update internal color profile size field
+		valueUpdater(Segment_Vec, profile_size_field_index, SEGMENT_SIZE - PROFILE_INTERNAL_DIFF, bits);
+	}
+
+	Image_Vec.insert(Image_Vec.begin(), Segment_Vec.begin(), Segment_Vec.end());
+	
+	// Clear	
+	std::vector<uint8_t>().swap(Segment_Vec);
+
 	const uint32_t IMAGE_SIZE = static_cast<uint32_t>(Image_Vec.size());
 
-	std::vector<uint8_t>().swap(Profile_Vec);
+	// Clear.
+	std::vector<uint8_t>().swap(Segment_Vec);
 
 	srand((unsigned)time(NULL)); 
 

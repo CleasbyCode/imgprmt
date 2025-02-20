@@ -1,19 +1,36 @@
 ﻿//	imgprmt v1.4 (Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
-//	Open imgprmt.sln file in Visual Studio, then from the Build menu, select build solution.
+
+
+enum class ArgOption {
+	Default,
+	BlueSky
+};
 
 #include "imgprmt.h"
 
 int main(int argc, char** argv) {
-	if (argc != 2) {
-		std::cout << "\nUsage: imgprmt <jpg-image>\n\t\bimgprmt --info\n\n";
-		return 1;
-	}
-	if (std::string(argv[1]) == "--info") {
+	if (argc == 2 && std::string(argv[1]) == "--info") {
 		displayInfo();
 		return 0;
 	}
+	if (argc < 2 || argc > 3) {
+		std::cout << "\nUsage: imgprmt [-b] <jpg-image>\n\t\bimgprmt --info\n\n";
+		return 1;
+	}
 
-	const std::string IMAGE_FILENAME = std::string(argv[1]);
+	ArgOption platformOption = ArgOption::Default;
+	uint8_t argIndex = 1;
+
+	if (argc == 3) {
+		if (std::string(argv[1]) != "-b") {
+			std::cerr << "\nInput Error: Invalid arguments. Expecting \"-b\" as the only optional argument.\n\n";
+			return 1;
+		}
+		platformOption = ArgOption::BlueSky;
+		argIndex = 2;
+	}
+
+	const std::string IMAGE_FILENAME = argv[argIndex];
 
 	constexpr const char* REG_EXP = ("(\\.[a-zA-Z_0-9\\.\\\\\\s\\-\\/]+)?[a-zA-Z_0-9\\.\\\\\\s\\-\\/]+?(\\.[a-zA-Z0-9]+)?");
 	const std::regex regex_pattern(REG_EXP);
@@ -35,5 +52,5 @@ int main(int argc, char** argv) {
 		std::cerr << "\nImage File Error: File not found. Check the filename and try again.\n\n";
 		return 1;
 	}
-	imgPrmt(IMAGE_FILENAME);
+	imgPrmt(IMAGE_FILENAME, platformOption);
 }
