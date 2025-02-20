@@ -19,7 +19,7 @@ https://github.com/user-attachments/assets/7fb4832c-f404-4e7a-8d2b-ea3ef1a4bf49
 
 PS G:\imgprmpt\demo> .\imgprmt.exe
 
-Usage: imgprmt <jpg-image>  
+Usage: imgprmt [-b] <jpg-image>  
        imgprmt --info
 
 PS G:\imgprmpt\demo> .\imgprmt Mansion_Monster.jpg
