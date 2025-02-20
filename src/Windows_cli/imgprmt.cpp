@@ -97,17 +97,22 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 		profile_size_field_index = 0x28, // Start index location for internal size field of the image color profile.(Max four bytes, only two used).
 
 		segment_size_field_index = hasBlueSkyOption ? 0x04 : 0x16,  // Start index location for size field of the main segment EXIF or color profile. (Max two bytes)
+		exif_segment_xres_offset_field_index = 0x2A,
+		exif_segment_xres_offset_size_diff = 0x36, // Always 0x36 size difference between EXIF segment size.
+
+		exif_segment_yres_offset_field_index = 0x36,
+		exif_segment_yres_offset_size_diff = 0x2E, // Always 0x2E size difference between EXIF segment size.
+
 		exif_segment_comment_size_field_index = 0x4A,
-		exif_segment_size_diff = 0x90, // EXIF segment size - comment section size
-		exif_segment_dims_offset_index = 0x5A,
-		exif_segment_dims_offset_size_diff = 0x66, // Always a 0x66 size difference between exif comment size and exif dimms offset.
+		exif_segment_size_diff = 0x90, // EXIF segment size - comment section size.
+
+		exif_segment_subifd_offset_index = 0x5A,
+		exif_segment_subifd_offset_size_diff = 0x26, // Always 0x26 size difference between EXIF segment size.
 		bits = 16;
 		
 	if (hasDefaultOption) {
 		Segment_Vec.insert(Segment_Vec.begin() + PROFILE_INSERT_INDEX, Profile_Vec.begin(), Profile_Vec.end());
-	}
-
-	if (hasBlueSkyOption) {
+	} else { 
 		Segment_Vec.swap(BlueSky_Vec);	
 	}
 
@@ -130,11 +135,15 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 		
 		bits = 32;
 		uint32_t 
+			exif_xres_offset = SEGMENT_SIZE - exif_segment_xres_offset_size_diff,
+			exif_yres_offset = SEGMENT_SIZE - exif_segment_yres_offset_size_diff,
 			exif_comment_size = (SEGMENT_SIZE - exif_segment_size_diff) + 4, // Include the APP ID "FFE1" (4 bytes).
-			exif_dims_offset = exif_comment_size + exif_segment_dims_offset_size_diff;
-
+			exif_subifd_offset = SEGMENT_SIZE - exif_segment_subifd_offset_size_diff;
+			
+		valueUpdater(Segment_Vec, exif_segment_xres_offset_field_index, exif_xres_offset, bits);
+		valueUpdater(Segment_Vec, exif_segment_yres_offset_field_index, exif_yres_offset, bits);
 		valueUpdater(Segment_Vec, exif_segment_comment_size_field_index, exif_comment_size, bits); 
-		valueUpdater(Segment_Vec, exif_segment_dims_offset_index, exif_dims_offset, bits);
+		valueUpdater(Segment_Vec, exif_segment_subifd_offset_index, exif_subifd_offset, bits);
 	} else {
 		// Update color profile segment size field (FFE2xxxx)
 		valueUpdater(Segment_Vec, segment_size_field_index, SEGMENT_SIZE - PROFILE_MAIN_DIFF, bits);
@@ -149,9 +158,6 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 	std::vector<uint8_t>().swap(Segment_Vec);
 
 	const uint32_t IMAGE_SIZE = static_cast<uint32_t>(Image_Vec.size());
-
-	// Clear.
-	std::vector<uint8_t>().swap(Segment_Vec);
 
 	srand((unsigned)time(NULL)); 
 
