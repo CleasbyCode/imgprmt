@@ -1,4 +1,4 @@
-﻿//	imgprmt v1.4 (Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
+﻿//	imgprmt v1.5 (Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
 
 
 enum class ArgOption {

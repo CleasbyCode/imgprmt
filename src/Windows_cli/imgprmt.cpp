@@ -83,8 +83,8 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 	constexpr uint16_t MAX_SEGMENT_SIZE = 10000;				// Segment size limit.
 
 	const uint16_t
-		PROMPT_INSERT_INDEX 	= hasBlueSkyOption ? 0xE24 : 0xF3C,	// Insert location within Segment containing HTML page for the user's prompt text.
-		LINK_INSERT_INDEX 	= hasBlueSkyOption ? 0xD95 : 0xEAD;	// Insert location within Segment containing HTML page for the user's web link.
+		PROMPT_INSERT_INDEX 	= hasBlueSkyOption ? 0xE86 : 0xF3C,	// Insert location within Segment containing HTML page for the user's prompt text.
+		LINK_INSERT_INDEX 	= hasBlueSkyOption ? 0xDF7 : 0xEAD;	// Insert location within Segment containing HTML page for the user's web link.
 
 	// For X/Twitter, Mastodon, Tumblr, Flickr.
 	constexpr uint8_t 
@@ -103,10 +103,10 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 		exif_segment_yres_offset_field_index = 0x36,
 		exif_segment_yres_offset_size_diff = 0x2E, // Always 0x2E size difference between EXIF segment size.
 
-		exif_segment_comment_size_field_index = 0x4A,
-		exif_segment_size_diff = 0x90, // EXIF segment size - comment section size.
+		exif_segment_comment_size_field_index = 0x56,
+		exif_segment_size_diff = 0xE7, // EXIF segment size - comment section size.
 
-		exif_segment_subifd_offset_index = 0x5A,
+		exif_segment_subifd_offset_index = 0x66,
 		exif_segment_subifd_offset_size_diff = 0x26, // Always 0x26 size difference between EXIF segment size.
 		bits = 16;
 		
@@ -127,7 +127,7 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 		return 1;
 	}
 
-	const uint32_t SEGMENT_SIZE = static_cast<uint32_t>(Segment_Vec.size() - 4); // Don't count the APP ID "FFE1" (4 bytes).
+	const uint32_t SEGMENT_SIZE = static_cast<uint32_t>(Segment_Vec.size() - 4); // Don't count/include the JPG ID + APP ID "FFD8FFE1" (4 bytes).
 
 	if (hasBlueSkyOption) {
 		// Update EXIF segment size field (FFE1xxxx)
@@ -137,7 +137,7 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 		uint32_t 
 			exif_xres_offset = SEGMENT_SIZE - exif_segment_xres_offset_size_diff,
 			exif_yres_offset = SEGMENT_SIZE - exif_segment_yres_offset_size_diff,
-			exif_comment_size = (SEGMENT_SIZE - exif_segment_size_diff) + 4, // Include the APP ID "FFE1" (4 bytes).
+			exif_comment_size = (SEGMENT_SIZE - exif_segment_size_diff) + 4, // Include the JPG ID + APP ID "FFD8FFE1" (4 bytes).
 			exif_subifd_offset = SEGMENT_SIZE - exif_segment_subifd_offset_size_diff;
 			
 		valueUpdater(Segment_Vec, exif_segment_xres_offset_field_index, exif_xres_offset, bits);
