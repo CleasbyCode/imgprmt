@@ -127,18 +127,21 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 		return 1;
 	}
 
-	const uint32_t SEGMENT_SIZE = static_cast<uint32_t>(Segment_Vec.size() - 4); // Don't count/include the JPG ID + APP ID "FFD8FFE1" (4 bytes).
+	uint32_t segment_size = static_cast<uint32_t>(Segment_Vec.size()); 
 
 	if (hasBlueSkyOption) {
+		// For Bluesky segment size don't count/include the JPG ID + APP ID "FFD8FFE1" (4 bytes).
+		segment_size -= 4;
+
 		// Update EXIF segment size field (FFE1xxxx)
-		valueUpdater(Segment_Vec, segment_size_field_index, SEGMENT_SIZE, bits);
+		valueUpdater(Segment_Vec, segment_size_field_index, segment_size, bits);
 		
 		bits = 32;
 		uint32_t 
-			exif_xres_offset = SEGMENT_SIZE - exif_segment_xres_offset_size_diff,
-			exif_yres_offset = SEGMENT_SIZE - exif_segment_yres_offset_size_diff,
-			exif_comment_size = (SEGMENT_SIZE - exif_segment_size_diff) + 4, // Include the JPG ID + APP ID "FFD8FFE1" (4 bytes).
-			exif_subifd_offset = SEGMENT_SIZE - exif_segment_subifd_offset_size_diff;
+			exif_xres_offset = segment_size - exif_segment_xres_offset_size_diff,
+			exif_yres_offset = segment_size - exif_segment_yres_offset_size_diff,
+			exif_comment_size = (segment_size - exif_segment_size_diff) + 4, // Include the JPG ID + APP ID "FFD8FFE1" (4 bytes).
+			exif_subifd_offset = segment_size - exif_segment_subifd_offset_size_diff;
 			
 		valueUpdater(Segment_Vec, exif_segment_xres_offset_field_index, exif_xres_offset, bits);
 		valueUpdater(Segment_Vec, exif_segment_yres_offset_field_index, exif_yres_offset, bits);
@@ -146,10 +149,10 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 		valueUpdater(Segment_Vec, exif_segment_subifd_offset_index, exif_subifd_offset, bits);
 	} else {
 		// Update color profile segment size field (FFE2xxxx)
-		valueUpdater(Segment_Vec, segment_size_field_index, SEGMENT_SIZE - PROFILE_MAIN_DIFF, bits);
+		valueUpdater(Segment_Vec, segment_size_field_index, segment_size - PROFILE_MAIN_DIFF, bits);
 
 		// Update internal color profile size field
-		valueUpdater(Segment_Vec, profile_size_field_index, SEGMENT_SIZE - PROFILE_INTERNAL_DIFF, bits);
+		valueUpdater(Segment_Vec, profile_size_field_index, segment_size - PROFILE_INTERNAL_DIFF, bits);
 	}
 
 	Image_Vec.insert(Image_Vec.begin(), Segment_Vec.begin(), Segment_Vec.end());
