@@ -72,6 +72,7 @@ Created output file: "imgprmt_21195.jpg 401529 Bytes"
 PS G:\imgprmpt\demo> python3 .\bsky_post.py --handle cleasbycode.bsky.social --password ****-****-****-**** --image imgprmt_21195.jpg --alt-text "Testing prompt embedded image. To view the embedded prompt, save image, then change the .jpg file extension to .htm" Image_Test
 
 ```
-https://github.com/user-attachments/assets/d7b88adc-6ebe-4b85-a6e6-0a9dde1409a7
+
+https://github.com/user-attachments/assets/f31089c8-2ec3-47b5-91f9-9cb169fe2a49
 
 ##
