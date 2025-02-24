@@ -69,7 +69,7 @@ Image Description: In a grand yet dilapidated mansion......
 
 Created output file: "imgprmt_21195.jpg 401529 Bytes"
 
-PS G:\imgprmpt\demo> python3 .\bsky_post.py --handle cleasbycode.bsky.social --password ****-****-****-**** --image imgprmt_21195.jpg --alt-text "Testing prompt embedded image. To view the embedded prompt, save image, then change the .jpg file extension to .htm" Image_Test
+PS G:\imgprmpt\demo> python3 .\bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx --image imgprmt_21195.jpg --alt-text "Testing prompt embedded image. To view the embedded prompt, save image, then change the .jpg file extension to .htm" Image_Test
 
 ```
 
