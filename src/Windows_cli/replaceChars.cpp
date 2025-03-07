@@ -1,6 +1,5 @@
 void replaceProblemChars(std::wstring& str) {
-	constexpr wchar_t Tag[]{ 39, 13, 10 };
-
+	constexpr std::array<wchar_t, 3> Tag { 39, 13, 10 };
 	for (int i = static_cast<int>(str.length()); i != -1; i--) {
 		wchar_t c = str[i];
 		for (int x = 0; x != 3; x++) {
