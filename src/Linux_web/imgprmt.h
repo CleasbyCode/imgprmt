@@ -17,6 +17,7 @@
 #include <turbojpeg.h>
 
 #include "searchFunc.cpp"
+#include "transcodeImage.cpp"
 #include "eraseSegments.cpp"
 #include "segmentData.cpp"
 #include "valueUpdater.cpp"
@@ -26,6 +27,7 @@ template <uint8_t N>
 uint32_t searchFunc(std::vector<uint8_t>&, uint32_t, uint8_t, const uint8_t (&)[N]);
 
 void	
+	transcodeImage(std::vector<uint8_t>&, bool),
 	eraseSegments(std::vector<uint8_t>&),
 	valueUpdater(std::vector<uint8_t>&, uint32_t, const uint32_t, uint8_t);
 
