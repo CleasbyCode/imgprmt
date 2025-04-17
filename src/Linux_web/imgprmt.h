@@ -9,6 +9,12 @@
 #include <string>
 #include <vector>
 
+// This software is based in part on the work of the Independent JPEG Group.
+// https://github.com/libjpeg-turbo/libjpeg-turbo
+// Copyright (C) 2009-2024 D. R. Commander. All Rights Reserved.
+// Copyright (C) 2015 Viktor Szathmáry. All Rights Reserved.
+#include <turbojpeg.h>
+
 #include "searchFunc.cpp"
 #include "eraseSegments.cpp"
 #include "segmentData.cpp"
