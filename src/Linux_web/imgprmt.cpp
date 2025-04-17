@@ -39,7 +39,7 @@ uint8_t imgPrmt(const std::string& IMAGE_FILENAME, const std::string& PROMPT_FIL
 
 	// For better compatibility, default re-encode image to JPG Progressive format with a quality value set at 97 with no chroma subsampling.
 	// If Bluesky option, re-encode to standard Baseline format with a quality value set at 85.
-	transcodeImage(image_vec, hasBlueskyOption);
+	transcodeImage(Image_Vec, hasBlueSkyOption);
 
 	eraseSegments(Image_Vec);
 	
