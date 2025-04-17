@@ -75,4 +75,14 @@ PS G:\imgprmpt\demo> python3 .\bsky_post.py --handle cleasbycode.bsky.social --p
 
 https://github.com/user-attachments/assets/f31089c8-2ec3-47b5-91f9-9cb169fe2a49
 
+## Third-Party Libraries
+
+This project makes use of the following third-party libraries:
+
+- libjpeg-turbo (see [***LICENSE***](https://github.com/libjpeg-turbo/libjpeg-turbo/blob/main/LICENSE.md) file)  
+  - {This software is based in part on the work of the Independent JPEG Group.}
+  - Copyright (C) 2009-2024 D. R. Commander. All Rights Reserved.
+  - Copyright (C) 2015 Viktor Szathmáry. All Rights Reserved.
+    
 ##
+
