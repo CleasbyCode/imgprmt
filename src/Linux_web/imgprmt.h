@@ -13,6 +13,7 @@
 // https://github.com/libjpeg-turbo/libjpeg-turbo
 // Copyright (C) 2009-2024 D. R. Commander. All Rights Reserved.
 // Copyright (C) 2015 Viktor Szathmáry. All Rights Reserved.
+// sudo apt-get install libturbojpeg-dev
 #include <turbojpeg.h>
 
 #include "searchFunc.cpp"
