@@ -1,5 +1,5 @@
 ﻿//	imgprmt v1.5 (Linux edition for imgprmt website ). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
-//	Not for standard use. ONLY used by web app: https://cleasbycode.co.uk/imgprmt/app/
+//	Not for standard use. ONLY used by the Web App: https://cleasbycode.co.uk/imgprmt/app/
 //	If you want the imgprmt CLI tool, then download/compile the imgprmt Windows edition from the github page.
 
 enum class ArgOption {
