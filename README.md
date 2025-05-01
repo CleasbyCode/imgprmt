@@ -14,9 +14,7 @@ These platforms will retain the embedded prompt, so that it's available to anyon
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/demo_image4.jpg)  
 
-View the embedded prompt as a basic web page by renaming the ***.jpg*** file extension to ***.htm***  
-
-https://github.com/user-attachments/assets/7fb4832c-f404-4e7a-8d2b-ea3ef1a4bf49
+View the embedded prompt locally as a basic web page by renaming the ***.jpg*** file extension to ***.htm***  
 
 ## Usage (Windows CLI Default)
 
@@ -74,6 +72,7 @@ Created output file: "imgprmt_21195.jpg 401529 Bytes"
 PS G:\imgprmpt\demo> python3 .\bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx --image imgprmt_21195.jpg --alt-text "Testing prompt embedded image. To view the embedded prompt, save image, then change the .jpg file extension to .htm" Image_Test
 
 ```
+https://github.com/user-attachments/assets/7fb4832c-f404-4e7a-8d2b-ea3ef1a4bf49  
 
 https://github.com/user-attachments/assets/f31089c8-2ec3-47b5-91f9-9cb169fe2a49
 
