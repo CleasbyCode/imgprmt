@@ -92,20 +92,11 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platform) {
 	uint8_t
 		// For Twitter, Mastodon, Tumblr, Flickr.
 		profile_size_field_index = 0x28, // Start index location for internal size field of the image color profile.(Max four bytes, only two used).
-
 		segment_size_field_index = hasBlueskyOption ? 0x04 : 0x16,  // Start index location for size field of the main segment EXIF or color profile. (Max two bytes)
-
-		exif_segment_xres_offset_field_index = 0x2A,
-		exif_segment_xres_offset_size_diff = 0x36, // Always 0x36 size difference between EXIF segment size.
-
-		exif_segment_yres_offset_field_index = 0x36,
-		exif_segment_yres_offset_size_diff = 0x2E, // Always 0x2E size difference between EXIF segment size.
-
-		exif_segment_artist_size_field_index = 0x4A,
-		exif_segment_size_diff = 0x91, // EXIF segment size - artist comment section size.
-
-		exif_segment_subifd_offset_index = 0x5A,
-		exif_segment_subifd_offset_size_diff = 0x26, // Always 0x26 size difference between EXIF segment size.
+		exif_segment_xres_offset_field_index 	= 0x2A,
+		exif_segment_yres_offset_field_index 	= 0x36,
+		exif_segment_artist_size_field_index 	= 0x4A,
+		exif_segment_subifd_offset_index 	= 0x5A,
 		bits = 16;
 		
 	if (!hasBlueskyOption) {
@@ -128,18 +119,20 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platform) {
 	uint32_t segment_size = static_cast<uint32_t>(segment_vec.size()); 
 
 	if (hasBlueskyOption) {
+		constexpr uint8_t MARKER_BYTES_LENGTH = 4;
+		
 		// For Bluesky segment size don't count/include the JPG ID + APP ID "FFD8FFE1" (4 bytes).
-		segment_size -= 4;
+		segment_size -= MARKER_BYTES_LENGTH;
 
 		// Update EXIF segment size field (FFE1xxxx)
 		valueUpdater(segment_vec, segment_size_field_index, segment_size, bits);
 		
 		bits = 32;
-		uint32_t 
-			exif_xres_offset = segment_size - exif_segment_xres_offset_size_diff,
-			exif_yres_offset = segment_size - exif_segment_yres_offset_size_diff,
-			exif_artist_size = (segment_size - exif_segment_size_diff) + 4, // For this variable, include the JPG ID + APP ID "FFD8FFE1" (4 bytes).
-			exif_subifd_offset = segment_size - exif_segment_subifd_offset_size_diff;
+		uint16_t 
+			exif_xres_offset = segment_size - 0x36,
+			exif_yres_offset = segment_size - 0x2E,
+			exif_artist_size = segment_size - 0x8D,
+			exif_subifd_offset = segment_size - 0x26;
 			
 		valueUpdater(segment_vec, exif_segment_xres_offset_field_index, exif_xres_offset, bits);
 		valueUpdater(segment_vec, exif_segment_yres_offset_field_index, exif_yres_offset, bits);
