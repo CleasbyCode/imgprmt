@@ -10,9 +10,9 @@ These platforms will retain the embedded prompt, so that it's available to anyon
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/Screenshot.png) 
 
-If you intend to share your prompt-embedded image on ***Bluesky***, you ***must*** first add the ***-b*** option to the CLI arguments:
+If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the CLI arguments:
 ```console
-PS G:\demo> .\imgprmt -b my_image.jpg*
+PS G:\demo> .\imgprmt -b my_image.jpg
 ```
 Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** python script (*located in the repo src folder*). An App-Password is also required to use with the python script, which you can create from your Bluesky account (https://bsky.app/settings/app-passwords).  
 
