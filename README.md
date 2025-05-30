@@ -57,8 +57,8 @@ $ python3 bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxx
 ```
 
 Images created with the ***-b*** option are only compatible for posting on the ***Bluesky*** platform. Image file size limit for ***Bluesky*** is **1MB**.  
-
-https://github.com/user-attachments/assets/b3d1592f-7269-4946-8770-be649b2796f5  
+https://github.com/user-attachments/assets/b3d1592f-7269-4946-8770-be649b2796f5
+  
 *Image credit: [***@Dd41Giant***](https://x.com/Dd41Giant)*  
 
 ## Third-Party Libraries
