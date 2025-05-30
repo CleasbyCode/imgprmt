@@ -48,7 +48,7 @@ Created JPG-HTML polyglot image file: imgprmt_24799.jpg (95590 bytes).
 ```console
 user1@mx:~/Desktop$ imgprmt -b my_image.jpg
 ```
-Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** python script (*located in the repo src folder*). An App-Password is also required to use with the python script, which you can create from your Bluesky account (https://bsky.app/settings/app-passwords).  
+Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** python script (*located in the repo src folder*). An ***app-password*** is also required to use with the python script, which you can create from your Bluesky account (https://bsky.app/settings/app-passwords).  
 
 Below is an usage example for the ***bsky_post.py*** python script:  
 
