@@ -21,7 +21,6 @@
 #endif
 
 int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
-
 	const size_t IMAGE_FILE_SIZE = std::filesystem::file_size(IMAGE_FILENAME);
 
 	std::ifstream image_file_ifs(IMAGE_FILENAME, std::ios::binary);
@@ -58,19 +57,18 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 	eraseSegments(Image_Vec);
 	
 	std::cout << "\n*** imgprmt v1.6 ***\n";
-//	std::cout << "================\n";
 
 	#ifdef _WIN32
 		constexpr uint16_t BUFFER_SIZE  = 8000;
 		wchar_t* buffer = new wchar_t[BUFFER_SIZE];
 		std::wcin.rdbuf()->pubsetbuf(buffer, BUFFER_SIZE);
 
-		// Store original modes
-		int original_stdin_mode = _setmode(_fileno(stdin), _O_BINARY);  // temporarily switch to binary
-		_setmode(_fileno(stdin), original_stdin_mode); // restore original immediately after saving
+		// Store original text modes.
+		int original_stdin_mode = _setmode(_fileno(stdin), _O_BINARY);  
+		_setmode(_fileno(stdin), original_stdin_mode); 
 
-		int original_stdout_mode = _setmode(_fileno(stdout), _O_BINARY);  // temporarily switch to binary
-		_setmode(_fileno(stdout), original_stdout_mode); // restore original immediately after saving
+		int original_stdout_mode = _setmode(_fileno(stdout), _O_BINARY);  
+		_setmode(_fileno(stdout), original_stdout_mode); 
 
 		fflush(stdin);
 		fflush(stdout);
@@ -108,14 +106,14 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 		PROMPT_INSERT_INDEX = hasBlueSkyOption ? 0xE76 : 0xF3C,	// Insert location within Segment containing HTML page for the user's prompt text.
 		LINK_INSERT_INDEX   = hasBlueSkyOption ? 0xDE7 : 0xEAD;	// Insert location within Segment containing HTML page for the user's web link.
 
-	// For X/Twitter, Mastodon, Tumblr, Flickr.
+	// For X-Twitter, Mastodon, Tumblr, Flickr.
 	constexpr uint8_t
 		PROFILE_INTERNAL_DIFF 	= 38,	 // Bytes we don't count as part of internal profile size.
 		PROFILE_MAIN_DIFF 	= 22,	 // Bytes we don't count as part of profile size.
-		PROFILE_INSERT_INDEX 	= 0x14;	 // Insert location within Default_Vec for the color profile (Segment_Vec). X/Twitter, Mastodon, Tumblr, Flickr.
+		PROFILE_INSERT_INDEX 	= 0x14;	 // Insert location within Default_Vec for the color profile (Segment_Vec). X-Twitter, Mastodon, Tumblr, Flickr.
 
 	uint8_t
-		// For Twitter, Mastodon, Tumblr, Flickr.
+		// For X-Twitter, Mastodon, Tumblr, Flickr.
 		profile_size_field_index = 0x28, // Start index location for internal size field of the image color profile.(Max four bytes, only two used).
 
 		segment_size_field_index = hasBlueSkyOption ? 0x04 : 0x16,  // Start index location for size field of the main segment EXIF or color profile. (Max two bytes)
@@ -150,7 +148,7 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 	uint32_t segment_size = static_cast<uint32_t>(Segment_Vec.size());
 
 	if (hasBlueSkyOption) {
-		// For Bluesky segment size don't count/include the JPG ID + APP ID "FFD8FFE1" (4 bytes).
+		// For Bluesky segment size don't count/include the JPG ID + APP ID "FFD8 FFE1" (4 bytes).
 		segment_size -= 4;
 
 		// Update EXIF segment size field (FFE1xxxx)
@@ -177,10 +175,10 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 
 	Image_Vec.insert(Image_Vec.begin(), Segment_Vec.begin(), Segment_Vec.end());
 
-#ifdef _WIN32
-	_setmode(_fileno(stdin), original_stdin_mode);
-    _setmode(_fileno(stdout), original_stdout_mode);
-#endif
+	#ifdef _WIN32
+		_setmode(_fileno(stdin), original_stdin_mode);
+    		_setmode(_fileno(stdout), original_stdout_mode);
+	#endif
 
 	const uint32_t IMAGE_SIZE = static_cast<uint32_t>(Image_Vec.size());
 
