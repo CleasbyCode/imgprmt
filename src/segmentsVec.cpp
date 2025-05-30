@@ -1,4 +1,3 @@
-
 #include "segmentsVec.h"
 
 // Color Profile (Used for X/Twitter, Mastodon, Tumble, Flickr)
