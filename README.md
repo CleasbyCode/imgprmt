@@ -11,6 +11,38 @@ The stored image prompt can be viewed locally as a basic web page. Simply rename
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/imgprmt_48940.jpg)  
 *Image credit: [***@daedalprincess***](https://x.com/daedalprincess)*  
 
+## Usage Example (Linux)
+
+```console
+user1@mx:~/Downloads/imgprmt-main/src$ sudo apt-get install libturbojpeg-dev
+user1@mx:~/Downloads/imgprmt-main/src$ chmod +x compile_imgprmt.sh
+user1@mx:~/Downloads/imgprmt-main/src$ ./compile_imgprmt.sh
+user1@mx:~/Downloads/imgprmt-main/src$ Compilation successful. Executable 'imgprmt' created.
+user1@mx:~/Downloads/imgprmt-main/src$ sudo cp imgprmt /usr/bin
+
+user1@mx:~/Desktop$ imgprmt 
+
+Usage: imgprmt [-b] <jpg_image> 
+       imgprmt --info
+
+user1@mx:~/Desktop$ imgprmt black_gold.jpg
+
+*** imgprmt v1.6 ***
+
+Enter a Web link (Image source, Social media page, etc.)
+
+Full URL Address: https://x.com/daedalprincess/status/1893078337817370801
+
+Type or paste in your prompt as one long sentence.
+
+Avoid newline characters, instead add <br> tags for new lines, if required.
+
+Image Description: The image depicts a striking portrait of a woman with her face painted in bold black and gold colors.... 
+  
+Created JPG-HTML polyglot image file: imgprmt_24799.jpg (95590 bytes).
+
+```
+
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the CLI arguments:
 ```console
 PS G:\demo> .\imgprmt -b my_image.jpg
