@@ -1,14 +1,16 @@
 # imgprmt
 
-Use the CLI tool ***imgprmt*** to embed an AI image ***text prompt*** within a ***JPG*** image.  
+***imgprmt*** is a command-line tool for Linux & Windows, used to embed ***AI image text prompts*** within a ***JPG*** image.  
 
-The program outputs a separate ***JPG-HTML*** polyglot image file. You can then share the image on a number of social media sites, such as ***X/Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr*** & ****Bluesky***.  
+The program outputs a separate ***JPG-HTML*** polyglot image file. You can share the image on a number of social media sites, such as ***X-Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr*** & ****Bluesky***.  
 
-These platforms will retain the embedded prompt, so that it's available to anyone who downloads your image.   
+These platforms will retain the embedded prompt, so that it's available to anyone who downloads your image.  
+
+The stored image prompt can be viewed locally as a basic web page. Simply rename the image file extension to ".htm", then open the file to view.
 
 *You can try the [***imgprmt Web App, here,***](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download and compile the CLI source code.*  
 
-![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/Screenshot.png) 
+
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the CLI arguments:
 ```console
