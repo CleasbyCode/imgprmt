@@ -56,7 +56,9 @@ Below is an usage example for the ***bsky_post.py*** python script:
 $ python3 bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx --image imgprmt_21195.jpg --alt-text "Your_ALT-TEXT_here" "Your_standard_post_text_here"
 ```
 
-Images created with the ***-b*** option are only compatible for posting on the ***Bluesky*** platform. Image file size limit for ***Bluesky*** is **1MB**.
+Images created with the ***-b*** option are only compatible for posting on the ***Bluesky*** platform. Image file size limit for ***Bluesky*** is **1MB**.  
+
+https://github.com/user-attachments/assets/b3d1592f-7269-4946-8770-be649b2796f5
 
 ## Third-Party Libraries
 
@@ -68,3 +70,4 @@ This project makes use of the following third-party libraries:
   - Copyright (C) 2015 Viktor Szathmáry. All Rights Reserved.
     
 ##
+
