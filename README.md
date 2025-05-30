@@ -37,7 +37,7 @@ Type or paste in your prompt as one long sentence.
 
 Avoid newline characters, instead add <br> tags for new lines, if required.
 
-Image Description: The image depicts a striking portrait of a woman with her face painted.... 
+Image Description: The image depicts a striking portrait of a woman with her face painted...
   
 Created JPG-HTML polyglot image file: imgprmt_24799.jpg (95590 bytes).
 
