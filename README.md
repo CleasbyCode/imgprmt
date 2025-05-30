@@ -4,7 +4,7 @@
 
 You can share the image on a number of social media sites, such as ***X-Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr*** & ****Bluesky***.  These platforms will retain the embedded prompt, so that it's available to anyone who downloads your image.  
 
-The stored image prompt can be viewed locally as a basic web page. Simply rename the image file extension to ".htm", then open the file to view.
+The stored image prompt can be viewed locally as a basic web page. Simply rename the image file extension to *".htm"*, then open the file to view.
 
 *You can try the [***imgprmt Web App, here,***](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download and compile the CLI source code.*  
 
