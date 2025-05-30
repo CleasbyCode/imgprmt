@@ -1,5 +1,4 @@
 // Remove pre-existing EXIF and/or Color Profile segments from user's cover image.
-
 #include "eraseSegments.h"
 #include "searchFunc.h" 
 
