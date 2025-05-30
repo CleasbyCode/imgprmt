@@ -2,7 +2,7 @@
 
 Use the CLI tool ***imgprmt*** to embed an AI image ***text prompt*** within a ***JPG*** image.  
 
-The program outputs a separate ***JPG+HTML*** polyglot image file. You can then share the image on a number of social media sites, such as ***X/Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr*** & ****Bluesky***.  
+The program outputs a separate ***JPG-HTML*** polyglot image file. You can then share the image on a number of social media sites, such as ***X/Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr*** & ****Bluesky***.  
 
 These platforms will retain the embedded prompt, so that it's available to anyone who downloads your image.   
 
