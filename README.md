@@ -45,7 +45,7 @@ Created JPG-HTML polyglot image file: imgprmt_24799.jpg (95590 bytes).
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the CLI arguments:
 ```console
-PS G:\demo> .\imgprmt -b my_image.jpg
+user1@mx:~/Desktop$ imgprmt -b my_image.jpg
 ```
 Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** python script (*located in the repo src folder*). An App-Password is also required to use with the python script, which you can create from your Bluesky account (https://bsky.app/settings/app-passwords).  
 
