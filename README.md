@@ -2,9 +2,7 @@
 
 ***imgprmt*** is a command-line tool for Linux & Windows, used to embed ***AI image text prompts*** within a ***JPG*** image.  The program outputs a separate ***JPG-HTML*** polyglot image file.  
 
-You can share the image on a number of social media sites, such as ***X-Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr*** & ****Bluesky***.  
-
-These platforms will retain the embedded prompt, so that it's available to anyone who downloads your image.  
+You can share the image on a number of social media sites, such as ***X-Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr*** & ****Bluesky***.  These platforms will retain the embedded prompt, so that it's available to anyone who downloads your image.  
 
 The stored image prompt can be viewed locally as a basic web page. Simply rename the image file extension to ".htm", then open the file to view.
 
