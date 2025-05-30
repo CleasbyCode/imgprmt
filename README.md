@@ -9,7 +9,7 @@ The stored image prompt can be viewed locally as a basic web page. Simply rename
 *You can try the [***imgprmt Web App, here,***](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download and compile the CLI source code.*  
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/imgprmt_48940.jpg)  
-*Image credit: [***@daedalprincess***](https://x.com/daedalprincess)* 
+*Image credit: [***@daedalprincess***](https://x.com/daedalprincess)*  
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the CLI arguments:
 ```console
