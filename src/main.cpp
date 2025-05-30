@@ -1,5 +1,4 @@
 ﻿//	imgprmt v1.6 (CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
-
 #include "fileChecks.h"
 #include "imgPrmt.h"
 
