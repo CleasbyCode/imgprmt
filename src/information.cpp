@@ -22,7 +22,7 @@ An App-Password is also required to use with the python script, which you can cr
 
 Below is an usage example for the bsky_post.py python script:
 
-python3 .\bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx --image imgprmt_21195.jpg --alt-text "Your_ALT-TEXT_here" "Your_standard_post_text_here"
+$ python3 bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx --image imgprmt_21195.jpg --alt-text "Your_ALT-TEXT_here" "Your_standard_post_text_here"
 
 Image size limit for Bluesky is 1MB.
 
