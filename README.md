@@ -43,7 +43,7 @@ Created JPG-HTML polyglot image file: imgprmt_24799.jpg (95590 bytes).
 
 ```
 
-If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the CLI arguments:
+If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the command-line arguments:
 ```console
 user1@mx:~/Desktop$ imgprmt -b my_image.jpg
 ```
