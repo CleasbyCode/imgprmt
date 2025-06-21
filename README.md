@@ -44,15 +44,15 @@ Saved "prompt-embedded" JPG image: imgprmt_24799.jpg (95590 bytes).
 ```
 Using the required, default command-line arguments without any options, the embedded image can only be posted on ***Tumblr***, ***Mastodon*** & ***Flickr***.  
 
-The ***Linux*** command-line version of ***imgprmt*** is limited to 4096 characters for your prompt text.  The ***Windows*** command-line version and the ***imgprmt Web App*** has a larger prompt text limit of 59392 characters.
+The ***Linux*** command-line version of ***imgprmt*** is limited to *4096* characters for your prompt text.  The ***Windows*** command-line version and the ***imgprmt Web App*** has a larger prompt text limit of *59392* characters.
 
 If you intend to share your *prompt-embedded* image on ***X-Twitter***, you ***must*** add the ***-x*** option to the command-line arguments:
 ```console
 user1@mx:~/Desktop$ imgprmt -x my_image.jpg
 ```
-The ***-x*** option reduces the prompt text limit to 6300 characters for the ***Windows*** command-line version and the ***imgprmt Web App*** (*4096 character limit for ***Linux****). This option also removes some ***JavaScript*** from the embedded webpage (*e.g. no clipboard copy button for the prompt*).  
+The ***-x*** option reduces the prompt text limit to *6300* characters for the ***Windows*** command-line version and the ***imgprmt Web App*** (*4096 character limit for ***Linux****). This option also removes some ***JavaScript*** from the embedded webpage (*e.g. no clipboard copy button for the prompt*).  
 
-These reductions allow the embedded image to be posted on ***X-Twitter***. You can also post these images on ***Tumblr***, ***Mastodon*** & ***Flickr***.
+These reductions allow the embedded image to be posted on ***X-Twitter***. You can also post these ***-x*** option images on ***Tumblr***, ***Mastodon*** & ***Flickr***.
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the command-line arguments:  
 
