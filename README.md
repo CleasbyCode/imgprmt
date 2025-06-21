@@ -1,8 +1,8 @@
 # imgprmt
 
-***imgprmt*** is a simple command-line tool for ***Linux*** and ***Windows*** that embeds AI-generated image text prompts into JPG images. It creates a unique JPG-HTML polyglot file, combining image, prompt text & html in a single output.  
+***imgprmt*** is a simple command-line tool for ***Linux*** and ***Windows*** that embeds AI-generated image text prompts into JPG images. It creates a unique ***JPG-HTML*** polyglot file, combining image, prompt text & html in a single output.  
 
-Share the resulting image on compatible social media platforms like ****X-Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr***, or ****Bluesky***, where the embedded prompt remains intact for anyone who downloads the image.  
+Share the resulting image on compatible social media platforms like ***X-Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr***, or ***Bluesky***, where the embedded prompt remains intact for anyone who downloads the image.  
 
 To view the stored prompt locally, simply rename the image file extension to ".htm" and open it in a web browser to display it as a basic webpage.
 
