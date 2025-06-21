@@ -25,19 +25,19 @@ user1@mx:~/Desktop$ imgprmt
 Usage: imgprmt [-b|-x] <jpg_image> 
        imgprmt --info
 
-user1@mx:~/Desktop$ imgprmt black_gold.jpg
+user1@mx:~/Desktop$ imgprmt cosmic_garden.jpg
 
 *** imgprmt v1.7 ***
 
 Enter a Web link (Image source, Social media page, etc.)
 
-Full URL Address: https://x.com/daedalprincess/status/1893078337817370801
+Full URL Address: https://x.com/daedalprincess/status/1918293297287569867
 
 Type or paste in your prompt as one long sentence. Character limit: 4,096.
 
 Avoid newline characters, instead add <br> tags for new lines, if required.
 
-Image Description: The image depicts a striking portrait of a woman with her face painted...
+Image Description: Create a digital artwork in 8K UHD that merges a luminous, dark figure in profile with a cyberpunk cosmic garden...
 
 Saved "prompt-embedded" JPG image: imgprmt_24799.jpg (95590 bytes).
 
