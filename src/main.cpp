@@ -1,4 +1,4 @@
-﻿//	imgprmt v1.7 (CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
+﻿//  imgprmt v1.7 (CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
 
 //  Downloads/imgprmt-main/src$ sudo apt-get install libturbojpeg-dev
 //  Downloads/imgprmt-main/src$ chmod +x compile_imgprmt.sh
