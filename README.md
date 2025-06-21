@@ -37,7 +37,7 @@ Type or paste in your prompt as one long sentence. Character limit: 4,096.
 
 Avoid newline characters, instead add <br> tags for new lines, if required.
 
-Image Description: Create a digital artwork in 8K UHD that merges a luminous, dark figure in profile with a cyberpunk cosmic garden...
+Image Description: Create a digital artwork in 8K UHD that merges a luminous...
 
 Saved "prompt-embedded" JPG image: imgprmt_24799.jpg (95590 bytes).
 
