@@ -1,12 +1,12 @@
 # imgprmt
 
-***imgprmt*** is a command-line tool for Linux & Windows, used to embed ***AI image text prompts*** within a ***JPG*** image.  The program outputs a separate ***JPG-HTML*** polyglot image file.  
+***imgprmt*** is a simple command-line tool for ***Linux*** and ***Windows** that embeds AI-generated image text prompts into JPG images. It creates a unique JPG-HTML polyglot file, combining image, prompt text & html in a single output.  
 
-You can share the image on a number of social media sites, such as ****X-Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr*** & ****Bluesky***.  These platforms will retain the embedded prompt, so that it's available to anyone who downloads your image.  
+Share the resulting image on compatible social media platforms like ****X-Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr***, or ****Bluesky***, where the embedded prompt remains intact for anyone who downloads the image.  
 
-The stored image prompt can be viewed locally as a basic web page. Simply rename the image file extension to *".htm"*, then open the file to view.
+To view the stored prompt locally, simply rename the image file extension to ".htm" and open it in a web browser to display it as a basic webpage.
 
-*You can try the [***imgprmt Web App, here,***](https://cleasbycode.co.uk/imgprmt/app/) if you don't want to download and compile the CLI source code.*  
+*Try the imgprmt Web App [***here***](https://cleasbycode.co.uk/imgprmt/app/) for a convenient alternative to downloading and compiling the CLI source code.*
 
 ![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/imgprmt_48940.jpg)  
 *Image credit: [***@daedalprincess***](https://x.com/daedalprincess)*  
