@@ -42,8 +42,9 @@ Image Description: The image depicts a striking portrait of a woman with her fac
 Saved "prompt-embedded" JPG image: imgprmt_24799.jpg (95590 bytes).
 
 ```
-Using the required, default command-line arguments (*imgprmt my_image.jpg*) without any options, the embedded image can only be posted on ***Tumblr***, ***Mastodon*** & ***Flickr***. The ***Linux*** command-line version of ***imgprmt*** is limited to 4096 characters for your prompt text.  
-The ***Windows*** command-line version and the ***imgprmt*** Web App has a prompt text limit of 59392 characters.
+Using the required, default command-line arguments (*imgprmt my_image.jpg*) without any options, the embedded image can only be posted on ***Tumblr***, ***Mastodon*** & ***Flickr***.  
+
+The ***Linux*** command-line version of ***imgprmt*** is limited to 4096 characters for your prompt text.  The ***Windows*** command-line version and the ***imgprmt*** Web App has a prompt text limit of 59392 characters.
 
 *If you intend to share your *prompt-embedded* image on ***X-Twitter***, you ***must*** first add the ***-x*** option to the command-line argument:
 ```console
