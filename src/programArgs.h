@@ -4,7 +4,8 @@
 
 enum class ArgOption {
 	Default,
-	Bluesky
+	Bluesky,
+	Twitter
 };
 
 struct ProgramArgs {

@@ -4,7 +4,7 @@
 // https://github.com/libjpeg-turbo/libjpeg-turbo
 
 #include "transcodeImage.h"
-#include <turbojpeg.h>
+#include "libjpeg-turbo/turbojpeg.h"
 #include <stdexcept>
 #include <string>
 

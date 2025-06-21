@@ -2,11 +2,11 @@
 #include "segmentsVec.h"
 #include "transcodeImage.h"
 #include "replaceChars.h"
-#include "valueUpdater.h"
 #include "eraseSegments.h"
 #include "convertString.h"
 
 #include <iostream>
+#include <csignal>
 #include <fstream>
 #include <array>
 #include <algorithm>
@@ -21,6 +21,12 @@
 #endif
 
 int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
+	// Small Lambda function used multiple times in this function. 
+	// Writes updated values (2 bytes or 4 bytes), such as segments lengths, index/offsets values, etc. into the relevant vector index location.	
+	auto updateValue = [](std::vector<uint8_t>& vec, uint32_t insert_index, const uint32_t NEW_VALUE, uint8_t bits) {
+		while (bits) { vec[insert_index++] = (NEW_VALUE >> (bits -= 8)) & 0xff; }	// Big-endian.
+		};
+
 	const size_t IMAGE_FILE_SIZE = std::filesystem::file_size(IMAGE_FILENAME);
 
 	std::ifstream image_file_ifs(IMAGE_FILENAME, std::ios::binary);
@@ -46,9 +52,10 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 		return 1;
 	}
 	
-	const bool
+	bool
 		hasBlueSkyOption = (platformOption == ArgOption::Bluesky),
-		hasDefaultOption = !hasBlueSkyOption;
+		hasTwitterOption = (platformOption == ArgOption::Twitter),
+		hasDefaultOption = (platformOption == ArgOption::Default);
 
 	// For better compatibility, default re-encode image to JPG Progressive format with a quality value set at 97 with no chroma subsampling.
 	// If Bluesky option, re-encode to standard Baseline format with a quality value set at 85.
@@ -56,19 +63,19 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 
 	eraseSegments(Image_Vec);
 	
-	std::cout << "\n*** imgprmt v1.6 ***\n";
+	std::cout << "\n*** imgprmt v1.7 ***\n";
 
 	#ifdef _WIN32
-		constexpr uint16_t BUFFER_SIZE  = 8000;
-		wchar_t* buffer = new wchar_t[BUFFER_SIZE];
-		std::wcin.rdbuf()->pubsetbuf(buffer, BUFFER_SIZE);
+		constexpr uint16_t WIN_BUFFER_SIZE  = 65535;
+		wchar_t* buffer = new wchar_t[WIN_BUFFER_SIZE];
+		std::wcin.rdbuf()->pubsetbuf(buffer, WIN_BUFFER_SIZE);
 
-		// Store original text modes.
-		int original_stdin_mode = _setmode(_fileno(stdin), _O_BINARY);  
-		_setmode(_fileno(stdin), original_stdin_mode); 
+		// Store original modes
+		int original_stdin_mode = _setmode(_fileno(stdin), _O_BINARY);  // temporarily switch to binary
+		_setmode(_fileno(stdin), original_stdin_mode); // restore original immediately after saving
 
-		int original_stdout_mode = _setmode(_fileno(stdout), _O_BINARY);  
-		_setmode(_fileno(stdout), original_stdout_mode); 
+		int original_stdout_mode = _setmode(_fileno(stdout), _O_BINARY);  // temporarily switch to binary
+		_setmode(_fileno(stdout), original_stdout_mode); // restore original immediately after saving
 
 		fflush(stdin);
 		fflush(stdout);
@@ -90,8 +97,26 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 
 	std::wcout << L"\nEnter a Web link (Image source, Social media page, etc.)\n\nFull URL Address: ";
 	std::getline(std::wcin, wurl);
+	
+	const std::wstring prefix = L"https://";
+	
+	if (wurl.length() < 12 || wurl.substr(0, prefix.length()) != prefix) {
+		std::wcerr << L"\nLink Error: URL must start with 'https://' and be at least 12 characters long.\n\n";
+		return 1;
+	}
+	
+	uint16_t platform_char_limit;
+	
+	#ifdef _WIN32
+		constexpr uint16_t
+			WIN_MAX_CHAR = 59392,
+			TWITTER_MAX_CHAR = 6300;	
+		platform_char_limit = hasTwitterOption ? TWITTER_MAX_CHAR : WIN_MAX_CHAR;
+	#else
+		platform_char_limit = 4096;
+	#endif
 
-	std::wcout << L"\nType or paste in your prompt as one long sentence.\n";
+	std::wcout << L"\nType or paste in your prompt as one long sentence. Character limit: " << platform_char_limit << ".\n";
 	std::wcout << L"\nAvoid newline characters, instead add <br> tags for new lines, if required.\n\nImage Description: ";
 	std::getline(std::wcin, wprompt);
 
@@ -100,20 +125,18 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 	std::string utf8_url = convertString(wurl);
 	std::string utf8_prompt = convertString(wprompt);
 
-	constexpr uint16_t MAX_SEGMENT_SIZE = 10000;
-
 	const uint16_t
-		PROMPT_INSERT_INDEX = hasBlueSkyOption ? 0xE76 : 0xF3C,	// Insert location within Segment containing HTML page for the user's prompt text.
-		LINK_INSERT_INDEX   = hasBlueSkyOption ? 0xDE7 : 0xEAD;	// Insert location within Segment containing HTML page for the user's web link.
+		PROMPT_INSERT_INDEX = hasBlueSkyOption ? 0xF40 : (hasTwitterOption ? 0xE04 : 0x1066),	// Insert location within vector containing HTML page for the user's prompt text.
+		LINK_INSERT_INDEX   = hasBlueSkyOption ? 0xEC5 : (hasTwitterOption ? 0xDC4 : 0xFEB);	// Insert location within vector containing HTML page for the user's web link.
 
 	// For X-Twitter, Mastodon, Tumblr, Flickr.
 	constexpr uint8_t
 		PROFILE_INTERNAL_DIFF 	= 38,	 // Bytes we don't count as part of internal profile size.
 		PROFILE_MAIN_DIFF 	= 22,	 // Bytes we don't count as part of profile size.
-		PROFILE_INSERT_INDEX 	= 0x14;	 // Insert location within Default_Vec for the color profile (Segment_Vec). X-Twitter, Mastodon, Tumblr, Flickr.
+		PROFILE_INSERT_INDEX 	= 0x14;	 // Insert location within Default_Vec for the color profile (Segment_Vec). X/Twitter, Mastodon, Tumblr, Flickr.
 
 	uint8_t
-		// For X-Twitter, Mastodon, Tumblr, Flickr.
+		// For Twitter, Mastodon, Tumblr, Flickr.
 		profile_size_field_index = 0x28, // Start index location for internal size field of the image color profile.(Max four bytes, only two used).
 
 		segment_size_field_index = hasBlueSkyOption ? 0x04 : 0x16,  // Start index location for size field of the main segment EXIF or color profile. (Max two bytes)
@@ -130,7 +153,12 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 		exif_segment_subifd_offset_size_diff = 0x26, // Always 0x26 size difference between EXIF segment size.
 		bits = 16;
 
-	if (hasDefaultOption) {
+	if (hasTwitterOption) {
+		hasDefaultOption = true;  
+		Segment_Vec.swap(Twitter_Vec);
+	}
+
+	if (hasDefaultOption) { 
 		Segment_Vec.insert(Segment_Vec.begin() + PROFILE_INSERT_INDEX, Profile_Vec.begin(), Profile_Vec.end());
 	} else {
 		Segment_Vec.swap(BlueSky_Vec);
@@ -140,19 +168,24 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 	Segment_Vec.insert(Segment_Vec.begin() + PROMPT_INSERT_INDEX, utf8_prompt.begin(), utf8_prompt.end());
 	Segment_Vec.insert(Segment_Vec.begin() + LINK_INSERT_INDEX, utf8_url.begin(), utf8_url.end());
 
-	if (Segment_Vec.size() > MAX_SEGMENT_SIZE) {
-		std::wcerr << L"\nFile Size Error: Data content size exceeds the maximum limit of 10KB.\n\n";
-		return 1;
-	}
+	#ifdef _WIN32
+		constexpr uint16_t TWITTER_SEGMENT_LIMIT = 10 * 1024;
+		const uint16_t MAX_SEGMENT_SIZE = hasTwitterOption ? TWITTER_SEGMENT_LIMIT : WIN_BUFFER_SIZE;  // Twitter 10KB, Other ~64KB.
+
+		if (Segment_Vec.size() > MAX_SEGMENT_SIZE) {
+			std::wcerr << L"\nFile Size Error: Data content size exceeds the maximum segment limit.\n\n";
+			return 1;
+		}
+	#endif
 
 	uint32_t segment_size = static_cast<uint32_t>(Segment_Vec.size());
 
 	if (hasBlueSkyOption) {
-		// For Bluesky segment size don't count/include the JPG ID + APP ID "FFD8 FFE1" (4 bytes).
+		// For Bluesky segment size don't count/include the JPG ID + APP ID "FFD8FFE1" (4 bytes).
 		segment_size -= 4;
 
 		// Update EXIF segment size field (FFE1xxxx)
-		valueUpdater(Segment_Vec, segment_size_field_index, segment_size, bits);
+		updateValue(Segment_Vec, segment_size_field_index, segment_size, bits);
 
 		bits = 32;
 		uint32_t
@@ -161,24 +194,24 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 			exif_artist_size = (segment_size - exif_segment_size_diff) + 4, // For this variable, include the JPG ID + APP ID "FFD8FFE1" (4 bytes).
 			exif_subifd_offset = segment_size - exif_segment_subifd_offset_size_diff;
 
-		valueUpdater(Segment_Vec, exif_segment_xres_offset_field_index, exif_xres_offset, bits);
-		valueUpdater(Segment_Vec, exif_segment_yres_offset_field_index, exif_yres_offset, bits);
-		valueUpdater(Segment_Vec, exif_segment_artist_size_field_index, exif_artist_size, bits);
-		valueUpdater(Segment_Vec, exif_segment_subifd_offset_index, exif_subifd_offset, bits);
+		updateValue(Segment_Vec, exif_segment_xres_offset_field_index, exif_xres_offset, bits);
+		updateValue(Segment_Vec, exif_segment_yres_offset_field_index, exif_yres_offset, bits);
+		updateValue(Segment_Vec, exif_segment_artist_size_field_index, exif_artist_size, bits);
+		updateValue(Segment_Vec, exif_segment_subifd_offset_index, exif_subifd_offset, bits);
 	} else {
 		// Update color profile segment size field (FFE2xxxx)
-		valueUpdater(Segment_Vec, segment_size_field_index, segment_size - PROFILE_MAIN_DIFF, bits);
+		updateValue(Segment_Vec, segment_size_field_index, segment_size - PROFILE_MAIN_DIFF, bits);
 
 		// Update internal color profile size field
-		valueUpdater(Segment_Vec, profile_size_field_index, segment_size - PROFILE_INTERNAL_DIFF, bits);
+		updateValue(Segment_Vec, profile_size_field_index, segment_size - PROFILE_INTERNAL_DIFF, bits);
 	}
 
 	Image_Vec.insert(Image_Vec.begin(), Segment_Vec.begin(), Segment_Vec.end());
 
-	#ifdef _WIN32
-		_setmode(_fileno(stdin), original_stdin_mode);
-    		_setmode(_fileno(stdout), original_stdout_mode);
-	#endif
+#ifdef _WIN32
+	_setmode(_fileno(stdin), original_stdin_mode);
+    _setmode(_fileno(stdout), original_stdout_mode);
+#endif
 
 	const uint32_t IMAGE_SIZE = static_cast<uint32_t>(Image_Vec.size());
 
@@ -196,6 +229,6 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 
 	write_file_fs.write(reinterpret_cast<const char*>(Image_Vec.data()), IMAGE_SIZE);
 	std::vector<uint8_t>().swap(Image_Vec);
-	std::cout << "\nCreated JPG-HTML polyglot image file: " << OUTPUT_FILENAME << " (" << IMAGE_SIZE << " bytes).\n\n";
+	std::cout << "\nSaved \"file-embedded\" JPG image: " << OUTPUT_FILENAME << " (" << IMAGE_SIZE << " bytes).\n\n";
 	return 0;
 }

@@ -12,19 +12,22 @@ ProgramArgs ProgramArgs::parse(int argc, char** argv) {
 	}
 
 	if (argc < 2 || argc > 3) {
-        	throw std::runtime_error("Usage: imgprmt [-b] <jpg-image>\n\t\bimgprmt --info");
+        	throw std::runtime_error("Usage: imgprmt [-b|-x] <jpg-image>\n\t\bimgprmt --info");
     	}
 
     	int arg_index = 1;
 
     	if (argc == 3) {
-		if (std::string(argv[arg_index]) != "-b") {
-            		throw std::runtime_error("Input Error: Invalid arguments. Expecting \"-b\" as the only optional argument.");
+		if (std::string(argv[arg_index]) != "-b" && std::string(argv[arg_index]) != "-x") {
+            		throw std::runtime_error("Input Error: Invalid arguments. Expecting \"-b\" or \"-x\" as the only optional arguments.");
         	}
-        	args.platform = ArgOption::Bluesky;
-        	++arg_index;
+		if (std::string(argv[arg_index]) == "-b") {
+        		args.platform = ArgOption::Bluesky;
+		} else {
+			args.platform = ArgOption::Twitter;
+		}
+        	arg_index = 2;
     	}
-
     	args.image_file = argv[arg_index];
     	return args;
 }
