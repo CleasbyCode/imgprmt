@@ -50,14 +50,18 @@ If you intend to share your *prompt-embedded* image on ***X-Twitter***, you ***m
 ```console
 user1@mx:~/Desktop$ imgprmt -x my_image.jpg
 ```
-The ***-x*** option reduces the prompt text limit to 6300 characters for the ***Windows*** command-line version and the ***imgprmt Web App*** (*4096 character limit for ***Linux****). This option also removes some ***JavaScript*** from the embedded webpage (*e.g. no clipboard copy button for the prompt*). These reductions allow the embedded image to be posted on ***X-Twitter***. You can also post these images on ***Tumblr***, ***Mastodon*** & ***Flickr***.
+The ***-x*** option reduces the prompt text limit to 6300 characters for the ***Windows*** command-line version and the ***imgprmt Web App*** (*4096 character limit for ***Linux****). This option also removes some ***JavaScript*** from the embedded webpage (*e.g. no clipboard copy button for the prompt*).  
+
+These reductions allow the embedded image to be posted on ***X-Twitter***. You can also post these images on ***Tumblr***, ***Mastodon*** & ***Flickr***.
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the command-line arguments:  
 
 ```console
 user1@mx:~/Desktop$ imgprmt -b my_image.jpg
 ```
-Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** python script, *located in the repo ***src*** folder*. To run this script, you need ***Python3*** and the ***'requests'*** and ***'bs4' (BeautifulSoup) Python*** packages installed. An ***app-password*** is also required to use with the ***Python*** script, which you can create from your ***Bluesky*** account (*https://bsky.app/settings/app-passwords*).  
+Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** python script, *located in the repo ***src*** folder*. To run this script, you need ***Python3*** and the ***'requests'*** and ***'bs4' (BeautifulSoup) Python*** packages installed.  
+
+An ***app-password*** is also required to use with the ***Python*** script, which you can create from your ***Bluesky*** account (*https://bsky.app/settings/app-passwords*).  
 
 Below is a usage example for the ***bsky_post.py Python*** script:  
 
