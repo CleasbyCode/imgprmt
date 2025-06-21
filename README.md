@@ -59,7 +59,7 @@ If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***mus
 ```console
 user1@mx:~/Desktop$ imgprmt -b my_image.jpg
 ```
-Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** python script, *located in the repo ***src*** folder*. To run this script, you need ***Python3*** and the ***'requests'*** and ***'bs4' (BeautifulSoup) Python*** packages installed.  
+Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** script, *located in the repo ***src*** folder*. To run this script, you need ***Python3*** and the ***'requests'*** and ***'bs4' (BeautifulSoup) Python*** packages installed.  
 
 An ***app-password*** is also required to use with the ***Python*** script, which you can create from your ***Bluesky*** account (*https://bsky.app/settings/app-passwords*).  
 
