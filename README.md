@@ -27,19 +27,19 @@ Usage: imgprmt [-b|-x] <jpg_image>
 
 user1@mx:~/Desktop$ imgprmt black_gold.jpg
 
-*** imgprmt v1.6 ***
+*** imgprmt v1.7 ***
 
 Enter a Web link (Image source, Social media page, etc.)
 
 Full URL Address: https://x.com/daedalprincess/status/1893078337817370801
 
-Type or paste in your prompt as one long sentence.
+Type or paste in your prompt as one long sentence. Character limit: 4,096.
 
 Avoid newline characters, instead add <br> tags for new lines, if required.
 
 Image Description: The image depicts a striking portrait of a woman with her face painted...
-  
-Created JPG-HTML polyglot image file: imgprmt_24799.jpg (95590 bytes).
+
+Saved "prompt-embedded" JPG image: imgprmt_24799.jpg (95590 bytes).
 
 ```
 Using the default required command-line arguments (*imgprmt my_image.jpg*) without any options, the embedded image can only be posted on ***Tumblr***, ***Mastodon*** & ***Flickr***. The Linux command-line version of imgprmt is limited to 4096 characters for your prompt text. The Windows command-line version and the imgprmt web app has an prompt text limit of 59392 characters.
