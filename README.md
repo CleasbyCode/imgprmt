@@ -46,25 +46,25 @@ Using the required, default command-line arguments (*imgprmt my_image.jpg*) with
 
 The ***Linux*** command-line version of ***imgprmt*** is limited to 4096 characters for your prompt text.  The ***Windows*** command-line version and the ***imgprmt*** Web App has a larger prompt text limit of 59392 characters.
 
-If you intend to share your *prompt-embedded* image on ***X-Twitter***, you ***must*** first add the ***-x*** option to the command-line arguments:
+If you intend to share your *prompt-embedded* image on ***X-Twitter***, you ***must*** add the ***-x*** option to the command-line arguments:
 ```console
 user1@mx:~/Desktop$ imgprmt -x my_image.jpg
 ```
-The ***X-Twitter*** -x option reduces the prompt text limit to 6300 characters for the Windows command-line version and the imgprmt web app (4096 character limit for Linux). The -x option also removes some ***JavaScript*** from the embedded web page (*e.g. no clipboard copy button for prompt*). These chanages allow the embedded image to be posted on X-Twitter. Embedded image created with the -x option, can also be posted on Tumblr, Mastodon & Flickr.
+The ***-x*** option reduces the prompt text limit to 6300 characters for the ***Windows*** command-line version and the ***imgprmt*** Web App (4096 character limit for Linux). This option also removes some ***JavaScript*** from the embedded web page (*e.g. no clipboard copy button for the prompt*). These differances allow the embedded image to be posted on ***X-Twitter***. You can also post these images on ***Tumblr***, ***Mastodon*** & ***Flickr***.
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the command-line arguments:  
 
 ```console
 user1@mx:~/Desktop$ imgprmt -b my_image.jpg
 ```
-Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** python script (*located in the repo src folder*). An ***app-password*** is also required to use with the python script, which you can create from your Bluesky account (https://bsky.app/settings/app-passwords).  
+Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** python script (*located in the repo ***src*** folder*). An ***app-password*** is also required to use with the python script, which you can create from your Bluesky account (https://bsky.app/settings/app-passwords).  
 
-Below is an usage example for the ***bsky_post.py*** python script:  
+Below is a usage example for the ***bsky_post.py*** python script:  
 
 ```console
 $ python3 bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx --image imgprmt_21195.jpg --alt-text "Your_ALT-TEXT_here" "Your_standard_post_text_here"
 ```
-Images created with the ***-b*** option are only compatible for posting on the ***Bluesky*** platform. Image file size limit for ***Bluesky*** is **1MB**.  
+Images created with the ***-b*** option can also be posted on ***Tumblr***. Image file size limit for ***Bluesky*** is **1MB**.  
 
 https://github.com/user-attachments/assets/3551e481-d134-4f07-be48-7216543d08d1
   
