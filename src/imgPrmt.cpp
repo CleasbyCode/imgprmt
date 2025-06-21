@@ -229,6 +229,6 @@ int imgPrmt(const std::string& IMAGE_FILENAME, ArgOption platformOption) {
 
 	write_file_fs.write(reinterpret_cast<const char*>(Image_Vec.data()), IMAGE_SIZE);
 	std::vector<uint8_t>().swap(Image_Vec);
-	std::cout << "\nSaved \"file-embedded\" JPG image: " << OUTPUT_FILENAME << " (" << IMAGE_SIZE << " bytes).\n\n";
+	std::cout << "\nSaved \"prompt-embedded\" JPG image: " << OUTPUT_FILENAME << " (" << IMAGE_SIZE << " bytes).\n\n";
 	return 0;
 }
