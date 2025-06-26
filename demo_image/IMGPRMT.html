@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)https://cleasbycode.co.uk/imgprmt/php/insert_form.php -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IMGPRMT Web App. Embed &amp; store your image prompt within a JPG image.">
+    <title>IMGPRMT</title>
+    <link href="./IMGPRMT_files/css" rel="stylesheet">
+    <link href="./IMGPRMT_files/main.css" rel="stylesheet">
+    <link href="./IMGPRMT_files/media.css" rel="stylesheet">
+</head>
+<body>
+
+<style>
+.compat-item {label{color:white; background:black;}} 
+.error {color: red;}
+input::placeholder{color: white;}
+textarea::placeholder{color: white;}
+</style>
+<script src="./IMGPRMT_files/common.js" defer=""></script>
+
+
+    <form action="https://cleasbycode.co.uk/imgprmt/php/insert.php" method="post" enctype="multipart/form-data">
+    <fieldset>
+  	<legend class="leg-col-1">IMGPRMT v1.7</legend>
+        <label for="image">Select JPG image:</label><br>
+        <input type="file" id="image" name="image" accept="image/jpeg" onchange="checkFile()"><br>
+        <label for="url">Web Link (Your website, Social media page, etc.):</label><br>
+        <input type="text" id="url" name="url" maxlength="200" placeholder="***Type or paste in full URL web address***" oninput="validateForm();" autocomplete="off"><br>
+        <div class="inline-item">
+             <label for="bluesky"><span style="color: firebrick;">Tick box if you intend to post image on: </span><span style="color: blue;">Bluesky</span></label>
+             <input type="checkbox" id="bluesky" name="bluesky" class="myCheckbox" onclick="checkChanged(this)" value="-b">
+
+           <label for="xtwitter"><span style="color: black;">X-Twitter</span></label>
+            <input type="checkbox" id="xtwitter" name="xtwitter" class="myCheckbox" onclick="checkChanged(this)" value="-x">
+          </div>
+        <br><br>
+        <label id="promptCounter" for="prompt">Image Prompt: (59392 characters remaining)</label><br>
+        <textarea id="prompt" name="prompt" placeholder="***Type or paste in your image prompt/description here. Use &lt;br&gt; tags to insert new lines within your prompt, if required***" rows="5" maxlength="59392" oninput="validateForm(); updatePromptCounter();"></textarea><br>
+
+
+          <label><span style="color: darkslategray;font-weight: 800;">Platform compatibility:</span></label><div class="compat-item"><label id="bluesky">Bluesky</label><label id="flickr">Flickr</label><label id="mastodon">Mastodon</label><label id="tumblr">Tumblr</label><label id="twitter">X-Twitter</label></div>
+        <input type="submit" value="Embed Prompt" class="button button1" id="uploadButton" disabled="">
+        
+        </fieldset>
+    </form>
+
+
+</body></html>
