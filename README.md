@@ -1,6 +1,6 @@
 # imgprmt
 
-***imgprmt*** is a command-line tool for ***Linux*** and ***Windows*** for storing and sharing your favorite AI image text prompts/descriptions by embedding them into JPG images. It creates a unique ***JPG-HTML*** polyglot file, combining image, prompt text & html in a single output.  
+***imgprmt*** is a command-line tool for storing and sharing your favorite AI image text prompts/descriptions by embedding them into JPG images. It creates a unique ***JPG-HTML*** polyglot file, combining image, prompt text & html in a single output.  
 
 Share the resulting image on compatible social media platforms like ***X-Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr***, or ***Bluesky***, where the embedded prompt remains intact for anyone who downloads the image.  
 
