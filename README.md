@@ -8,7 +8,7 @@ To view the stored prompt locally, simply rename the image file extension to "*.
 
 *Try the imgprmt Web App [***here***](https://cleasbycode.co.uk/imgprmt/app/) for a convenient alternative to downloading and compiling the CLI source code.*
 
-![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/imgprmt_69223.jpg)  
+![Demo Image](https://github.com/CleasbyCode/imgprmt/blob/main/demo_image/Gv_UflRWYAELDNu.jpeg)  
 *Image credit: [***@daedalprincess***](https://x.com/daedalprincess)*  
 
 ## Usage Example (Linux)
