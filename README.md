@@ -31,15 +31,15 @@ user1@mx:~/Desktop$ imgprmt cosmic_garden.jpg
 
 Enter a Web link (Image source, Social media page, etc.)
 
-Full URL Address: https://x.com/daedalprincess/status/1918293297287569867
+Full URL Address: https://x.com/Dd41Giant/status/1945507214296273145
 
 Type or paste in your prompt as one long sentence. Character limit: 4,096.
 
 Avoid newline characters, instead add <br> tags for new lines, if required.
 
-Image Description: Create a digital artwork in 8K UHD that merges a luminous...
+Image Description: Overhead Shot Extremely grainy photo taken with Lomo LC-A iso100 film...
 
-Saved "prompt-embedded" JPG image: imgprmt_24799.jpg (95590 bytes).
+Saved "prompt-embedded" JPG image: imgprmt_29443.jpg (170713 bytes).
 
 ```
 Using the required, default command-line arguments without any options, the embedded image can only be posted on ***Tumblr***, ***Mastodon*** & ***Flickr***.  
