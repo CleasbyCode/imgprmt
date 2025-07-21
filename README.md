@@ -68,15 +68,15 @@ Below is a usage example for the ***bsky_post.py Python*** script:
 ```console
 $ python3 bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx --image imgprmt_21195.jpg --alt-text "Your_ALT-TEXT_here" "Your_standard_post_text_here"
 ```
-Images created with the ***-b*** option can also be posted on ***Tumblr***. Image file size limit for ***Bluesky*** is **1MB**.  
+Images created with the ***-b*** option can also be posted on ***Tumblr***.  Image file size limit for ***Bluesky*** is **1MB**.  
 
-https://github.com/user-attachments/assets/3551e481-d134-4f07-be48-7216543d08d1
+https://github.com/user-attachments/assets/de24e5d6-39d5-4b09-a5f1-dbe5b2bbf8f5
   
-*Image credit: [***@Dd41Giant***](https://x.com/Dd41Giant)*  
+https://github.com/user-attachments/assets/d1ebdb8b-0446-44ce-b060-fef22928c24c
 
-https://github.com/user-attachments/assets/770591ee-999b-4603-a07a-5648b6cb38a1
+https://github.com/user-attachments/assets/2c810f39-cfcb-4357-a6b6-25a2dd5e6ea1
 
-*Image credit: [***@fy360593***](https://x.com/fy360593)* 
+*Image credit: [***@Dd41Giant***](https://x.com/Dd41Giant/status/1940804031234167100)* 
 
 ## Third-Party Libraries
 
