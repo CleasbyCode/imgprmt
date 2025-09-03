@@ -20,13 +20,14 @@
 
 #ifdef _WIN32
 	#define NOMINMAX
-    	#include <windows.h>
+    #include <windows.h>
+
    	#include <fcntl.h>
-    	#include <io.h>
-    	#include <tuple>
-    	#include <cstdio>
+    #include <io.h>
+    #include <tuple>
+    #include <cstdio>
 #else
-    	#include <cwchar>
+    #include <cwchar>
 #endif
 
 #include "fileChecks.h"
@@ -363,3 +364,4 @@ int main(int argc, char** argv) {
         return 1;
     }
 }
+
