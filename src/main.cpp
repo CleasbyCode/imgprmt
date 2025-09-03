@@ -51,47 +51,47 @@ static inline uint32_t searchSig(std::vector<uint8_t>& vec, const std::array<T, 
 static inline void updateValue(std::vector<uint8_t>& vec, uint32_t insert_index, uint32_t NEW_VALUE, uint8_t bits) {
 	while (bits) {
 		vec[insert_index++] = (NEW_VALUE >> (bits -= 8)) & 0xFF; // Big-endian.
-    	}
+    }
 }
 
 static inline void replaceProblemChars(std::wstring& str) {
-    	constexpr uint8_t ARR_SIZE = 4;
-    	constexpr std::array<wchar_t, ARR_SIZE> Tag{ 96, 39, 13, 10 }; 
+	constexpr uint8_t ARR_SIZE = 4;
+    constexpr std::array<wchar_t, ARR_SIZE> Tag{ 96, 39, 13, 10 }; 
 
-    	for (int i = static_cast<int>(str.length()) - 1; i >= 0; --i) {
-        	wchar_t c = str[i];
-        	for (wchar_t tagChar : Tag) {
-            		if (c == tagChar) {
-                		std::wstring html_entity = L"&#" + std::to_wstring(tagChar) + L";";
-                		str.erase(str.begin() + i);
-                		str.insert(str.begin() + i, html_entity.begin(), html_entity.end());
-                		break; 
-            		}
-        	}
-    	}
+    for (int i = static_cast<int>(str.length()) - 1; i >= 0; --i) {
+    	wchar_t c = str[i];
+        for (wchar_t tagChar : Tag) {
+        	if (c == tagChar) {
+            	std::wstring html_entity = L"&#" + std::to_wstring(tagChar) + L";";
+                str.erase(str.begin() + i);
+                str.insert(str.begin() + i, html_entity.begin(), html_entity.end());
+                break; 
+            }
+        }
+    }
 }
 
 static inline std::string convertString(const std::wstring& wide) {
 	#ifdef _WIN32
-    		if (wide.empty()) return {};
+    	if (wide.empty()) return {};
 
-    		int size = WideCharToMultiByte(CP_UTF8, 0, wide.c_str(), -1, nullptr, 0, nullptr, nullptr);
-    		if (size <= 0) throw std::runtime_error("WideCharToMultiByte failed.");
+    	int size = WideCharToMultiByte(CP_UTF8, 0, wide.c_str(), -1, nullptr, 0, nullptr, nullptr);
+    	if (size <= 0) throw std::runtime_error("WideCharToMultiByte failed.");
 
-    		std::string convertedString(size - 1, 0); // Exclude null terminator
-    		WideCharToMultiByte(CP_UTF8, 0, wide.c_str(), -1, convertedString.data(), size, nullptr, nullptr);
-    		return convertedString;
+    	std::string convertedString(size - 1, 0); // Exclude null terminator
+    	WideCharToMultiByte(CP_UTF8, 0, wide.c_str(), -1, convertedString.data(), size, nullptr, nullptr);
+    	return convertedString;
 
 	#else
-    		std::mbstate_t state{};
-    		const wchar_t* src = wide.data();
-    		size_t len = std::wcsrtombs(nullptr, &src, 0, &state);
-    		if (len == static_cast<size_t>(-1)) throw std::runtime_error("Conversion to UTF-8 failed.");
+    	std::mbstate_t state{};
+    	const wchar_t* src = wide.data();
+    	size_t len = std::wcsrtombs(nullptr, &src, 0, &state);
+    	if (len == static_cast<size_t>(-1)) throw std::runtime_error("Conversion to UTF-8 failed.");
 
-    		std::string convertedString(len, 0);
-    		src = wide.data(); // reset pointer
-    		std::wcsrtombs(convertedString.data(), &src, len, &state);
-    		return convertedString;
+    	std::string convertedString(len, 0);
+    	src = wide.data(); // reset pointer
+    	std::wcsrtombs(convertedString.data(), &src, len, &state);
+    	return convertedString;
 	#endif
 }
 
@@ -111,47 +111,47 @@ int main(int argc, char** argv) {
 		// -------------
 			
 		tjhandle decompressor = tjInitDecompress();
-    		if (!decompressor) {
-        		throw std::runtime_error("tjInitDecompress() failed.");
-    		}
+    	if (!decompressor) {
+        	throw std::runtime_error("tjInitDecompress() failed.");
+    	}
 
-    		int width = 0, height = 0, jpegSubsamp = 0, jpegColorspace = 0;
-    		if (tjDecompressHeader3(decompressor, cover_image_vec.data(), static_cast<unsigned long>(cover_image_vec.size()), &width, &height, &jpegSubsamp, &jpegColorspace) != 0) {
-        		tjDestroy(decompressor);
-        		throw std::runtime_error(std::string("tjDecompressHeader3: ") + tjGetErrorStr());
-    		}
+    	int width = 0, height = 0, jpegSubsamp = 0, jpegColorspace = 0;
+    	if (tjDecompressHeader3(decompressor, cover_image_vec.data(), static_cast<unsigned long>(cover_image_vec.size()), &width, &height, &jpegSubsamp, &jpegColorspace) != 0) {
+        	tjDestroy(decompressor);
+        	throw std::runtime_error(std::string("tjDecompressHeader3: ") + tjGetErrorStr());
+    	}
 
-    		std::vector<uint8_t> decoded_image_vec(width * height * 3); 
-    		if (tjDecompress2(decompressor, cover_image_vec.data(),static_cast<unsigned long>(cover_image_vec.size()), decoded_image_vec.data(), width, 0, height, TJPF_RGB, 0) != 0) {
-        		tjDestroy(decompressor);
-        		throw std::runtime_error(std::string("tjDecompress2: ") + tjGetErrorStr());
-    		}
-    		tjDestroy(decompressor);
-    		tjhandle compressor = tjInitCompress();
-    		if (!compressor) {
-        		throw std::runtime_error("tjInitCompress() failed.");
-    		}
+    	std::vector<uint8_t> decoded_image_vec(width * height * 3); 
+    	if (tjDecompress2(decompressor, cover_image_vec.data(),static_cast<unsigned long>(cover_image_vec.size()), decoded_image_vec.data(), width, 0, height, TJPF_RGB, 0) != 0) {
+        	tjDestroy(decompressor);
+        	throw std::runtime_error(std::string("tjDecompress2: ") + tjGetErrorStr());
+    	}
+    	tjDestroy(decompressor);
+    	tjhandle compressor = tjInitCompress();
+    	if (!compressor) {
+        	throw std::runtime_error("tjInitCompress() failed.");
+    	}
 
-    		const uint8_t JPG_QUALITY_VAL = (args.platform == ArgOption::Bluesky) ? 85 : 97;
+    	const uint8_t JPG_QUALITY_VAL = (args.platform == ArgOption::Bluesky) ? 85 : 97;
 
-    		uint8_t* jpegBuf = nullptr;
-    		unsigned long jpegSize = 0;
+    	uint8_t* jpegBuf = nullptr;
+    	unsigned long jpegSize = 0;
 
-    		int flags = TJFLAG_ACCURATEDCT | ((args.platform == ArgOption::Bluesky) ? 0 : TJFLAG_PROGRESSIVE);
+    	int flags = TJFLAG_ACCURATEDCT | ((args.platform == ArgOption::Bluesky) ? 0 : TJFLAG_PROGRESSIVE);
 
-    		if (tjCompress2(compressor, decoded_image_vec.data(), width, 0, height, TJPF_RGB, &jpegBuf, &jpegSize, TJSAMP_444, JPG_QUALITY_VAL, flags) != 0) {
-        		tjDestroy(compressor);
-        		throw std::runtime_error(std::string("tjCompress2: ") + tjGetErrorStr());
-    		}
-    		tjDestroy(compressor);
+    	if (tjCompress2(compressor, decoded_image_vec.data(), width, 0, height, TJPF_RGB, &jpegBuf, &jpegSize, TJSAMP_444, JPG_QUALITY_VAL, flags) != 0) {
+        	tjDestroy(compressor);
+        	throw std::runtime_error(std::string("tjCompress2: ") + tjGetErrorStr());
+    	}
+    	tjDestroy(compressor);
 
-    		std::vector<uint8_t> output_image_vec(jpegBuf, jpegBuf + jpegSize);
-    		tjFree(jpegBuf);
+    	std::vector<uint8_t> output_image_vec(jpegBuf, jpegBuf + jpegSize);
+    	tjFree(jpegBuf);
     			
-    		cover_image_vec.swap(output_image_vec);
+    	cover_image_vec.swap(output_image_vec);
     			
-    		std::vector<uint8_t>().swap(output_image_vec);
-    		std::vector<uint8_t>().swap(decoded_image_vec);
+    	std::vector<uint8_t>().swap(output_image_vec);
+    	std::vector<uint8_t>().swap(decoded_image_vec);
     			
 		// ------------
 	
@@ -194,19 +194,19 @@ int main(int argc, char** argv) {
 
 			// Store original modes
 			int original_stdin_mode = _setmode(_fileno(stdin), _O_BINARY);  	// temporarily switch to binary
-			_setmode(_fileno(stdin), original_stdin_mode); 				// restore original immediately after saving
+			_setmode(_fileno(stdin), original_stdin_mode); 						// restore original immediately after saving
 
 			int original_stdout_mode = _setmode(_fileno(stdout), _O_BINARY);  	// temporarily switch to binary
-			_setmode(_fileno(stdout), original_stdout_mode); 			// restore original immediately after saving
+			_setmode(_fileno(stdout), original_stdout_mode); 					// restore original immediately after saving
 
 			fflush(stdin);
 			fflush(stdout);
 
-			std::ignore = _setmode(_fileno(stdin), 0x20000); 			// set text mode to UTF-16
+			std::ignore = _setmode(_fileno(stdin), 0x20000); 					// set text mode to UTF-16
 			std::ignore = _setmode(_fileno(stdout), 0x20000);
 
 		#else
-			// Linux.
+			// Linux
 			std::locale::global(std::locale("en_US.UTF-8")); 
 
 			std::wcin.imbue(std::locale());
@@ -259,7 +259,7 @@ int main(int argc, char** argv) {
 		// For X-Twitter, Mastodon, Tumblr, Flickr.
 		constexpr uint8_t
 			PROFILE_INTERNAL_DIFF 	 = 38,	 // Bytes we don't count as part of internal profile size.
-			PROFILE_MAIN_DIFF 	 = 22,	 // Bytes we don't count as part of profile size.
+			PROFILE_MAIN_DIFF 	 	 = 22,	 // Bytes we don't count as part of profile size.
 			PROFILE_INSERT_INDEX 	 = 0x14, // Insert location within Default_Vec for the color profile (Segment_Vec). X/Twitter, Mastodon, Tumblr, Flickr.
 			PROFILE_SIZE_FIELD_INDEX = 0x28, // Start index location for internal size field of the image color profile.(Max four bytes, only two used).
 			SEGMENT_SIZE_FIELD_INDEX = 0x16; // Start index location for size field of the main color profile. (Max two bytes)
@@ -303,7 +303,7 @@ int main(int argc, char** argv) {
 			segment_size -= 4; // For Bluesky segment size, don't count the JPG ID + APP ID "FFD8FFE1" (4 bytes).
 		
 			constexpr uint8_t 
-				EXIF_SIZE_FIELD_INDEX 		= 0x04,  
+				EXIF_SIZE_FIELD_INDEX 			= 0x04,  
 				EXIF_XRES_OFFSET_FIELD_INDEX 	= 0x2A,  
 				EXIF_YRES_OFFSET_FIELD_INDEX 	= 0x36,  
 				EXIF_ARTIST_SIZE_FIELD_INDEX 	= 0x4A,  
@@ -359,7 +359,7 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 	catch (const std::runtime_error& e) {
-        	std::cerr << "\n" << e.what() << "\n\n";
-        	return 1;
-    	}
+    	std::cerr << "\n" << e.what() << "\n\n";
+        return 1;
+    }
 }
