@@ -2,7 +2,7 @@
 
 void displayInfo() {
 	std::cout << R"(
-Imgprmt v1.7 (CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
+Imgprmt v1.8 (Linux / Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
 
 imgprmt is a command-line tool for Linux and Windows that embeds AI-generated image text prompts into JPG images. 
 It creates a unique JPG-HTML polyglot file, combining image, prompt text & html in a single output.
@@ -53,3 +53,4 @@ Images created with the -b option can also be posted on Tumblr. Image file size 
 
 )";
 }
+
