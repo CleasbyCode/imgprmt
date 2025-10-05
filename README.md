@@ -39,18 +39,18 @@ Type or paste in your prompt as one long sentence.
 
 Avoid newline characters, instead add <br> tags for new lines, if required.
 
-Image Description: A woman dressed as a nurse with a syringe in her hand, a full-body portrait in the style of...
+Image Description: A woman dressed as a nurse with a syringe in her hand...
 
 Saved "prompt-embedded" JPG image: imgprmt_32097.jpg (330511 bytes).
 
 ```
 Using the default command-line arguments (no option), the embedded image can only be posted on ***Twitter***, ***Tumblr***, ***Mastodon*** & ***Flickr***.  
 
-The ***Linux*** command-line version of ***imgprmt*** is limited to *4096* characters (minus ULR link) for your prompt text.  
+The ***Linux*** command-line version of ***imgprmt*** is limited to **4096** characters (minus ULR link) for your prompt text.  
 
-The ***Windows*** command-line version and the ***imgprmt web app***, has a larger prompt text limit of *59392* characters (minus ULR link).
+The ***Windows*** command-line version and the ***imgprmt web app***, has a larger prompt text limit of **59392** characters (minus ULR link).
 
-For compatibility reasons, ***X-Twitter*** has a reduced character limit of 1856 (minus URL link) characters for your prompt text.
+For compatibility reasons, ***X-Twitter*** has a reduced character limit of **1856** (minus URL link) characters for your prompt text.
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the command-line arguments:  
 
