@@ -14,14 +14,13 @@
 #ifdef _WIN32
 	#define NOMINMAX
     	#include <windows.h>
-    	
     	#include "windows/libjpeg-turbo/include/turbojpeg.h"
     	// This software is based in part on the work of the Independent JPEG Group.
-	// Copyright (C) 2009-2024 D. R. Commander. All Rights Reserved.
-	// Copyright (C) 2015 Viktor Szathmáry. All Rights Reserved.
-	// https://github.com/libjpeg-turbo/libjpeg-turbo
+		// Copyright (C) 2009-2024 D. R. Commander. All Rights Reserved.
+		// Copyright (C) 2015 Viktor Szathmáry. All Rights Reserved.
+		// https://github.com/libjpeg-turbo/libjpeg-turbo
     	
-   	#include <fcntl.h>
+   		#include <fcntl.h>
     	#include <io.h>
     	#include <tuple>
     	#include <cstdio>
@@ -54,49 +53,77 @@ static inline void displayInfo() {
 Imgprmt v2.1 (CLI Edition).
 Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
 
-imgprmt is a command-line tool for Linux and Windows that embeds AI-generated image text prompts into JPG images. 
+imgprmt is a command-line tool for Linux and Windows that embeds image text prompts into JPG images. 
 It outputs a unique JPG-HTML polyglot file, combining image, prompt text & html.
 
-Share the resulting image on compatible social media platforms like X-Twitter, Tumblr, Mastodon, Flickr, or Bluesky, 
-where the embedded prompt remains intact for anyone who downloads the image.
+Share the resulting image on compatible social media platforms like:-
+	X-Twitter, Tumblr, Mastodon, Flickr, or *Bluesky.
+The embedded prompt is preserved for anyone who downloads the image.
 
-To view the stored prompt locally, simply rename the image file extension to ".htm" and open
-it in a web browser to display it as a basic webpage.
+To view the stored prompt locally, rename the image extension to ".htm" and open
+it in a web browser to display the basic webpage.
 
-For a convenient alternative to downloading and compiling the CLI source code, try the imgprmt Web App:
-https://cleasbycode.co.uk/imgprmt/app/
+For a convenient alternative to downloading & compiling the CLI source code, use the imgprmt Web App:-
+	https://cleasbycode.co.uk/imgprmt/app/
 
-user1@mx:~/Desktop$ imgprmt 
+──────────────────────────
+Compile & run (Linux)
+──────────────────────────
+		
+  $ sudo apt-get install libturbojpeg0-dev
 
-Usage: imgprmt [-b] <jpg_image> 
-       imgprmt --info
+  $ chmod +x compile_imgprmt.sh
+  $ ./compile_imgprmt.sh
 
-With the default command-line arguments without any options, the embedded image can be posted on X-Twitter, Tumblr, Mastodon & Flickr.
+  Compilation successful. Executable 'imgprmt' created.
 
-The Linux command-line version of imgprmt is limited to 4096 (minus URL address length) characters for your prompt text.
-The Windows command-line version and the imgprmt Web App has a larger prompt text limit of 59392 (minus URL address length) characters.
-X-Twitter, for compatibility reasons, is limited to 2201 (minus URL address length) characters.
+  $ sudo cp imgprmt /usr/bin
+  $ imgprmt
 
-If you intend to share your prompt-embedded image on Bluesky, you must first add the -b option to the command-line arguments:
+──────────────────────────
+Usage
+──────────────────────────
 
-user1@mx:~/Desktop$ imgprmt -b my_image.jpg
+  imgprmt [-b] <jpg_image>
+  imgprmt --info
 
-Secondly, to post the image on Bluesky, you will need to use the bsky_post.py script, located in the repo src folder.
-To run this script, you need Python3 and the 'requests' and 'bs4' (BeautifulSoup) Python packages installed.
+With the default command-line arguments without any option(s), 
+the embedded image can be posted on X-Twitter, Tumblr, Mastodon & Flickr.
 
-An app-password is also required to use with the Python script, which you can create from your Bluesky account: 
-https://bsky.app/settings/app-passwords
+The Linux command-line version of imgprmt is limited to 
+4096 (minus URL address length) characters for your prompt text.
+		
+The Windows command-line version and the imgprmt Web App has a larger prompt text limit
+of 59392 (minus URL address length) characters.
+		
+X-Twitter, for compatibility reasons, is limited to 1856 (minus URL address length) characters.
+
+If you intend to share your prompt-embedded image on Bluesky,
+you must first add the -b option to the command-line arguments:-
+
+	$ imgprmt -b my_image.jpg
+
+Secondly, to post the image on Bluesky, you will need to use the bsky_post.py script, 
+located in the repo src folder.
+
+To run this script, you need Python3 and the 'requests' and 'bs4' (BeautifulSoup)
+Python packages installed.
+
+An app-password is also required for the Python script, which you can create 
+from your Bluesky account: https://bsky.app/settings/app-passwords
 
 Below is a basic usage example for the bsky_post.py Python script:
 
-$ python3 bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx --image imgprmt_21195.jpg --alt-text "Your_ALT-TEXT_here" "Your_standard_post_text_here"
+$ python3 bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx 
+	--image your_image.jpg --alt-text 'alt-text here (optional)' 'standard post text here (required)'
 
-Images created with the -b option can also be posted on Tumblr. Image file size limit for Bluesky is ~1MB.
+Images created with the -b option can also be posted on Tumblr (bsky_post.py script not required). 
+Image file size upload limit for Bluesky is ~1MB.
 
 )";
 }
 
-enum class Option : unsigned char { None, Bluesky};
+enum class Option : unsigned char { None, Bluesky };
 
 struct ProgramArgs {
 	Option option{Option::None};
@@ -107,7 +134,7 @@ struct ProgramArgs {
 		using std::string_view;
 
         auto arg = [&](int i) -> string_view {
-		return (i >= 0 && i < argc) ? string_view(argv[i]) : string_view{};
+			return (i >= 0 && i < argc) ? string_view(argv[i]) : string_view{};
         };
 
         const std::string prog = fs::path(argv[0]).filename().string();
@@ -126,7 +153,7 @@ struct ProgramArgs {
 
         ProgramArgs out{};
 
-	int i = 1;
+		int i = 1;
 
         if (arg(i) == "-b") {
         	out.option = Option::Bluesky;  
@@ -138,85 +165,85 @@ struct ProgramArgs {
     }
 };
 
-// Return vector index location for relevant signature search.
+// Return vector index location for signature search.
 template <typename T, size_t N>
 static inline uint32_t searchSig(std::vector<uint8_t>& vec, const std::array<T, N>& SIG) {
 	return static_cast<uint32_t>(std::search(vec.begin(), vec.end(), SIG.begin(), SIG.end()) - vec.begin());
 }
 
-// Writes updated values, such as segments lengths, index/offsets values, etc. into the relevant vector index location.	
+// Writes updated values, such as segments lengths, index/offsets values, etc, into the relevant vector index location.	
 static inline void updateValue(std::vector<uint8_t>& vec, uint32_t insert_index, uint32_t NEW_VALUE, uint8_t bits) {
 	while (bits) {
 		vec[insert_index++] = (NEW_VALUE >> (bits -= 8)) & 0xFF; // Big-endian.
-    	}
+    }
 }
 
 static inline bool hasValidFilename(const fs::path& p) {
 	if (p.empty()) {
-    		return false;
+    	return false;
 	}		
     
-    	std::string filename = p.filename().string();
-    	if (filename.empty()) {
-    		return false;
-    	}
+    std::string filename = p.filename().string();
+    if (filename.empty()) {
+    	return false;
+    }
 
-    	auto validChar = [](unsigned char c) {
-    		return std::isalnum(c) || c == '.' || c == '-' || c == '_' || c == '@' || c == '%';
+    auto validChar = [](unsigned char c) {
+    	return std::isalnum(c) || c == '.' || c == '-' || c == '_' || c == '@' || c == '%';
  	};
 
-    	return std::all_of(filename.begin(), filename.end(), validChar);
+    return std::all_of(filename.begin(), filename.end(), validChar);
 }
 
 static inline bool hasFileExtension(const fs::path& p, std::initializer_list<const char*> exts) {
 	auto e = p.extension().string();
-    	std::transform(e.begin(), e.end(), e.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
-    	for (const char* cand : exts) {
-    		std::string c = cand;
-        	std::transform(c.begin(), c.end(), c.begin(), [](unsigned char x){ return static_cast<char>(std::tolower(x)); });
-        	if (e == c) return true;
-    	}
-    	return false;
+    std::transform(e.begin(), e.end(), e.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
+    for (const char* cand : exts) {
+    	std::string c = cand;
+        std::transform(c.begin(), c.end(), c.begin(), [](unsigned char x){ return static_cast<char>(std::tolower(x)); });
+        if (e == c) return true;
+    }
+    return false;
 }
 
 static inline void replaceProblemChars(std::wstring& str) {
-    	constexpr uint8_t ARR_SIZE = 4;
-    	constexpr std::array<wchar_t, ARR_SIZE> Tag{ 96, 39, 13, 10 }; 
+	constexpr uint8_t ARR_SIZE = 4;
+	constexpr std::array<wchar_t, ARR_SIZE> Tag{ 96, 39, 13, 10 }; 
 
-    	for (int i = static_cast<int>(str.length()) - 1; i >= 0; --i) {
-        	wchar_t c = str[i];
-        	for (wchar_t tagChar : Tag) {
-            		if (c == tagChar) {
-                		std::wstring html_entity = L"&#" + std::to_wstring(tagChar) + L";";
-                		str.erase(str.begin() + i);
-                		str.insert(str.begin() + i, html_entity.begin(), html_entity.end());
-                		break; 
-            		}
-        	}
-    	}
+    for (int i = static_cast<int>(str.length()) - 1; i >= 0; --i) {
+    	wchar_t c = str[i];
+    	for (wchar_t tagChar : Tag) {
+        	if (c == tagChar) {
+            	std::wstring html_entity = L"&#" + std::to_wstring(tagChar) + L";";
+                str.erase(str.begin() + i);
+                str.insert(str.begin() + i, html_entity.begin(), html_entity.end());
+                break; 
+            }
+        }
+    }
 }
 
 static inline std::string convertString(const std::wstring& wide) {
 	#ifdef _WIN32
-    		if (wide.empty()) return {};
+    	if (wide.empty()) return {};
 
-    		int size = WideCharToMultiByte(CP_UTF8, 0, wide.c_str(), -1, nullptr, 0, nullptr, nullptr);
-    		if (size <= 0) throw std::runtime_error("WideCharToMultiByte failed.");
+    	int size = WideCharToMultiByte(CP_UTF8, 0, wide.c_str(), -1, nullptr, 0, nullptr, nullptr);
+    	if (size <= 0) throw std::runtime_error("WideCharToMultiByte failed.");
 
-    		std::string convertedString(size - 1, 0); // Exclude null terminator
-    		WideCharToMultiByte(CP_UTF8, 0, wide.c_str(), -1, convertedString.data(), size, nullptr, nullptr);
-    		return convertedString;
+    	std::string convertedString(size - 1, 0); 
+    	WideCharToMultiByte(CP_UTF8, 0, wide.c_str(), -1, convertedString.data(), size, nullptr, nullptr);
+    	return convertedString;
 
 	#else
-    		std::mbstate_t state{};
-    		const wchar_t* src = wide.data();
-    		size_t len = std::wcsrtombs(nullptr, &src, 0, &state);
-    		if (len == static_cast<size_t>(-1)) throw std::runtime_error("Conversion to UTF-8 failed.");
+    	std::mbstate_t state{};
+    	const wchar_t* src = wide.data();
+    	size_t len = std::wcsrtombs(nullptr, &src, 0, &state);
+    	if (len == static_cast<size_t>(-1)) throw std::runtime_error("Conversion to UTF-8 failed.");
 
-    		std::string convertedString(len, 0);
-    		src = wide.data(); // reset pointer
-    		std::wcsrtombs(convertedString.data(), &src, len, &state);
-    		return convertedString;
+    	std::string convertedString(len, 0);
+    	src = wide.data(); 
+    	std::wcsrtombs(convertedString.data(), &src, len, &state);
+    	return convertedString;
 	#endif
 }
 
@@ -225,34 +252,34 @@ int main(int argc, char** argv) {
 		ProgramArgs args = ProgramArgs::parse(argc, argv);
 		
 		if (!fs::exists(args.image_file_path)) {
-        		throw std::runtime_error("Image File Error: File not found.");
-    		}
+        	throw std::runtime_error("Image File Error: File not found.");
+    	}
 			
 		if (!hasValidFilename(args.image_file_path)) {
-    			throw std::runtime_error("Invalid Input Error: Unsupported characters in filename arguments.");
+    		throw std::runtime_error("Invalid Input Error: Unsupported characters in filename arguments.");
 		}
 
 		if (!hasFileExtension(args.image_file_path, {".jpg", ".jpeg", ".jfif"})) {
-        		throw std::runtime_error("File Type Error: Invalid image extension. Only expecting \".jpg\", \".jpeg\", or \".jfif\".");
-    		}
+        	throw std::runtime_error("File Type Error: Invalid image extension. Only expecting \".jpg\", \".jpeg\", or \".jfif\".");
+    	}
     			
 		std::ifstream image_file_ifs(args.image_file_path, std::ios::binary);
         	
-    		if (!image_file_ifs) {
-    			throw std::runtime_error("Read File Error: Unable to read image file. Check the filename and try again.");
+    	if (!image_file_ifs) {
+    		throw std::runtime_error("Read File Error: Unable to read image file. Check the filename and try again.");
    		}
 
 		uintmax_t image_file_size = fs::file_size(args.image_file_path);
 
-    		constexpr uint8_t MINIMUM_IMAGE_SIZE = 134;
+    	constexpr uint8_t MINIMUM_IMAGE_SIZE = 134;
 
-    		if (MINIMUM_IMAGE_SIZE > image_file_size) {
-        		throw std::runtime_error("Image File Error: Invalid file size.");
-    		}
+    	if (MINIMUM_IMAGE_SIZE > image_file_size) {
+        	throw std::runtime_error("Image File Error: Invalid file size.");
+    	}
     	
-    		constexpr uintmax_t MAX_IMAGE_SIZE = 5ULL * 1024 * 1024;   
+    	constexpr uintmax_t MAX_IMAGE_SIZE = 5ULL * 1024 * 1024;   
     	
-    		if (image_file_size > MAX_IMAGE_SIZE) {
+    	if (image_file_size > MAX_IMAGE_SIZE) {
 			throw std::runtime_error("File Size Error: Image file exceeds maximum size limit.");
 		}
 		
@@ -275,47 +302,49 @@ int main(int argc, char** argv) {
 		// -------------
 			
 		tjhandle decompressor = tjInitDecompress();
-    		if (!decompressor) {
-        		throw std::runtime_error("tjInitDecompress() failed.");
-    		}
+    	if (!decompressor) {
+        	throw std::runtime_error("tjInitDecompress() failed.");
+    	}
 
-    		int width = 0, height = 0, jpegSubsamp = 0, jpegColorspace = 0;
-    		if (tjDecompressHeader3(decompressor, image_file_vec.data(), static_cast<unsigned long>(image_file_vec.size()), &width, &height, &jpegSubsamp, &jpegColorspace) != 0) {
-        		tjDestroy(decompressor);
-        		throw std::runtime_error(std::string("tjDecompressHeader3: ") + tjGetErrorStr());
-    		}
+    	int width = 0, height = 0, jpegSubsamp = 0, jpegColorspace = 0;
+    	if (tjDecompressHeader3(decompressor, image_file_vec.data(), static_cast<unsigned long>(image_file_vec.size()), &width, &height, &jpegSubsamp, &jpegColorspace) != 0) {
+        	tjDestroy(decompressor);
+        	throw std::runtime_error(std::string("tjDecompressHeader3: ") + tjGetErrorStr());
+    	}
 
-    		std::vector<uint8_t> decoded_image_vec(width * height * 3); 
-    		if (tjDecompress2(decompressor, image_file_vec.data(),static_cast<unsigned long>(image_file_vec.size()), decoded_image_vec.data(), width, 0, height, TJPF_RGB, 0) != 0) {
-        		tjDestroy(decompressor);
-        		throw std::runtime_error(std::string("tjDecompress2: ") + tjGetErrorStr());
-    		}
-    		tjDestroy(decompressor);
-    		tjhandle compressor = tjInitCompress();
-    		if (!compressor) {
-        		throw std::runtime_error("tjInitCompress() failed.");
-    		}
+    	std::vector<uint8_t> decoded_image_vec(width * height * 3); 
+    	if (tjDecompress2(decompressor, image_file_vec.data(),static_cast<unsigned long>(image_file_vec.size()), decoded_image_vec.data(), width, 0, height, TJPF_RGB, 0) != 0) {
+        	tjDestroy(decompressor);
+        	throw std::runtime_error(std::string("tjDecompress2: ") + tjGetErrorStr());
+    	}
+		
+    	tjDestroy(decompressor);
+    	tjhandle compressor = tjInitCompress();
+    	if (!compressor) {
+        	throw std::runtime_error("tjInitCompress() failed.");
+    	}
 
-    		const uint8_t JPG_QUALITY_VAL = (args.option == Option::Bluesky) ? 85 : 97;
+    	const uint8_t JPG_QUALITY_VAL = (args.option == Option::Bluesky) ? 85 : 97;
 
-    		uint8_t* jpegBuf = nullptr;
-    		unsigned long jpegSize = 0;
+    	uint8_t* jpegBuf = nullptr;
+    	unsigned long jpegSize = 0;
 
-    		int flags = TJFLAG_ACCURATEDCT | ((args.option == Option::Bluesky) ? 0 : TJFLAG_PROGRESSIVE);
+    	int flags = TJFLAG_ACCURATEDCT | ((args.option == Option::Bluesky) ? 0 : TJFLAG_PROGRESSIVE);
 
-    		if (tjCompress2(compressor, decoded_image_vec.data(), width, 0, height, TJPF_RGB, &jpegBuf, &jpegSize, TJSAMP_444, JPG_QUALITY_VAL, flags) != 0) {
-        		tjDestroy(compressor);
-        		throw std::runtime_error(std::string("tjCompress2: ") + tjGetErrorStr());
-    		}
-    		tjDestroy(compressor);
+    	if (tjCompress2(compressor, decoded_image_vec.data(), width, 0, height, TJPF_RGB, &jpegBuf, &jpegSize, TJSAMP_444, JPG_QUALITY_VAL, flags) != 0) {
+        	tjDestroy(compressor);
+        	throw std::runtime_error(std::string("tjCompress2: ") + tjGetErrorStr());
+    	}
+		
+    	tjDestroy(compressor);
 
-    		std::vector<uint8_t> output_image_vec(jpegBuf, jpegBuf + jpegSize);
-    		tjFree(jpegBuf);
+    	std::vector<uint8_t> output_image_vec(jpegBuf, jpegBuf + jpegSize);
+    	tjFree(jpegBuf);
     			
-    		image_file_vec.swap(output_image_vec);
+    	image_file_vec.swap(output_image_vec);
     			
-    		std::vector<uint8_t>().swap(output_image_vec);
-    		std::vector<uint8_t>().swap(decoded_image_vec);
+    	std::vector<uint8_t>().swap(output_image_vec);
+    	std::vector<uint8_t>().swap(decoded_image_vec);
     			
 		// ------------
 	
@@ -357,16 +386,16 @@ int main(int argc, char** argv) {
 			std::wcin.rdbuf()->pubsetbuf(buffer, WIN_BUFFER_SIZE);
 
 			// Store original modes
-			int original_stdin_mode = _setmode(_fileno(stdin), _O_BINARY);  	// temporarily switch to binary
-			_setmode(_fileno(stdin), original_stdin_mode); 				// restore original immediately after saving
+			int original_stdin_mode = _setmode(_fileno(stdin), _O_BINARY);  	// Temporarily switch to binary.
+			_setmode(_fileno(stdin), original_stdin_mode); 						// Restore original immediately after saving.
 
-			int original_stdout_mode = _setmode(_fileno(stdout), _O_BINARY);  	// temporarily switch to binary
-			_setmode(_fileno(stdout), original_stdout_mode); 			// restore original immediately after saving
+			int original_stdout_mode = _setmode(_fileno(stdout), _O_BINARY);  	// Temporarily switch to binary.
+			_setmode(_fileno(stdout), original_stdout_mode); 					// Restore original immediately after saving.
 
 			fflush(stdin);
 			fflush(stdout);
 
-			std::ignore = _setmode(_fileno(stdin), 0x20000); 			// set text mode to UTF-16
+			std::ignore = _setmode(_fileno(stdin), 0x20000); 					// Set text mode to UTF-16.
 			std::ignore = _setmode(_fileno(stdout), 0x20000);
 
 		#else
@@ -418,7 +447,7 @@ int main(int argc, char** argv) {
 		std::string utf8_prompt = convertString(wprompt);
 		std::wstring().swap(wprompt);
 		
-		// Color Profile (Used for X-Twitter, Mastodon, Tumblr & Flickr). The vector is inserted into the main default segment vector, below.
+		// Color Profile (X-Twitter, Mastodon, Tumblr & Flickr). The vector is inserted into the main default segment vector.
 		std::vector<uint8_t>profile_vec {
 			0xFF, 0xE2, 0x00, 0x00, 0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46, 0x49, 0x4C, 0x45, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x3C, 0x21,
 			0x2D, 0x2D, 0x04, 0x20, 0x00, 0x00, 0x6D, 0x6E, 0x74, 0x72, 0x52, 0x47, 0x42, 0x20, 0x58, 0x59, 0x5A, 0x20, 0x07, 0xE5, 0x00, 0x04, 0x00, 0x1B,
@@ -443,8 +472,8 @@ int main(int argc, char** argv) {
 			0x33, 0x33, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x0E, 0x41
 		};
 		
-		// Option -b selected. This vector contains the basic EXIF segment required for BlueSky as color profile not supported by BlueSky.
-		// Currently without webpage, user's image prompt, url; which is inserted later. The contents of segment_vec (not including JPG header) is inserted
+		// If option -b selected. This vector contains the basic EXIF segment required for BlueSky. Color profile not supported by BlueSky.
+		// Currently without webpage, user's image prompt & URL; which is inserted later. The contents of segment_vec (not including JPG header) is inserted
 		// into this vector.
 		std::vector<uint8_t>bluesky_vec {
 			0xFF, 0xD8, 0xFF, 0xE1, 0x1A, 0xDC, 0x45, 0x78, 0x69, 0x66, 0x00, 0x00, 0x4D, 0x4D, 0x00, 0x2A, 0x00, 0x00, 0x00, 0x08, 0x00, 0x06, 0x01, 0x12,
@@ -460,8 +489,9 @@ int main(int argc, char** argv) {
 			0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0xA0, 0x02, 0x00, 0x04, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x03, 0xE8, 0xA0, 0x03, 0x00, 0x04, 0x00, 0x00,
 			0x00, 0x01, 0x00, 0x00, 0x02, 0xF1, 0x00, 0x00, 0x00, 0x00
 		};
-		// Main segment vector containing JPG header and basic webpage to display user's image prompt. This is vector is either inserted into bluesky_vec, if
-		// -b option selected (not including JPG header bytes), or profile_vec is inserted into this vector, default (no option seletect).
+		
+		// Main segment vector containing JPG header and basic webpage to display user's image prompt. This vector is either inserted into bluesky_vec, if
+		// -b option selected (not including JPG header bytes), or profile_vec is inserted into this vector, default (no option selected).
 		std::vector<uint8_t>segment_vec {
 			0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01,
 			0x01, 0x00, 0x00, 0x48, 0x00, 0x48, 0x00, 0x00, 0x2D, 0x2D, 0x3E, 0x3C,
@@ -1128,15 +1158,15 @@ int main(int argc, char** argv) {
 			// Insert location within vector containing HTML page for the user's prompt text.
 			PROMPT_INSERT_INDEX = (args.option == Option::Bluesky) ? 0x183D : 0x1963,	
 			// Insert location within vector containing HTML page for the user's web link.
-			LINK_INSERT_INDEX   = (args.option == Option::Bluesky) ? 0x175E : 0x1884;	
+			URL_INSERT_INDEX   = (args.option == Option::Bluesky) ? 0x175E : 0x1884;	
 
-		// For X-Twitter, Mastodon, Tumblr, Flickr.
+		// For X-Twitter, Mastodon, Tumblr & Flickr.
 		constexpr uint8_t
-			PROFILE_VEC_INTERNAL_DIFF 	= 38,	// Bytes we don't count as part of internal profile size.
-			PROFILE_VEC_MAIN_DIFF 	 	= 22,	// Bytes we don't count as part of profile size.
-			PROFILE_VEC_INSERT_INDEX 	= 0x14, // Insert location within Default_Vec for the color profile (Segment_Vec). X/Twitter, Mastodon, Tumblr, Flickr.
+			PROFILE_VEC_INTERNAL_DIFF 		= 38,	// Bytes we don't count as part of internal profile size.
+			PROFILE_VEC_MAIN_DIFF 	 		= 22,	// Bytes we don't count as part of profile size.
+			PROFILE_VEC_INSERT_INDEX 		= 0x14, // Insert location within segment_vec for the color profile (profile_vec).
 			PROFILE_VEC_SIZE_FIELD_INDEX 	= 0x28, // Start index location for internal size field of the image color profile.(Max four bytes, only two used).
-			SEGMENT_VEC_SIZE_FIELD_INDEX 	= 0x16; // Start index location for size field of the main color profile. (Max two bytes)
+			SEGMENT_VEC_SIZE_FIELD_INDEX 	= 0x16; // Start index location for size field of the main color profile. (Max two bytes).
 		
 		uint8_t bits = 16;
 		
@@ -1166,13 +1196,13 @@ int main(int argc, char** argv) {
 		segment_vec.insert(segment_vec.begin() + PROMPT_INSERT_INDEX, utf8_prompt.begin(), utf8_prompt.end());
 		std::string().swap(utf8_prompt);
 		
-		segment_vec.insert(segment_vec.begin() + LINK_INSERT_INDEX, utf8_url.begin(), utf8_url.end());
+		segment_vec.insert(segment_vec.begin() + URL_INSERT_INDEX, utf8_url.begin(), utf8_url.end());
 		std::string().swap(utf8_url);
 		
 
 		#ifdef _WIN32
-			constexpr uint16_t TWITTER_SEGMENT_LIMIT = 10 * 1024; // Twitter 10KB
-			const uint16_t MAX_SEGMENT_SIZE = WIN_BUFFER_SIZE;  // Other ~64KB.
+			constexpr uint16_t TWITTER_SEGMENT_LIMIT = 10 * 1024; 	// Twitter 10KB
+			const uint16_t MAX_SEGMENT_SIZE = WIN_BUFFER_SIZE;  	// Other ~64KB.
 
 			if (segment_vec.size() > MAX_SEGMENT_SIZE) {
 				throw std::runtime_error("File Size Error: Data content size exceeds the maximum segment limit.");
@@ -1188,7 +1218,7 @@ int main(int argc, char** argv) {
 			segment_size -= 4; // For Bluesky segment size, don't count the JPG ID + APP ID "FFD8FFE1" (4 bytes).
 		
 			constexpr uint8_t 
-				EXIF_SIZE_FIELD_INDEX 		= 0x04,  
+				EXIF_SIZE_FIELD_INDEX 			= 0x04,  
 				EXIF_XRES_OFFSET_FIELD_INDEX 	= 0x2A,  
 				EXIF_YRES_OFFSET_FIELD_INDEX 	= 0x36,  
 				EXIF_ARTIST_SIZE_FIELD_INDEX 	= 0x4A,  
@@ -1244,7 +1274,7 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 	catch (const std::runtime_error& e) {
-        	std::cerr << "\n" << e.what() << "\n\n";
-        	return 1;
-    	}
+    	std::cerr << "\n" << e.what() << "\n\n";
+    	return 1;
+    }
 }
