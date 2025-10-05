@@ -53,18 +53,23 @@ static inline void displayInfo() {
 Imgprmt v2.1 (CLI Edition).
 Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
 
-imgprmt is a command-line tool for Linux and Windows that embeds image text prompts into JPG images. 
+imgprmt is a command-line tool for Linux and Windows that
+embeds image text prompts into JPG images. 
+		
 It outputs a unique JPG-HTML polyglot file, combining image, prompt text & html.
 
 Share the resulting image on compatible social media platforms like:-
-	X-Twitter, Tumblr, Mastodon, Flickr, or *Bluesky.
+		
+X-Twitter, Tumblr, Mastodon, Flickr, or *Bluesky.
+		
 The embedded prompt is preserved for anyone who downloads the image.
 
 To view the stored prompt locally, rename the image extension to ".htm" and open
 it in a web browser to display the basic webpage.
 
 For a convenient alternative to downloading & compiling the CLI source code, use the imgprmt Web App:-
-	https://cleasbycode.co.uk/imgprmt/app/
+		
+https://cleasbycode.co.uk/imgprmt/app/
 
 ──────────────────────────
 Compile & run (Linux)
@@ -101,7 +106,7 @@ X-Twitter, for compatibility reasons, is limited to 1856 (minus URL address leng
 If you intend to share your prompt-embedded image on Bluesky,
 you must first add the -b option to the command-line arguments:-
 
-	$ imgprmt -b my_image.jpg
+$ imgprmt -b my_image.jpg
 
 Secondly, to post the image on Bluesky, you will need to use the bsky_post.py script, 
 located in the repo src folder.
@@ -115,7 +120,7 @@ from your Bluesky account: https://bsky.app/settings/app-passwords
 Below is a basic usage example for the bsky_post.py Python script:
 
 $ python3 bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx 
-	--image your_image.jpg --alt-text 'alt-text here (optional)' 'standard post text here (required)'
+--image your_image.jpg --alt-text 'alt-text here (optional)' 'standard post text here (required)'
 
 Images created with the -b option can also be posted on Tumblr (bsky_post.py script not required). 
 Image file size upload limit for Bluesky is ~1MB.
@@ -1278,3 +1283,4 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
+
