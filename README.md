@@ -25,23 +25,23 @@ user1@mx:~/Desktop$ imgprmt
 Usage: imgprmt [-b] <jpg_image> 
        imgprmt --info
 
-user1@mx:~/Desktop$ imgprmt cosmic_garden.jpg
+user1@mx:~/Desktop$ imgprmt nurse.jpg
 
 *** imgprmt v2.1 ***
 
 Enter a Web link (Image source, Social media page, etc.)
 
-Full URL Address: https://x.com/Dd41Giant/status/1945507214296273145
+Full URL Address: https://x.com/_virtualvisions/status/1907586383285301504
 
-Default character limit: 4,046 (X-Twitter character limit: 1,806).
+Default character limit: 4,040 (X-Twitter character limit: 1,800).
 
 Type or paste in your prompt as one long sentence.
 
 Avoid newline characters, instead add <br> tags for new lines, if required.
 
-Image Description: Overhead Shot Extremely grainy photo taken with Lomo LC-A iso100 film...
+Image Description: A woman dressed as a nurse with a syringe in her hand, a full-body portrait in the style of...
 
-Saved "prompt-embedded" JPG image: imgprmt_29443.jpg (170713 bytes).
+Saved "prompt-embedded" JPG image: imgprmt_32097.jpg (330511 bytes).
 
 ```
 Using the default command-line arguments (no option), the embedded image can only be posted on ***Twitter***, ***Tumblr***, ***Mastodon*** & ***Flickr***.  
