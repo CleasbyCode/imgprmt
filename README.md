@@ -1,6 +1,6 @@
 # imgprmt
 
-***imgprmt*** is a command-line tool for storing and sharing your favorite AI image text prompts. The tool embeds your prompt into a ***JPG*** image and creates a unique ***JPG-HTML*** polyglot file, combining image, prompt text & html in a single output.  
+***imgprmt*** is a command-line tool for storing and sharing your favorite image text prompts. The tool embeds your prompt into a ***JPG*** image and creates a unique ***JPG-HTML*** polyglot file, combining image, prompt text & html in a single output.  
 
 Share the resulting image on compatible social media platforms like ***X-Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr***, or ***Bluesky***, where the embedded prompt remains intact for anyone who downloads the image.  
 
@@ -22,18 +22,20 @@ user1@mx:~/Downloads/imgprmt-main/src$ sudo cp imgprmt /usr/bin
 
 user1@mx:~/Desktop$ imgprmt 
 
-Usage: imgprmt [-b|-x] <jpg_image> 
+Usage: imgprmt [-b] <jpg_image> 
        imgprmt --info
 
 user1@mx:~/Desktop$ imgprmt cosmic_garden.jpg
 
-*** imgprmt v1.7 ***
+*** imgprmt v2.1 ***
 
 Enter a Web link (Image source, Social media page, etc.)
 
 Full URL Address: https://x.com/Dd41Giant/status/1945507214296273145
 
-Type or paste in your prompt as one long sentence. Character limit: 4,096.
+Default character limit: 4,046 (X-Twitter character limit: 1,806).
+
+Type or paste in your prompt as one long sentence.
 
 Avoid newline characters, instead add <br> tags for new lines, if required.
 
