@@ -44,17 +44,12 @@ Image Description: Overhead Shot Extremely grainy photo taken with Lomo LC-A iso
 Saved "prompt-embedded" JPG image: imgprmt_29443.jpg (170713 bytes).
 
 ```
-Using the required, default command-line arguments without any options, the embedded image can only be posted on ***Tumblr***, ***Mastodon*** & ***Flickr***.  
+Using the default command-line arguments (no option), the embedded image can only be posted on ***Twitter***, ***Tumblr***, ***Mastodon*** & ***Flickr***.  
 
-The ***Linux*** command-line version of ***imgprmt*** is limited to *4096* characters for your prompt text.  The ***Windows*** command-line version and the ***imgprmt Web App*** has a larger prompt text limit of *59392* characters.
+The ***Linux*** command-line version of ***imgprmt*** is limited to *4096* characters (minus ULR link) for your prompt text.  
+The ***Windows*** command-line version and the ***imgprmt web app***, has a larger prompt text limit of *59392* characters (minus ULR link).
 
-If you intend to share your *prompt-embedded* image on ***X-Twitter***, you ***must*** add the ***-x*** option to the command-line arguments:
-```console
-user1@mx:~/Desktop$ imgprmt -x my_image.jpg
-```
-The ***-x*** option reduces the prompt text limit to *6300* characters for the ***Windows*** command-line version and the ***imgprmt Web App*** (*4096 character limit for ***Linux****). This option also removes some ***JavaScript*** from the embedded webpage (*e.g. no clipboard copy button for the prompt*).  
-
-These reductions allow the embedded image to be posted on ***X-Twitter***. You can also post these ***-x*** option images on ***Tumblr***, ***Mastodon*** & ***Flickr***.
+For compatibility reasons, ***X-Twitter*** has a reduced character limit of 1856 (minus URL link) characters for your prompt text.
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the command-line arguments:  
 
@@ -70,7 +65,8 @@ Below is a usage example for the ***bsky_post.py Python*** script:
 ```console
 $ python3 bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx --image imgprmt_21195.jpg --alt-text "Your_ALT-TEXT_here" "Your_standard_post_text_here"
 ```
-Images created with the ***-b*** option can also be posted on ***Tumblr***.  Image file size limit for ***Bluesky*** is **1MB**.  
+Images created with the ***-b*** option can also be posted on ***Tumblr***, (bsky_post script not required).
+Image file size limit for ***Bluesky*** is **1MB**.  
 
 https://github.com/user-attachments/assets/de24e5d6-39d5-4b09-a5f1-dbe5b2bbf8f5
   
@@ -90,4 +86,3 @@ This project makes use of the following third-party libraries:
   - Copyright (C) 2015 Viktor Szathmáry. All Rights Reserved.
     
 ##
-
