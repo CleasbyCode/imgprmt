@@ -47,6 +47,7 @@ Saved "prompt-embedded" JPG image: imgprmt_29443.jpg (170713 bytes).
 Using the default command-line arguments (no option), the embedded image can only be posted on ***Twitter***, ***Tumblr***, ***Mastodon*** & ***Flickr***.  
 
 The ***Linux*** command-line version of ***imgprmt*** is limited to *4096* characters (minus ULR link) for your prompt text.  
+
 The ***Windows*** command-line version and the ***imgprmt web app***, has a larger prompt text limit of *59392* characters (minus ULR link).
 
 For compatibility reasons, ***X-Twitter*** has a reduced character limit of 1856 (minus URL link) characters for your prompt text.
@@ -58,7 +59,7 @@ user1@mx:~/Desktop$ imgprmt -b my_image.jpg
 ```
 Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** script, *located in the repo ***src*** folder*. To run this script, you need ***Python3*** and the ***'requests'*** and ***'bs4' (BeautifulSoup) Python*** packages installed.  
 
-An ***app-password*** is also required to use with the ***Python*** script, which you can create from your ***Bluesky*** account (*https://bsky.app/settings/app-passwords*).  
+An ***app-password*** is also required, to use with the ***Python*** script, which you can create from your ***Bluesky*** account (*https://bsky.app/settings/app-passwords*).  
 
 Below is a usage example for the ***bsky_post.py Python*** script:  
 
