@@ -439,7 +439,12 @@ int main(int argc, char** argv) {
 			default_char_limit = 4096 - wurl.length();
 		#endif
 
-		std::wcout << L"\nDefault character limit: " << default_char_limit << " (X-Twitter character limit: " << TWITTER_MAX_CHAR - wurl.length() << ").\n";
+		if (args.option == Option::None) { 
+			std::wcout << L"\nDefault character limit: " << default_char_limit << " (X-Twitter character limit: " << TWITTER_MAX_CHAR - wurl.length() << ").\n";
+		} else {
+			std::wcout << L"\nDefault character limit: " << default_char_limit << ".\n";
+		}
+
 		std::wcout << L"\nType or paste in your prompt as one long sentence.\n"; 
 		std::wcout << L"\nAvoid newline characters, instead add <br> tags for new lines, if required.\n\nImage Description: ";
 		std::getline(std::wcin, wprompt);
@@ -1283,4 +1288,5 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
+
 
