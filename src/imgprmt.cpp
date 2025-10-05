@@ -434,7 +434,7 @@ int main(int argc, char** argv) {
 		#ifdef _WIN32
 			constexpr uint16_t WIN_MAX_CHAR = 59392;	
 			
-			default_char_limit = WIN_MAX_CHAR - wurl.length();
+			default_char_limit = static_cast<uint16_t>(WIN_MAX_CHAR - wurl.length());
 		#else
 			default_char_limit = 4096 - wurl.length();
 		#endif
@@ -1218,7 +1218,7 @@ int main(int argc, char** argv) {
 				throw std::runtime_error("File Size Error: Data content size exceeds the maximum segment limit.");
 			}
 			if (segment_vec.size() > TWITTER_SEGMENT_LIMIT) {
-				std:cerr << "Warning: Data content exceeds the maximum segment size limit for X-Twitter.\n\tImage will not be compatible for posting on that platform.\n\n";
+				std::cerr << "Warning: Data content exceeds the maximum segment size limit for X-Twitter.\n\tImage will not be compatible for posting on that platform.\n\n";
 			}
 		#endif
 
@@ -1288,5 +1288,6 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
+
 
 
