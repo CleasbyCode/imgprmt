@@ -433,7 +433,7 @@ int main(int argc, char** argv) {
 			
 		#ifdef _WIN32
 			constexpr uint16_t WINDOWS_MAX_CHAR = 57151;
-			default_char_limit = WINDOWS_MAX_CHAR - wurl.length();
+			default_char_limit = static_cast<uint16_t>(WINDOWS_MAX_CHAR - wurl.length());
 		#else
 			default_char_limit = LINUX_MAX_CHAR; 
 		#endif
@@ -962,4 +962,5 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
+
 
