@@ -33,7 +33,7 @@ Enter a Web link (Image source, Social media page, etc.)
 
 Full URL Address: https://x.com/_virtualvisions/status/1907586383285301504
 
-Default character limit: 4,040 (X-Twitter character limit: 1,800).
+Default character limit: 4,095 (X-Twitter character limit: 1,800).
 
 Type or paste in your prompt as one long sentence.
 
