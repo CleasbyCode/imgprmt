@@ -46,7 +46,7 @@ Saved "prompt-embedded" JPG image: imgprmt_32097.jpg (330511 bytes).
 ```
 Using the default command-line arguments (no option), the embedded image can only be posted on ***Twitter***, ***Tumblr***, ***Mastodon*** & ***Flickr***.  
 
-The ***Linux*** CLI version of ***imgprmt*** is limited to **4096** characters for your prompt text.  
+The ***Linux*** CLI version of ***imgprmt*** is limited to **4095** characters for your prompt text.  
 
 The ***Windows*** CLI version and the ***imgprmt web app***, has a larger prompt text limit of **57151** (minus ULR link) characters.
 
