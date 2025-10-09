@@ -466,9 +466,9 @@ static inline void validate_url_link_core(const std::string& url) {
 int main(int argc, char** argv) {
 	try {
 		auto args_opt = program_args::parse(argc, argv);
-        	if (!args_opt) return 0; 
+        if (!args_opt) return 0; 
         	       
-      		program_args args = *args_opt;   
+      	program_args args = *args_opt;   
 		
 		if (!fs::exists(args.image_file_path)) {
         	throw std::runtime_error("Image File Error: File not found.");
@@ -486,7 +486,7 @@ int main(int argc, char** argv) {
         	
     	if (!image_file_ifs) {
     		throw std::runtime_error("Read File Error: Unable to read image file. Check the filename and try again.");
-   	}
+   		}
 
 		uintmax_t image_file_size = fs::file_size(args.image_file_path);
 
@@ -500,7 +500,7 @@ int main(int argc, char** argv) {
     	
     	if (image_file_size > MAX_IMAGE_SIZE) {
 			throw std::runtime_error("File Size Error: Image file exceeds maximum size limit.");
-	}
+		}
 		
 		std::vector<uint8_t> image_file_vec(image_file_size);
 	
@@ -512,7 +512,7 @@ int main(int argc, char** argv) {
 			IMAGE_END_SIG   { 0xFF, 0xD9 };
 
 		if (!std::equal(IMAGE_START_SIG.begin(), IMAGE_START_SIG.end(), image_file_vec.begin()) || !std::equal(IMAGE_END_SIG.begin(), IMAGE_END_SIG.end(), image_file_vec.end() - 2)) {
-    			throw std::runtime_error("Image File Error: This is not a valid JPG image.");
+    		throw std::runtime_error("Image File Error: This is not a valid JPG image.");
 		}
 
 		// For improved compatibility, default re-encode image to JPG Progressive format with a quality value set at 97 with no chroma subsampling,
@@ -533,14 +533,13 @@ int main(int argc, char** argv) {
 			DQT2_SIG { 0xFF, 0xDB, 0x00, 0x84 };
 				
 		erase_app_segment_if_present(image_file_vec, std::span<const uint8_t>(APP1_EXIF_SIG));
-
 		erase_app_segment_if_present(image_file_vec, std::span<const uint8_t>(APP2_ICC_SIG));
 
-    		auto dqt1 = find_sig(image_file_vec, std::span<const uint8_t>(DQT1_SIG));
-    		auto dqt2 = find_sig(image_file_vec, std::span<const uint8_t>(DQT2_SIG));
+    	auto dqt1 = find_sig(image_file_vec, std::span<const uint8_t>(DQT1_SIG));
+    	auto dqt2 = find_sig(image_file_vec, std::span<const uint8_t>(DQT2_SIG));
 
 		if (!dqt1 && !dqt2) {
-    			throw std::runtime_error("Image File Error: No DQT segment found (corrupt or unsupported JPEG).");
+    		throw std::runtime_error("Image File Error: No DQT segment found (corrupt or unsupported JPEG).");
 		}
 
 		const size_t NPOS = static_cast<size_t>(-1);
@@ -554,7 +553,7 @@ int main(int argc, char** argv) {
 		#ifdef _WIN32
 			constexpr int WIN_BUFFER_SIZE = 65535;
    			static std::vector<wchar_t> win_inbuf(WIN_BUFFER_SIZE);
-    			std::wcin.rdbuf()->pubsetbuf(win_inbuf.data(), win_inbuf.size());
+    		std::wcin.rdbuf()->pubsetbuf(win_inbuf.data(), win_inbuf.size());
 
    			std::wcout.flush();
    			std::cout.flush();
@@ -562,37 +561,36 @@ int main(int argc, char** argv) {
    			bool stdin_is_tty  = (_isatty(_fileno(stdin))  != 0);
   			bool stdout_is_tty = (_isatty(_fileno(stdout)) != 0);
 
-    			int desired_in_mode  = stdin_is_tty  ? _O_U16TEXT : _O_BINARY;
-    			int desired_out_mode = stdout_is_tty ? _O_U16TEXT : _O_BINARY;
+    		int desired_in_mode  = stdin_is_tty  ? _O_U16TEXT : _O_BINARY;
+    		int desired_out_mode = stdout_is_tty ? _O_U16TEXT : _O_BINARY;
 
-    			int old_stdin_mode  = _setmode(_fileno(stdin),  desired_in_mode);
-    			int old_stdout_mode = _setmode(_fileno(stdout), desired_out_mode);
+    		int old_stdin_mode  = _setmode(_fileno(stdin),  desired_in_mode);
+    		int old_stdout_mode = _setmode(_fileno(stdout), desired_out_mode);
 		#else
 			// Linux.
 			try {
    				if (!std::setlocale(LC_ALL, "")) {
 				}
-				
-    				std::locale loc("");              
-    				std::locale::global(loc);
-    				std::wcin.imbue(loc);
-    				std::wcout.imbue(loc);
-    				std::wcerr.imbue(loc);
+    			std::locale loc("");              
+    			std::locale::global(loc);
+    			std::wcin.imbue(loc);
+    			std::wcout.imbue(loc);
+    			std::wcerr.imbue(loc);
 			}
 			catch (const std::exception&) { 	
-    				try {
-        				std::locale loc("C.UTF-8");
-        				std::locale::global(loc);
-        				std::wcin.imbue(loc);
-        				std::wcout.imbue(loc);
-        				std::wcerr.imbue(loc);
-    				} catch (...) {
-        				std::locale loc("en_US.UTF-8");
-        				std::locale::global(loc);
-        				std::wcin.imbue(loc);
-        				std::wcout.imbue(loc);
-        				std::wcerr.imbue(loc);
-    				}
+    			try {
+        			std::locale loc("C.UTF-8");
+        			std::locale::global(loc);
+        			std::wcin.imbue(loc);
+        			std::wcout.imbue(loc);
+        			std::wcerr.imbue(loc);
+    			} catch (...) {
+        			std::locale loc("en_US.UTF-8");
+        			std::locale::global(loc);
+        			std::wcin.imbue(loc);
+        			std::wcout.imbue(loc);
+        			std::wcerr.imbue(loc);
+    			}
 			}	
 		#endif
 	
@@ -1031,9 +1029,9 @@ int main(int argc, char** argv) {
 		
 		// For X-Twitter, Mastodon, Tumblr & Flickr.
 		constexpr uint8_t
-			PROFILE_VEC_INTERNAL_DIFF 	= 38,	// Bytes we don't count as part of internal profile size.
-			PROFILE_VEC_MAIN_DIFF 	 	= 22,	// Bytes we don't count as part of profile size.
-			PROFILE_VEC_INSERT_INDEX 	= 0x14, // Insert location within segment_vec for the color profile (profile_vec).
+			PROFILE_VEC_INTERNAL_DIFF 		= 38,	// Bytes we don't count as part of internal profile size.
+			PROFILE_VEC_MAIN_DIFF 	 		= 22,	// Bytes we don't count as part of profile size.
+			PROFILE_VEC_INSERT_INDEX 		= 0x14, // Insert location within segment_vec for the color profile (profile_vec).
 			PROFILE_VEC_SIZE_FIELD_INDEX 	= 0x28, // Start index location for internal size field of the image color profile.(Max four bytes, only two used).
 			SEGMENT_VEC_SIZE_FIELD_INDEX 	= 0x16; // Start index location for size field of the main color profile. (Max two bytes).
 		
@@ -1051,7 +1049,7 @@ int main(int argc, char** argv) {
 			
 			constexpr uint8_t	
 				SEGMENT_VEC_INSERT_INDEX = 0xE3,
-				SEGMENT_VEC_START_INDEX =  0x17;
+				SEGMENT_VEC_START_INDEX  = 0x17;
 				
 			bluesky_vec.insert(bluesky_vec.begin() + SEGMENT_VEC_INSERT_INDEX, segment_vec.begin() + SEGMENT_VEC_START_INDEX, segment_vec.end());
 			segment_vec.swap(bluesky_vec);
@@ -1062,7 +1060,7 @@ int main(int argc, char** argv) {
 		std::vector<uint8_t>().swap(profile_vec);
 		
 		constexpr std::array<uint8_t, 10> PROMPT_INSERT_MARKER	{'%','%','P','R','O','M','P','T','%','%'};
-		constexpr std::array<uint8_t, 7>  URL_INSERT_MARKER	{'%','%','U','R','L','%','%'};
+		constexpr std::array<uint8_t, 7>  URL_INSERT_MARKER		{'%','%','U','R','L','%','%'};
 		
 		auto prompt_pos = find_sig(segment_vec, std::span(PROMPT_INSERT_MARKER));
 		auto url_pos 	= find_sig(segment_vec, std::span(URL_INSERT_MARKER));
@@ -1080,7 +1078,7 @@ int main(int argc, char** argv) {
 		
 		#ifdef _WIN32
 			if (old_stdin_mode  != -1) _setmode(_fileno(stdin),  old_stdin_mode);
-    		 if (old_stdout_mode != -1) _setmode(_fileno(stdout), old_stdout_mode);
+    		if (old_stdout_mode != -1) _setmode(_fileno(stdout), old_stdout_mode);
     			 
 			const uint16_t MAX_SEGMENT_SIZE = WIN_BUFFER_SIZE;  // Default segment limit: ~64KB.
 			if (segment_size > MAX_SEGMENT_SIZE) {
@@ -1132,8 +1130,8 @@ int main(int argc, char** argv) {
 		image_file_size = static_cast<uint32_t>(image_file_vec.size());
 
 		std::random_device rd;
-    		std::mt19937 gen(rd());
-    		std::uniform_int_distribution<> dist(10000, 99999);
+    	std::mt19937 gen(rd());
+    	std::uniform_int_distribution<> dist(10000, 99999);
 	
 		const std::string OUTPUT_FILENAME = "imgprmt_" + std::to_string(dist(gen)) + ".jpg";
 
