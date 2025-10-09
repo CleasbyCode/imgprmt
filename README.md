@@ -27,7 +27,7 @@ Usage: imgprmt [-b] <jpg_image>
 
 user1@mx:~/Desktop$ imgprmt nurse.jpg
 
-*** imgprmt v2.1 ***
+*** imgprmt v1.2 ***
 
 Enter a Web link (Image source, Social media page, etc.)
 
@@ -48,9 +48,9 @@ Using the default command-line arguments (no option), the embedded image can onl
 
 The ***Linux*** CLI version of ***imgprmt*** is limited to **4095** characters for your prompt text.  
 
-The ***Windows*** CLI version and the ***imgprmt web app***, has a larger prompt text limit of **57151** (minus ULR link) characters.
+The ***Windows*** CLI version and the ***imgprmt web app***, has a larger prompt text limit of **57140** (minus ULR link) characters.
 
-For compatibility reasons, ***X-Twitter*** has a reduced character limit of **1856** (minus URL link) for your prompt text.
+For compatibility reasons, ***X-Twitter*** has a reduced character limit of **1845** (minus URL link) for your prompt text.
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the command-line arguments:  
 
