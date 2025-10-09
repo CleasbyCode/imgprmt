@@ -37,7 +37,7 @@ Default byte limit: 4,095 (X-Twitter byte limit: 1,800).
 
 Type or paste in your prompt as one long sentence.
 
-If required, add \r, \n or <br> tags to your text for new lines.
+If required, add <br> tags to your text for new lines.
 
 Image Description: A woman dressed as a nurse with a syringe in her hand...
 
