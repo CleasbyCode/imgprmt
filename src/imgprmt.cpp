@@ -667,8 +667,8 @@ int main(int argc, char** argv) {
 		}
 		
 		uint16_t 
-			default_max_bytes = 57140 - wurl.length(),
-			twitter_max_bytes = 1845 - wurl.length();
+			default_max_bytes = static_cast<uint16_t>(57140 - wurl.length()),
+			twitter_max_bytes = static_cast<uint16_t>(1845 - wurl.length());
 			
 		if (args.option == Option::None) { 
 			std::wcout << L"\nDefault byte limit: " << default_max_bytes << " | X-Twitter byte limit: " << twitter_max_bytes << ".\n";
@@ -1199,3 +1199,4 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
+
