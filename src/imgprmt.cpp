@@ -602,7 +602,7 @@ int main(int argc, char** argv) {
 			URL_MIN_CHARS = 12,
 			URL_MAX_CHARS = 200;
 			
-		std::wcout << L"\nEnter a Web link (Image source, Social media page, etc.)\n\nFull URL Address: ";
+		std::wcout << L"\nEnter a web address (Your site, social media page, etc).\nFull URL: ";
 		std::getline(std::wcin, wurl);
 	
 		const std::wstring prefix = L"https://";
@@ -625,13 +625,13 @@ int main(int argc, char** argv) {
 		#endif
 
 		if (args.option == Option::None) { 
-			std::wcout << L"\nDefault byte limit: " << default_char_limit << " (X-Twitter byte limit: " << TWITTER_MAX_CHAR - wurl.length() << ").\n";
+			std::wcout << L"\nDefault byte limit: " << default_char_limit << " | X-Twitter byte limit: " << TWITTER_MAX_CHAR - wurl.length() << ".\n";
 		} else {
 			std::wcout << L"\nDefault byte limit: " << default_char_limit << ".\n";
 		}
 		
-		std::wcout << L"\nType or paste in your prompt as one long sentence.\n"; 
-		std::wcout << L"\nIf required, add <br> tags to your text for new lines.\n\nImage Description: ";
+		std::wcout << L"\nType or paste in your prompt as one long sentence."; 
+		std::wcout << L"\nIf required, add <br> tags to your text for new lines.\n\nPrompt: ";
 		std::getline(std::wcin, wprompt);
 
 		if (default_char_limit == LINUX_MAX_CHAR && wprompt.length() == default_char_limit) {
@@ -1151,4 +1151,5 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
+
 
