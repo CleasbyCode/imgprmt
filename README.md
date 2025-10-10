@@ -46,7 +46,7 @@ Using the default command-line arguments (no option), the embedded image can onl
 
 The default prompt limit is **57140** (minus URL address length) bytes.
 		
-***X-Twitter***, for compatibility reasons, is limited to **1845** (minus URL address length) bytes.
+***X-Twitter***, for compatibility reasons, is limited to **1845** (minus URL address length) bytes.  
 Considerably smaller than the default size, but should be adequate for most prompts.
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the command-line arguments:  
