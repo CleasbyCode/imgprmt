@@ -32,7 +32,7 @@ user1@mx:~/Desktop$ imgprmt nurse.jpg
 Enter a web address (Your site, social media page, etc).
 Full URL: https://x.com/_virtualvisions/status/1907586383285301504
 
-Default byte limit: 4,095 | X-Twitter byte limit: 1,800.
+Default byte limit: 57,084 | X-Twitter byte limit: 1,800.
 
 Type or paste in your prompt as one long sentence.
 If required, add <br> tags to your text for new lines.
@@ -44,11 +44,10 @@ Saved "prompt-embedded" JPG image: imgprmt_32097.jpg (330511 bytes).
 ```
 Using the default command-line arguments (no option), the embedded image can only be posted on ***Twitter***, ***Tumblr***, ***Mastodon*** & ***Flickr***.  
 
-The ***Linux*** CLI version of ***imgprmt*** is limited to **4095** bytes for your prompt text.  
-
-The ***Windows*** CLI version and the ***imgprmt web app***, has a larger limit of **57140** (minus ULR link) bytes.
-
-For compatibility reasons, ***X-Twitter*** has a reduced byte limit of **1845** (minus URL link) for your prompt text.
+The default prompt limit is **57140** (minus URL address length) bytes.
+		
+***X-Twitter***, for compatibility reasons, is limited to **1845** (minus URL address length) bytes.
+Considerably smaller than the default size, but should be adequate for most prompts.
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the command-line arguments:  
 
