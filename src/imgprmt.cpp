@@ -1077,8 +1077,8 @@ int main(int argc, char** argv) {
 		uint32_t segment_size = static_cast<uint32_t>(segment_vec.size());
 		
 		#ifdef _WIN32
-			if (old_stdin_mode  != -1) _setmode(_fileno(stdin),  old_stdin_mode);
-    		if (old_stdout_mode != -1) _setmode(_fileno(stdout), old_stdout_mode);
+			if (old_stdin_mode  != -1) (void)_setmode(_fileno(stdin),  old_stdin_mode);
+    		if (old_stdout_mode != -1) (void)_setmode(_fileno(stdout), old_stdout_mode);
     			 
 			const uint16_t MAX_SEGMENT_SIZE = WIN_BUFFER_SIZE;  // Default segment limit: ~64KB.
 			if (segment_size > MAX_SEGMENT_SIZE) {
@@ -1151,3 +1151,4 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
+
