@@ -28,6 +28,8 @@
 	#include <clocale> 
   	#include <locale>   
     #include <cwchar>
+    #include <termios.h>
+	#include <unistd.h>
     #include <turbojpeg.h>
 #endif
 
@@ -51,7 +53,7 @@
 
 namespace fs = std::filesystem;
 
-static inline void display_info() {
+static void display_info() {
 	std::cout << R"(
 Imgprmt v1.2 (CLI Edition).
 Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
@@ -97,14 +99,11 @@ Usage
 
 With the default command-line arguments without any option(s), 
 the embedded image can be posted on X-Twitter, Tumblr, Mastodon & Flickr.
-
-The Linux command-line version of imgprmt is limited to 
-4095 bytes for your prompt text.
 		
-The Windows command-line version and the imgprmt Web App has a larger prompt text limit
-of 57140 (minus URL address length) bytes.
+The default prompt limit is 57140 (minus URL address length) bytes.
 		
 X-Twitter, for compatibility reasons, is limited to 1845 (minus URL address length) bytes.
+Considerably smaller than the default size, but should be adequate for most prompts.
 
 If you intend to share your prompt-embedded image on Bluesky,
 you must first add the -b option to the command-line arguments:-
@@ -120,10 +119,24 @@ Python packages installed.
 An app-password is also required for the Python script, which you can create 
 from your Bluesky account: https://bsky.app/settings/app-passwords
 
-Below is a basic usage example for the bsky_post.py Python script:
+Here are some basic usage examples for the bsky_post.py Python script:
 
-$ python3 bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx 
---image your_image.jpg --alt-text 'alt-text here (optional)' 'standard post text here (required)'
+Standard image post to your profile/account.
+
+$ python3 bsky_post.py --handle you.bsky.social --password xxxx-xxxx-xxxx-xxxx 
+--image your_image.jpg --alt-text "alt-text here [optional]" "standard post text here [required]"
+
+If you want to post multiple images (Max. 4):
+
+$ python3 bsky_post.py --handle you.bsky.social --password xxxx-xxxx-xxxx-xxxx 
+--image img1.jpg --image img2.jpg --alt-text "alt_here" "standard post text..."
+
+If you want to post an image as a reply to another thread:
+
+$ python3 bsky_post.py --handle you.bsky.social --password xxxx-xxxx-xxxx-xxxx 
+--image your_image.jpg --alt-text "alt_here" 
+--reply-to https://bsky.app/profile/someone.bsky.social/post/8m2tgw6cgi23i 
+"standard post text..."
 
 Images created with the -b option can also be posted on Tumblr (bsky_post.py script not required). 
 Image file size upload limit for Bluesky is ~1MB.
@@ -134,7 +147,7 @@ Image file size upload limit for Bluesky is ~1MB.
 enum class Option : unsigned char { None, Bluesky };
 
 struct program_args {
-	Option option{Option::None};
+    Option option{Option::None};
     fs::path image_file_path;
 
     static std::optional<program_args> parse(int argc, char** argv) {
@@ -169,19 +182,19 @@ struct program_args {
     }
 };
 
-static inline std::optional<size_t> find_sig(const std::vector<uint8_t>& v, std::span<const uint8_t> sig) {
+static std::optional<size_t> find_sig(const std::vector<uint8_t>& v, std::span<const uint8_t> sig) {
 	auto it = std::search(v.begin(), v.end(), sig.begin(), sig.end());
     if (it == v.end()) return std::nullopt;
     return static_cast<size_t>(it - v.begin());
 }
 
-static inline void update_value(std::vector<uint8_t>& vec, uint32_t insert_index, uint32_t NEW_VALUE, uint8_t bits) {
+static void update_value(std::vector<uint8_t>& vec, uint32_t insert_index, uint32_t NEW_VALUE, uint8_t bits) {
 	while (bits) {
 		vec[insert_index++] = (NEW_VALUE >> (bits -= 8)) & 0xFF; 
     }
 }
 
-static inline bool has_valid_filename(const fs::path& p) {
+static bool has_valid_filename(const fs::path& p) {
 	if (p.empty()) {
     	return false;
 	}		
@@ -198,7 +211,7 @@ static inline bool has_valid_filename(const fs::path& p) {
     return std::all_of(filename.begin(), filename.end(), valid_char);
 }
 
-static inline bool has_file_extension(const fs::path& p, std::initializer_list<const char*> exts) {
+static bool has_file_extension(const fs::path& p, std::initializer_list<const char*> exts) {
 	auto e = p.extension().string();
     std::transform(e.begin(), e.end(), e.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
     for (const char* cand : exts) {
@@ -209,19 +222,19 @@ static inline bool has_file_extension(const fs::path& p, std::initializer_list<c
     return false;
 }
 
-static inline void replace_problem_chars(std::wstring& s) {
+static void replace_problem_chars(std::wstring& s) {
 	auto starts_with = [](const std::wstring& t, size_t pos, const std::wstring& needle) -> bool {
     	return pos + needle.size() <= t.size() && t.compare(pos, needle.size(), needle) == 0;
-    };
+	};
 
     std::wstring out;
     out.reserve(s.size()); 
 
     for (size_t i = 0; i < s.size(); ++i) {
-    	wchar_t c = s[i];
+        wchar_t c = s[i];
 
         if (c == L'<') {
-        	if (starts_with(s, i, L"<br>"))   { out += L"<br>";   i += 3; continue; }
+            if (starts_with(s, i, L"<br>"))   { out += L"<br>";   i += 3; continue; }
             if (starts_with(s, i, L"<br/>"))  { out += L"<br/>";  i += 4; continue; }
             if (starts_with(s, i, L"<br />")) { out += L"<br />"; i += 5; continue; }
         }
@@ -252,7 +265,7 @@ static inline void replace_problem_chars(std::wstring& s) {
     s.swap(out);
 }
 
-static inline std::string convert_string(const std::wstring& wide) {
+static std::string convert_string(const std::wstring& wide) {
 	#ifdef _WIN32
     	if (wide.empty()) return {};
 
@@ -275,7 +288,47 @@ static inline std::string convert_string(const std::wstring& wide) {
 	#endif
 }
 
-static inline void encode_image(std::vector<uint8_t>& image_file_vec, int& width, int& height, Option option) {
+// This should provide larger console input for Linux. Default is just 4095 chars.
+#ifdef __unix__
+	namespace {  
+		struct TermiosGuard {
+    		termios old{};
+    		bool active = false;
+
+    		TermiosGuard() {
+        		if (::isatty(STDIN_FILENO)) {
+            		if (::tcgetattr(STDIN_FILENO, &old) == 0) {
+                		termios raw = old;
+                		raw.c_lflag &= ~ICANON;
+                		raw.c_cc[VMIN]  = 1;           
+                		raw.c_cc[VTIME] = 0;
+                		if (::tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == 0) {
+                    		active = true;
+                		}
+            		}
+        		}
+    		}
+    		~TermiosGuard() {
+        		if (active) {
+            		::tcsetattr(STDIN_FILENO, TCSAFLUSH, &old);
+        		}
+    		}
+		};
+	} 
+
+	static inline std::wstring read_long_line_from_tty() {
+		TermiosGuard guard;  
+    	std::wstring s;
+    	wchar_t ch;
+    	while (std::wcin.get(ch)) {
+        	if (ch == L'\n') break;
+        	s.push_back(ch);
+    	}
+    	return s;
+	}
+#endif
+
+static void encode_image(std::vector<uint8_t>& image_file_vec, int& width, int& height, Option option) {
 	tjhandle decompressor = tjInitDecompress();
 	if (!decompressor) throw std::runtime_error("tjInitDecompress() failed.");
 
@@ -310,8 +363,8 @@ static inline void encode_image(std::vector<uint8_t>& image_file_vec, int& width
 
 	if (tjCompress2(compressor, decoded_image_vec.data(), width, 0, height, TJPF_RGB, &jpegBuf, &jpegSize, subsamp, JPG_QUALITY_VAL, flags) != 0) {
     	tjDestroy(compressor);
-    		throw std::runtime_error(std::string("tjCompress2: ") + tjGetErrorStr());
-		}	
+    	throw std::runtime_error(std::string("tjCompress2: ") + tjGetErrorStr());
+	}	
 	tjDestroy(compressor);
 
 	std::vector<uint8_t> output_image_vec(jpegBuf, jpegBuf + jpegSize);
@@ -322,7 +375,7 @@ static inline void encode_image(std::vector<uint8_t>& image_file_vec, int& width
 	std::vector<uint8_t>().swap(decoded_image_vec);
 }
 
-static inline auto erase_app_segment_if_present(std::vector<uint8_t>& v, std::span<const uint8_t> sig) -> void {
+static auto erase_app_segment_if_present(std::vector<uint8_t>& v, std::span<const uint8_t> sig) -> void {
 	auto pos = find_sig(v, sig);
     if (!pos) return;
 	if (*pos + 3 >= v.size()) return;
@@ -331,41 +384,42 @@ static inline auto erase_app_segment_if_present(std::vector<uint8_t>& v, std::sp
 
     size_t erase_end = *pos + 2 + block_len; 
     if (erase_end > v.size()) return;       
+
     v.erase(v.begin() + *pos, v.begin() + erase_end);
 }
 
 // Validate URL.
 namespace {
-	static inline bool is_dec(char c) noexcept { return c >= '0' && c <= '9'; }
+	static bool is_dec(char c) noexcept { return c >= '0' && c <= '9'; }
 
-	static inline bool is_hex(char c) noexcept {
+	static bool is_hex(char c) noexcept {
     	unsigned char u = static_cast<unsigned char>(c);
     	return std::isxdigit(u) != 0;
 	}
 	
-	static inline bool valid_pct(const std::string& s, std::size_t i) noexcept {
+	static bool valid_pct(const std::string& s, std::size_t i) noexcept {
     	return i + 2 < s.size() && is_hex(s[i+1]) && is_hex(s[i+2]);
 	}
 
-	static inline bool valid_ipv4(const std::string& s) noexcept {
+	static bool valid_ipv4(const std::string& s) noexcept {
     	int dots = 0, val = 0, digits = 0;
     	for (char c : s) {
         	if (c == '.') {
-            	if (digits == 0 || val > 255) return false;
+        		if (digits == 0 || val > 255) return false;
             	++dots; val = 0; digits = 0;
-        		} else if (is_dec(c)) {
-            		val = val * 10 + (c - '0');
-            		if (val > 255) return false;
-            		++digits;
-        		} else {
-            		return false;
-        		}
+        	} else if (is_dec(c)) {
+            	val = val * 10 + (c - '0');
+            	if (val > 255) return false;
+            	++digits;
+        	} else {
+            	return false;
+        	}
     	}
     	if (digits == 0 || val > 255) return false;
     	return dots == 3;
 	}	
 
-	static inline bool valid_dns_label(const std::string& lbl) noexcept {
+	static bool valid_dns_label(const std::string& lbl) noexcept {
     	if (lbl.empty() || lbl.size() > 63) return false;
     	auto alnum = [](unsigned char c){ return std::isalnum(c) != 0; };
     	if (!alnum(lbl.front()) || !alnum(lbl.back())) return false;
@@ -374,7 +428,7 @@ namespace {
     	return true;
 	}
 
-	static inline bool valid_hostname_ascii(const std::string& host) noexcept {
+	static bool valid_hostname_ascii(const std::string& host) noexcept {
     	if (host.empty() || host.size() > 253) return false;
     	if (host.find("..") != std::string::npos) return false;
     	if (host.back() == '.') return false;
@@ -383,7 +437,7 @@ namespace {
     	for (unsigned char c : host) {
         	if (!(std::isalnum(c) || c == '-' || c == '.')) return false;
         	if (!(std::isdigit(c) || c == '.')) all_digits_or_dot = false;
-    	}
+    		}
     	if (all_digits_or_dot && valid_ipv4(host)) return true;
 
     	std::size_t start = 0;
@@ -397,15 +451,15 @@ namespace {
     	return true;
 	}
 
-	static inline bool valid_path_query_ascii(const std::string& s, std::string* err) {
+	static bool valid_path_query_ascii(const std::string& s, std::string* err) {
     	for (std::size_t i = 0; i < s.size(); ++i) {
         	unsigned char c = static_cast<unsigned char>(s[i]);
         	if (c < 0x20 || c == 0x7F) { if (err) *err = "Control char in path/query"; return false; }
         	if (c == '#') { if (err) *err = "Fragment ('#') not allowed"; return false; }
         	if (c == '%') {
             	if (!valid_pct(s, i)) { if (err) *err = "Bad percent-encoding"; return false; }
-            	i += 2;
-            	continue;
+            		i += 2;
+            		continue;
         	}
         	if (!(std::isalnum(c) || c=='-'||c=='_'||c=='.'||c=='~' ||
 				c==':'||c=='/'||c=='?'||c=='@'||c=='!'||c=='$'||c=='&'||
@@ -418,13 +472,13 @@ namespace {
 	}
 }
 
-static inline bool validate_url_link(const std::string& url, std::string* err = nullptr) {
+static bool validate_url_link(const std::string& url, std::string* err = nullptr) {
 	auto bad = [&](const char* e){ if (err) *err = e; return false; };
 	
  	constexpr char kScheme[] = "https://";
  	
     for (unsigned char c : url)
-        if (c < 0x20 || c == 0x7F) return bad("Control/whitespace not allowed");
+    	if (c < 0x20 || c == 0x7F) return bad("Control/whitespace not allowed");
     std::size_t pos = sizeof(kScheme) - 1;
     std::size_t slash = url.find('/', pos);
     std::string authority = url.substr(pos, (slash == std::string::npos) ? std::string::npos : slash - pos);
@@ -436,12 +490,12 @@ static inline bool validate_url_link(const std::string& url, std::string* err = 
     std::size_t colon = authority.rfind(':');
     	
     if (colon != std::string::npos) {
-        host = authority.substr(0, colon);
+    	host = authority.substr(0, colon);
         port_str = authority.substr(colon + 1);
         if (port_str.empty()) return bad("Empty port");
         unsigned long port = 0;
         for (char c : port_str) {
-            if (!is_dec(c)) return bad("Port must be digits");
+        	if (!is_dec(c)) return bad("Port must be digits");
             port = port * 10 + (c - '0');
             if (port > 65535UL) return bad("Port out of range");
         }
@@ -456,7 +510,7 @@ static inline bool validate_url_link(const std::string& url, std::string* err = 
     return valid_path_query_ascii(url.substr(slash), err);
 }
 
-static inline void validate_url_link_core(const std::string& url) {
+static void validate_url_link_core(const std::string& url) {
 	std::string err;
     if (!validate_url_link(url, &err)) {
     	throw std::runtime_error(std::string("Link Error: ") + (err.empty() ? "Invalid URL" : err));
@@ -533,6 +587,7 @@ int main(int argc, char** argv) {
 			DQT2_SIG { 0xFF, 0xDB, 0x00, 0x84 };
 				
 		erase_app_segment_if_present(image_file_vec, std::span<const uint8_t>(APP1_EXIF_SIG));
+
 		erase_app_segment_if_present(image_file_vec, std::span<const uint8_t>(APP2_ICC_SIG));
 
     	auto dqt1 = find_sig(image_file_vec, std::span<const uint8_t>(DQT1_SIG));
@@ -567,10 +622,10 @@ int main(int argc, char** argv) {
     		int old_stdin_mode  = _setmode(_fileno(stdin),  desired_in_mode);
     		int old_stdout_mode = _setmode(_fileno(stdout), desired_out_mode);
 		#else
-			// Linux.
 			try {
    				if (!std::setlocale(LC_ALL, "")) {
 				}
+				
     			std::locale loc("");              
     			std::locale::global(loc);
     			std::wcin.imbue(loc);
@@ -610,33 +665,25 @@ int main(int argc, char** argv) {
 		if (URL_MIN_CHARS > wurl.length() || wurl.substr(0, prefix.length()) != prefix || wurl.length() > URL_MAX_CHARS) {
 			throw std::runtime_error("Link Error: URL must start with 'https://', have a minimun length of 12 characters and not exceed 200 characters.");
 		}
-	
-		constexpr uint16_t 
-			TWITTER_MAX_CHAR = 1845,
-			LINUX_MAX_CHAR = 4095;
-					
-		uint16_t default_char_limit;
+		
+		uint16_t 
+			default_max_bytes = 57140 - wurl.length(),
+			twitter_max_bytes = 1845 - wurl.length();
 			
-		#ifdef _WIN32
-			constexpr uint16_t WINDOWS_MAX_CHAR = 57140;
-			default_char_limit = static_cast<uint16_t>(WINDOWS_MAX_CHAR - wurl.length());
-		#else
-			default_char_limit = LINUX_MAX_CHAR; 
-		#endif
-
 		if (args.option == Option::None) { 
-			std::wcout << L"\nDefault byte limit: " << default_char_limit << " | X-Twitter byte limit: " << TWITTER_MAX_CHAR - wurl.length() << ".\n";
+			std::wcout << L"\nDefault byte limit: " << default_max_bytes << " | X-Twitter byte limit: " << twitter_max_bytes << ".\n";
 		} else {
-			std::wcout << L"\nDefault byte limit: " << default_char_limit << ".\n";
+			std::wcout << L"\nDefault byte limit: " << default_max_bytes << ".\n";
 		}
 		
 		std::wcout << L"\nType or paste in your prompt as one long sentence."; 
 		std::wcout << L"\nIf required, add <br> tags to your text for new lines.\n\nPrompt: ";
-		std::getline(std::wcin, wprompt);
 
-		if (default_char_limit == LINUX_MAX_CHAR && wprompt.length() == default_char_limit) {
-			std::wcerr << "\nWarning: Image description exceeds the maximum byte limit for Linux.\n\t Text over the limit will be cut from your description.\n";
-		}		
+		#ifdef _WIN32 
+			std::getline(std::wcin, wprompt); 
+		#else 
+			wprompt = read_long_line_from_tty(); 
+		#endif
 
 		replace_problem_chars(wprompt);
 
@@ -1049,7 +1096,7 @@ int main(int argc, char** argv) {
 			
 			constexpr uint8_t	
 				SEGMENT_VEC_INSERT_INDEX = 0xE3,
-				SEGMENT_VEC_START_INDEX  = 0x17;
+				SEGMENT_VEC_START_INDEX =  0x17;
 				
 			bluesky_vec.insert(bluesky_vec.begin() + SEGMENT_VEC_INSERT_INDEX, segment_vec.begin() + SEGMENT_VEC_START_INDEX, segment_vec.end());
 			segment_vec.swap(bluesky_vec);
@@ -1074,24 +1121,25 @@ int main(int argc, char** argv) {
 		std::string().swap(utf8_prompt);
 		std::string().swap(utf8_url);
 		
+		constexpr uint16_t 
+			MAX_SEGMENT_SIZE 		= 65535,     // ~64KB
+			TWITTER_SEGMENT_LIMIT	= 10 * 1024; // X-Twitter 10KB.
+		
 		uint32_t segment_size = static_cast<uint32_t>(segment_vec.size());
-		
-		#ifdef _WIN32
-			if (old_stdin_mode  != -1) (void)_setmode(_fileno(stdin),  old_stdin_mode);
-    		if (old_stdout_mode != -1) (void)_setmode(_fileno(stdout), old_stdout_mode);
-    			 
-			const uint16_t MAX_SEGMENT_SIZE = WIN_BUFFER_SIZE;  // Default segment limit: ~64KB.
-			if (segment_size > MAX_SEGMENT_SIZE) {
-				throw std::runtime_error("File Size Error: Data content size exceeds the maximum segment limit.");
-			}	
-		#endif
-		
-		constexpr uint16_t TWITTER_SEGMENT_LIMIT = 10 * 1024; 	// X-Twitter 10KB.
 		
 		if (segment_size > TWITTER_SEGMENT_LIMIT) {
 			std::wcerr << "\n\nWarning: Data content exceeds the maximum segment size limit for X-Twitter.\n\t Image will not be compatible for posting on that platform.\n";
 		}
-
+		
+		if (segment_size > MAX_SEGMENT_SIZE) {
+			throw std::runtime_error("File Size Error: Data content size exceeds the maximum segment limit.");
+		}
+		
+		#ifdef _WIN32
+			 if (old_stdin_mode  != -1) (void)_setmode(_fileno(stdin),  old_stdin_mode);
+    		 if (old_stdout_mode != -1) (void)_setmode(_fileno(stdout), old_stdout_mode);		
+		#endif
+	
 		if (args.option == Option::Bluesky) {
 			segment_size -= 4; // For Bluesky segment size, don't count the JPG ID + APP ID "FFD8FFE1" (4 bytes).
 		
@@ -1151,5 +1199,3 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
-
-
