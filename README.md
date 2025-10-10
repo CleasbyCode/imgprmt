@@ -29,17 +29,15 @@ user1@mx:~/Desktop$ imgprmt nurse.jpg
 
 *** imgprmt v1.2 ***
 
-Enter a Web link (Image source, Social media page, etc.)
+Enter a web address (Your site, social media page, etc).
+Full URL: https://x.com/_virtualvisions/status/1907586383285301504
 
-Full URL Address: https://x.com/_virtualvisions/status/1907586383285301504
-
-Default byte limit: 4,095 (X-Twitter byte limit: 1,800).
+Default byte limit: 4,095 | X-Twitter byte limit: 1,800.
 
 Type or paste in your prompt as one long sentence.
-
 If required, add <br> tags to your text for new lines.
 
-Image Description: A woman dressed as a nurse with a syringe in her hand...
+Prompt: A woman dressed as a nurse with a syringe in her hand...
 
 Saved "prompt-embedded" JPG image: imgprmt_32097.jpg (330511 bytes).
 
