@@ -44,9 +44,9 @@ Saved "prompt-embedded" JPG image: imgprmt_32097.jpg (330511 bytes).
 ```
 Using the default command-line arguments (no option), the embedded image can only be posted on ***Twitter***, ***Tumblr***, ***Mastodon*** & ***Flickr***.  
 
-The default prompt limit is **57140** (minus URL address length) bytes.
+The default prompt limit is **57140** bytes (minus URL address length).
 		
-***X-Twitter***, for compatibility reasons, is limited to **1845** (minus URL address length) bytes.  
+***X-Twitter***, for compatibility reasons, is limited to **1845** bytes (minus URL address length).  
 Considerably smaller than the default size, but should be adequate for most prompts.
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the command-line arguments:  
@@ -58,11 +58,24 @@ Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_p
 
 An ***app-password*** is also required, to use with the ***Python*** script, which you can create from your ***Bluesky*** account (*https://bsky.app/settings/app-passwords*).  
 
-Below is a usage example for the ***bsky_post.py Python*** script:  
+Here are some basic usage examples for the bsky_post.py Python script:  
+
+Standard image post to your profile/account.
 
 ```console
-$ python3 bsky_post.py --handle cleasbycode.bsky.social --password xxxx-xxxx-xxxx-xxxx --image imgprmt_21195.jpg --alt-text "Your_ALT-TEXT_here" "Your_standard_post_text_here"
+$ python3 bsky_post.py --handle you.bsky.social --password xxxx-xxxx-xxxx-xxxx --image your_image.jpg --alt-text "alt-text here (optional)" "standard post text here (required)"
 ```
+If you want to post multiple images (Max. 4).  
+
+```console
+$ python3 bsky_post.py --handle you.bsky.social --password xxxx-xxxx-xxxx-xxxx --image img1.jpg --image img2.jpg --alt-text "alt_here" "standard post text..."
+```
+If you want to post an image as a reply to another thread.  
+
+```console
+$ python3 bsky_post.py --handle you.bsky.social --password xxxx-xxxx-xxxx-xxxx --image your_image.jpg --alt-text "alt_here" --reply-to https://bsky.app/profile/someone.bsky.social/post/8m2tgw6cgi23i "standard post text..."
+```
+
 Images created with the ***-b*** option can also be posted on ***Tumblr***, (bsky_post script not required).
 Image file size limit for ***Bluesky*** is **1MB**.  
 
