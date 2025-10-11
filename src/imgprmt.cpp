@@ -100,9 +100,9 @@ Usage
 With the default command-line arguments without any option(s), 
 the embedded image can be posted on X-Twitter, Tumblr, Mastodon & Flickr.
 		
-The default prompt limit is 57140 (minus URL address length) bytes.
+The default prompt limit is 57140 bytes (minus URL address length).
 		
-X-Twitter, for compatibility reasons, is limited to 1845 (minus URL address length) bytes.
+X-Twitter, for compatibility reasons, is limited to 1845 bytes (minus URL address length).
 Considerably smaller than the default size, but should be adequate for most prompts.
 
 If you intend to share your prompt-embedded image on Bluesky,
@@ -316,7 +316,7 @@ static std::string convert_string(const std::wstring& wide) {
 		};
 	} 
 
-	static inline std::wstring read_long_line_from_tty() {
+	static std::wstring read_long_line_from_tty() {
 		TermiosGuard guard;  
     	std::wstring s;
     	wchar_t ch;
@@ -1199,4 +1199,5 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
+
 
