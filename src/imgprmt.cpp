@@ -328,6 +328,9 @@ static std::string convert_string(const std::wstring& wide) {
 	}
 #endif
 
+// For improved compatibility, default re-encode image to JPG Progressive format with a quality value set at 97 with no chroma subsampling,
+// or if Bluesky option, re-encode to standard Baseline format with a quality value set at 85.
+
 static void encode_image(std::vector<uint8_t>& image_file_vec, int& width, int& height, Option option) {
 	tjhandle decompressor = tjInitDecompress();
 	if (!decompressor) throw std::runtime_error("tjInitDecompress() failed.");
@@ -561,18 +564,29 @@ int main(int argc, char** argv) {
 		image_file_ifs.read(reinterpret_cast<char*>(image_file_vec.data()), image_file_size);
 		image_file_ifs.close();
 	
-		constexpr std::array<uint8_t, 2>
-			IMAGE_START_SIG	{ 0xFF, 0xD8 },
-			IMAGE_END_SIG   { 0xFF, 0xD9 };
+		constexpr uint8_t 
+			SOI0 = 0xFF, 
+			SOI1 = 0xD8,
+   			EOI0 = 0xFF, 
+   			EOI1 = 0xD9;
 
-		if (!std::equal(IMAGE_START_SIG.begin(), IMAGE_START_SIG.end(), image_file_vec.begin()) || !std::equal(IMAGE_END_SIG.begin(), IMAGE_END_SIG.end(), image_file_vec.end() - 2)) {
-    		throw std::runtime_error("Image File Error: This is not a valid JPG image.");
-		}
+	    if (!(image_file_vec[0] == SOI0 && image_file_vec[1] == SOI1)) {
+        	throw std::runtime_error("Image File Error: Missing SOI marker.");
+    	}
 
-		// For improved compatibility, default re-encode image to JPG Progressive format with a quality value set at 97 with no chroma subsampling,
-		// or if Bluesky option, re-encode to standard Baseline format with a quality value set at 85.
-	
-		// -------------
+    	const std::array<uint8_t,2> EOI{EOI0, EOI1};
+
+    	auto last_eoi = std::find_end(image_file_vec.begin() + 2, image_file_vec.end(), EOI.begin(), EOI.end());
+    	if (last_eoi == image_file_vec.end()) {
+        	throw std::runtime_error("Image File Error: Missing EOI marker.");
+    	}
+
+    	// Erase any trailing data after EOI
+    	auto after_eoi = last_eoi + 2;
+    	if (after_eoi != image_file_vec.end()) {
+        	image_file_vec.erase(after_eoi, image_file_vec.end());
+    	}
+		
 		int img_width = 0, img_height = 0;
 		
 		encode_image(image_file_vec, img_width, img_height, args.option);
@@ -587,7 +601,6 @@ int main(int argc, char** argv) {
 			DQT2_SIG { 0xFF, 0xDB, 0x00, 0x84 };
 				
 		erase_app_segment_if_present(image_file_vec, std::span<const uint8_t>(APP1_EXIF_SIG));
-
 		erase_app_segment_if_present(image_file_vec, std::span<const uint8_t>(APP2_ICC_SIG));
 
     	auto dqt1 = find_sig(image_file_vec, std::span<const uint8_t>(DQT1_SIG));
@@ -600,8 +613,6 @@ int main(int argc, char** argv) {
 		const size_t NPOS = static_cast<size_t>(-1);
 		size_t dqt_pos = std::min(dqt1.value_or(NPOS), dqt2.value_or(NPOS));
 		image_file_vec.erase(image_file_vec.begin(), image_file_vec.begin() + static_cast<std::ptrdiff_t>(dqt_pos));
-		
-		// ------------
 		
 		std::cout << "\n*** imgprmt v1.2 ***\n";
 
@@ -695,7 +706,7 @@ int main(int argc, char** argv) {
 		std::string utf8_prompt = convert_string(wprompt);
 		std::wstring().swap(wprompt);
 		
-		// Color Profile (X-Twitter, Mastodon, Tumblr & Flickr). The vector is inserted into the main default segment vector.
+		// Color Profile (X-Twitter, Mastodon, Tumblr & Flickr). Vector content will be inserted into the main default segment vector.
 		std::vector<uint8_t>profile_vec {
 			0xFF, 0xE2, 0x00, 0x00, 0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46, 0x49, 0x4C, 0x45, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x3C, 0x21,
 			0x2D, 0x2D, 0x04, 0x20, 0x00, 0x00, 0x6D, 0x6E, 0x74, 0x72, 0x52, 0x47, 0x42, 0x20, 0x58, 0x59, 0x5A, 0x20, 0x07, 0xE5, 0x00, 0x04, 0x00, 0x1B,
@@ -720,8 +731,8 @@ int main(int argc, char** argv) {
 			0x33, 0x33, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x0E, 0x41
 		};
 		
-		// If option -b selected. This vector contains the basic EXIF segment required for BlueSky. Color profile not supported by BlueSky.
-		// Currently without webpage, user's image prompt & URL; which is inserted later. The contents of segment_vec (not including JPG header) is inserted
+		// Use if option -b selected. This vector contains the basic EXIF segment required for BlueSky. Color profile not supported by BlueSky.
+		// Currently without webpage, user's image prompt & URL, which is inserted later. The contents of segment_vec (not including JPG header) is inserted
 		// into this vector.
 		std::vector<uint8_t>bluesky_vec {
 			0xFF, 0xD8, 0xFF, 0xE1, 0x1A, 0xDC, 0x45, 0x78, 0x69, 0x66, 0x00, 0x00, 0x4D, 0x4D, 0x00, 0x2A, 0x00, 0x00, 0x00, 0x08, 0x00, 0x06, 0x01, 0x12,
@@ -739,7 +750,7 @@ int main(int argc, char** argv) {
 		};
 		
 		// Main segment vector containing JPG header and basic webpage to display user's image prompt. This vector is either inserted into bluesky_vec, if
-		// -b option selected (not including JPG header bytes), or profile_vec is inserted into this vector, default (no option selected).
+		// -b option selected (not including JPG header bytes), or profile_vec is inserted into this vector, the default (no option selected).
 		std::vector<uint8_t>segment_vec {
 			0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x48, 0x00, 0x48, 0x00, 0x00, 0x2D, 0x2D, 0x3E, 0x3C,
 			0x21, 0x44, 0x4F, 0x43, 0x54, 0x59, 0x50, 0x45, 0x20, 0x68, 0x74, 0x6D, 0x6C, 0x3E, 0x3C, 0x68, 0x74, 0x6D, 0x6C, 0x20, 0x6C, 0x61, 0x6E, 0x67,
@@ -1165,10 +1176,10 @@ int main(int argc, char** argv) {
 			update_value(segment_vec, EXIF_ARTIST_SIZE_FIELD_INDEX, EXIF_ARTIST_SIZE, bits); 
 			update_value(segment_vec, EXIF_SUBIFD_OFFSET_FIELD_INDEX, EXIF_SUBIFD_OFFSET, bits);
 		} else {
-			// Update color profile segment size field (FFE2xxxx)
+			// Update JPG segment size field for APP_2 (icc color_profile) (FFE2xxxx) 2 bytes.
 			update_value(segment_vec, SEGMENT_VEC_SIZE_FIELD_INDEX, segment_size - PROFILE_VEC_MAIN_DIFF, bits);
 
-			// Update internal color profile size field
+			// Update internal color profile size field, 4 bytes.
 			update_value(segment_vec, PROFILE_VEC_SIZE_FIELD_INDEX, segment_size - PROFILE_VEC_INTERNAL_DIFF, bits);
 		}	
 
@@ -1199,5 +1210,3 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
-
-
