@@ -35,6 +35,7 @@
 
 #include <string>
 #include <string_view>
+#include <cstring>
 #include <cctype>
 #include <cstddef>
 #include <cstdlib>
@@ -75,10 +76,9 @@ it in a web browser to display the basic webpage.
 For a convenient alternative to downloading & compiling the CLI source code, use the imgprmt Web App:-
 		
 https://cleasbycode.co.uk/imgprmt/app/
-
-──────────────────────────
+________________________
 Compile & run (Linux)
-──────────────────────────
+________________________
 		
   $ sudo apt-get install libturbojpeg0-dev
 
@@ -89,10 +89,9 @@ Compile & run (Linux)
 
   $ sudo cp imgprmt /usr/bin
   $ imgprmt
-
-──────────────────────────
+________________________
 Usage
-──────────────────────────
+________________________
 
   imgprmt [-b] <jpg_image>
   imgprmt --info
@@ -182,10 +181,128 @@ struct program_args {
     }
 };
 
-static std::optional<size_t> find_sig(const std::vector<uint8_t>& v, std::span<const uint8_t> sig) {
+// searchSig function searches a byte vector (uint8_t) for a fixed byte pattern and returns the offset of the first match, or std::nullopt if there’s no match.
+// It uses std::search on v.begin().. v.end() with the pattern given by sig.begin().. sig.end(). 
+	
+// The std::span<const uint8_t> parameter lets you pass anything contiguous - std::array, C-array, another std::vector, or a subrange, without copying. 
+// If std::search returns v.end(), the function maps that to std::nullopt; otherwise it converts the iterator difference to a size_t index.
+static std::optional<size_t> searchSig(const std::vector<uint8_t>& v, std::span<const uint8_t> sig) {
 	auto it = std::search(v.begin(), v.end(), sig.begin(), sig.end());
     if (it == v.end()) return std::nullopt;
     return static_cast<size_t>(it - v.begin());
+}
+
+// First search for an EXIF segment, if found search for an Orientation tag.
+// Returns 1..8 if found and passed to normalize_orientation, or std::nullopt if no EXIF/Orientation.
+static std::optional<uint16_t> exif_orientation(const std::vector<uint8_t>& jpg) {
+	const uint8_t APP1[] = {0xFF, 0xE1};
+    auto app1 = searchSig(jpg, std::span<const uint8_t>(APP1, 2));
+    if (!app1) return std::nullopt;
+
+    size_t p = *app1;
+    if (p + 4 > jpg.size()) return std::nullopt;
+
+    uint16_t len = (static_cast<uint16_t>(jpg[p+2]) << 8) | jpg[p+3];
+    size_t exif_end = p + 2 + len;            
+    if (exif_end > jpg.size()) return std::nullopt;
+
+    size_t exif_start = p + 4;
+    if (exif_start + 6 > exif_end) return std::nullopt;
+    if (std::memcmp(&jpg[exif_start], "Exif\0\0", 6) != 0) return std::nullopt;
+
+    size_t tiff = exif_start + 6;
+    if (tiff + 8 > exif_end) return std::nullopt;
+
+    bool le = false;
+    if (jpg[tiff] == 'I' && jpg[tiff+1] == 'I') le = true;
+    else if (jpg[tiff] == 'M' && jpg[tiff+1] == 'M') le = false;
+    else return std::nullopt;
+
+    auto rd16 = [&](size_t off) -> uint16_t {
+		if (off + 1 >= exif_end) return 0;
+        return le ? (uint16_t)(jpg[off] | (jpg[off+1] << 8)) : (uint16_t)((jpg[off] << 8) | jpg[off+1]);
+    };
+    auto rd32 = [&](size_t off) -> uint32_t {
+        if (off + 3 >= exif_end) return 0;
+        return le ? (uint32_t)(jpg[off] | (jpg[off+1] << 8) | (jpg[off+2] << 16) | (jpg[off+3] << 24)) : (uint32_t)((jpg[off] << 24) | (jpg[off+1] << 16) | (jpg[off+2] << 8) | jpg[off+3]);
+    };
+
+    if (rd16(tiff + 2) != 0x002A) return std::nullopt;
+    uint32_t ifd0_off = rd32(tiff + 4);
+    size_t ifd = tiff + ifd0_off;
+    if (ifd + 2 > exif_end) return std::nullopt;
+
+    uint16_t count = rd16(ifd);
+    ifd += 2;
+    for (uint16_t i = 0; i < count; ++i) {
+    	size_t entry = ifd + i * 12;
+        if (entry + 12 > exif_end) return std::nullopt;
+        uint16_t tag = rd16(entry + 0);
+        if (tag == 0x0112) {
+            return rd16(entry + 8); // 1..8 usually. 
+        }
+    }
+    return std::nullopt;
+}
+
+static void rotate_rgb_180(std::vector<uint8_t>& rgb, int w, int h) {
+    const int stride = w * 3;
+    for (int y = 0; y < h / 2; ++y) {
+		int opp = h - 1 - y;
+        for (int x = 0; x < w; ++x) {
+        	for (int c = 0; c < 3; ++c)
+            	std::swap(rgb[y*stride + x*3 + c], rgb[opp*stride + (w-1-x)*3 + c]);
+        }
+    }
+    if (h % 2 == 1) {
+        int y = h/2;
+        for (int x = 0; x < w/2; ++x)
+            for (int c = 0; c < 3; ++c)
+                std::swap(rgb[y*stride + x*3 + c], rgb[y*stride + (w-1-x)*3 + c]);
+    }
+}
+
+static void rotate_rgb_90cw(std::vector<uint8_t>& rgb, int& w, int& h) {
+    std::vector<uint8_t> out(static_cast<size_t>(w) * static_cast<size_t>(h) * 3);
+    int nw = h;
+    for (int y = 0; y < h; ++y) {
+        for (int x = 0; x < w; ++x) {
+            int nx = h - 1 - y, ny = x;
+            for (int c = 0; c < 3; ++c)
+                out[(static_cast<size_t>(ny) * nw + nx) * 3 + c] =
+                    rgb[(static_cast<size_t>(y) * w + x) * 3 + c];
+        }
+    }
+    rgb.swap(out);
+    std::swap(w, h);
+}
+
+static void rotate_rgb_270cw(std::vector<uint8_t>& rgb, int& w, int& h) {
+    std::vector<uint8_t> out(static_cast<size_t>(w) * static_cast<size_t>(h) * 3);
+    int nw = h;
+    for (int y = 0; y < h; ++y) {
+        for (int x = 0; x < w; ++x) {
+            int nx = y, ny = w - 1 - x;
+            for (int c = 0; c < 3; ++c)
+                out[(static_cast<size_t>(ny) * nw + nx) * 3 + c] =
+                    rgb[(static_cast<size_t>(y) * w + x) * 3 + c];
+        }
+    }
+    rgb.swap(out);
+    std::swap(w, h);
+}
+
+// If exif_orientation found an Orientation tag, use normalize_orientation 
+// and its above helpers to normalize the pixels, so that we can later safely remove
+// the EXIF segment from the cover image and have correct orientation with viewers.
+// Minimal mapper: handle 3,6,8 (most common). Add flips (2,4,5,7)...
+static void normalize_orientation(std::vector<uint8_t>& rgb, int& w, int& h, int ori) {
+    switch (ori) {
+        case 3: rotate_rgb_180(rgb, w, h); break;
+        case 6: rotate_rgb_90cw(rgb, w, h); break;
+        case 8: rotate_rgb_270cw(rgb, w, h); break;
+        default: /* 1 or unsupported -> do nothing */ break;
+    }
 }
 
 static void update_value(std::vector<uint8_t>& vec, uint32_t insert_index, uint32_t NEW_VALUE, uint8_t bits) {
@@ -222,10 +339,13 @@ static bool has_file_extension(const fs::path& p, std::initializer_list<const ch
     return false;
 }
 
+// Sanitizes user-supplied (wide) text so it’s safe to drop into an HTML context while still allowing line breaks. 
+// Everything else goes through a switch that HTML-escapes the dangerous characters & < > " ' \`` into their entities (&, <, >, ", ', ``&#96;``), preventing HTML/JS injection;
+// Any other character is copied as-is. 
 static void replace_problem_chars(std::wstring& s) {
-	auto starts_with = [](const std::wstring& t, size_t pos, const std::wstring& needle) -> bool {
-    	return pos + needle.size() <= t.size() && t.compare(pos, needle.size(), needle) == 0;
-	};
+    auto starts_with = [](const std::wstring& t, size_t pos, const std::wstring& needle) -> bool {
+        return pos + needle.size() <= t.size() && t.compare(pos, needle.size(), needle) == 0;
+    };
 
     std::wstring out;
     out.reserve(s.size()); 
@@ -265,11 +385,33 @@ static void replace_problem_chars(std::wstring& s) {
     s.swap(out);
 }
 
+// Try to set a UTF-8 C locale; keep C++ locale in sync if it works. (Linux).
+static bool force_utf8_locale() {
+	if (std::setlocale(LC_ALL, "C.UTF-8") || std::setlocale(LC_ALL, "en_US.UTF-8") || std::setlocale(LC_ALL, "UTF-8")) {
+    	try {
+            	std::locale::global(std::locale(""));
+        } catch (...) {
+            	// If this throws, we still have the C locale set to UTF-8,
+            	// so wide→multibyte functions will be OK; streams may remain default.
+        }
+        return true;
+    }
+    return false;
+}
+
+// Converts a UTF-16/UTF-32 wstring to a UTF-8 string, using the right API on each platform.
+
+// Windows: WideCharToMultiByte is the canonical way to encode UTF-16 to UTF-8. The first call asks for the required buffer size (passing nullptr as the output pointer), 
+// which returns a count including the terminating NUL. The code allocates a std::string of size-1 (so the result has no trailing NUL) and calls the function again to actually write the bytes.
+// If either call fails, it throws. It also passes WC_ERR_INVALID_CHARS as a flag to reject lone surrogates.
+
+// On Linux, wcsrtombs converts from the current C locale’s wide encoding to multibyte (UTF-8). It’s used in the standard two-pass pattern: first call with nullptr to get the length,
+// then allocate and call again to do the conversion. If the input contains an unconvertible sequence under the current locale, wcsrtombs returns (size_t)-1 and the code throws.
 static std::string convert_string(const std::wstring& wide) {
 	#ifdef _WIN32
     	if (wide.empty()) return {};
+    	int size = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, wide.c_str(), -1, nullptr, 0, nullptr, nullptr);
 
-    	int size = WideCharToMultiByte(CP_UTF8, 0, wide.c_str(), -1, nullptr, 0, nullptr, nullptr);
     	if (size <= 0) throw std::runtime_error("WideCharToMultiByte failed.");
 
     	std::string converted_string(size - 1, 0); 
@@ -289,12 +431,19 @@ static std::string convert_string(const std::wstring& wide) {
 }
 
 // This should provide larger console input for Linux. Default is just 4095 chars.
+// Temporarily disables canonical input mode so you can read an arbitrarily long line from a TTY without the ~4 KB line buffer limit. 
+// TermiosGuard grabs the current terminal settings in its constructor (tcgetattr), makes a copy, clears ICANON (non-canonical mode),
+// sets VMIN=1/VTIME=0 so reads return as soon as one byte is available, and applies the change with tcsetattr.
+// It records active=true only if the change succeeded. 
+// When the guard goes out of scope, the destructor restores the original settings, guaranteeing cleanup even on exceptions (RAII).
+
+// read_long_line_from_tty() simply instantiates TermiosGuard (activating the temporary mode for the duration of the function) 
+// and then pulls characters from std::wcin with get() until it sees a newline, appending each wchar_t to a std::wstring.
 #ifdef __unix__
 	namespace {  
 		struct TermiosGuard {
     		termios old{};
     		bool active = false;
-
     		TermiosGuard() {
         		if (::isatty(STDIN_FILENO)) {
             		if (::tcgetattr(STDIN_FILENO, &old) == 0) {
@@ -315,7 +464,6 @@ static std::string convert_string(const std::wstring& wide) {
     		}
 		};
 	} 
-
 	static std::wstring read_long_line_from_tty() {
 		TermiosGuard guard;  
     	std::wstring s;
@@ -328,73 +476,10 @@ static std::string convert_string(const std::wstring& wide) {
 	}
 #endif
 
-// For improved compatibility, default re-encode image to JPG Progressive format with a quality value set at 97 with no chroma subsampling,
-// or if Bluesky option, re-encode to standard Baseline format with a quality value set at 85.
-
-static void encode_image(std::vector<uint8_t>& image_file_vec, int& width, int& height, Option option) {
-	tjhandle decompressor = tjInitDecompress();
-	if (!decompressor) throw std::runtime_error("tjInitDecompress() failed.");
-
-	int jpegSubsamp = 0, jpegColorspace = 0;
-		
-	if (tjDecompressHeader3(decompressor, image_file_vec.data(), (unsigned long)image_file_vec.size(), &width, &height, &jpegSubsamp, &jpegColorspace) != 0) {
-    	tjDestroy(decompressor);
-    	throw std::runtime_error(std::string("tjDecompressHeader3: ") + tjGetErrorStr());
-	}
-
-	std::vector<uint8_t> decoded_image_vec((size_t)width * (size_t)height * 3);
-	if (tjDecompress2(decompressor, image_file_vec.data(), (unsigned long)image_file_vec.size(), decoded_image_vec.data(), width, 0, height, TJPF_RGB, 0) != 0) {
-    	tjDestroy(decompressor);
-    	throw std::runtime_error(std::string("tjDecompress2: ") + tjGetErrorStr());
-	}
-	tjDestroy(decompressor);
-
-	const bool isBluesky = (option == Option::Bluesky);
-	const int JPG_QUALITY_VAL = isBluesky ? 85 : 97;
-
-	const int subsamp = isBluesky ? TJSAMP_420 : TJSAMP_444;
-	int flags = 0;
-	if (!isBluesky) flags |= TJFLAG_PROGRESSIVE; 
-		
-	flags |= (JPG_QUALITY_VAL >= 90 ? TJFLAG_FASTDCT : TJFLAG_ACCURATEDCT);
-
-	tjhandle compressor = tjInitCompress();
-	if (!compressor) throw std::runtime_error("tjInitCompress() failed.");
-
-	uint8_t* jpegBuf = nullptr;
-	unsigned long jpegSize = 0;
-
-	if (tjCompress2(compressor, decoded_image_vec.data(), width, 0, height, TJPF_RGB, &jpegBuf, &jpegSize, subsamp, JPG_QUALITY_VAL, flags) != 0) {
-    	tjDestroy(compressor);
-    	throw std::runtime_error(std::string("tjCompress2: ") + tjGetErrorStr());
-	}	
-	tjDestroy(compressor);
-
-	std::vector<uint8_t> output_image_vec(jpegBuf, jpegBuf + jpegSize);
-	tjFree(jpegBuf);
-
-	image_file_vec.swap(output_image_vec);
-	std::vector<uint8_t>().swap(output_image_vec);
-	std::vector<uint8_t>().swap(decoded_image_vec);
-}
-
-static auto erase_app_segment_if_present(std::vector<uint8_t>& v, std::span<const uint8_t> sig) -> void {
-	auto pos = find_sig(v, sig);
-    if (!pos) return;
-	if (*pos + 3 >= v.size()) return;
-
-    uint16_t block_len = (static_cast<uint16_t>(v[*pos + 2]) << 8) | static_cast<uint16_t>(v[*pos + 3]);
-
-    size_t erase_end = *pos + 2 + block_len; 
-    if (erase_end > v.size()) return;       
-
-    v.erase(v.begin() + *pos, v.begin() + erase_end);
-}
-
 // Validate URL.
 namespace {
-	static bool is_dec(char c) noexcept { return c >= '0' && c <= '9'; }
 
+	static bool is_dec(char c) noexcept { return c >= '0' && c <= '9'; }
 	static bool is_hex(char c) noexcept {
     	unsigned char u = static_cast<unsigned char>(c);
     	return std::isxdigit(u) != 0;
@@ -408,12 +493,12 @@ namespace {
     	int dots = 0, val = 0, digits = 0;
     	for (char c : s) {
         	if (c == '.') {
-        		if (digits == 0 || val > 255) return false;
-            	++dots; val = 0; digits = 0;
+            	if (digits == 0 || val > 255) return false;
+            		++dots; val = 0; digits = 0;
         	} else if (is_dec(c)) {
-            	val = val * 10 + (c - '0');
+				val = val * 10 + (c - '0');
             	if (val > 255) return false;
-            	++digits;
+            		++digits;
         	} else {
             	return false;
         	}
@@ -440,7 +525,7 @@ namespace {
     	for (unsigned char c : host) {
         	if (!(std::isalnum(c) || c == '-' || c == '.')) return false;
         	if (!(std::isdigit(c) || c == '.')) all_digits_or_dot = false;
-    		}
+    	}
     	if (all_digits_or_dot && valid_ipv4(host)) return true;
 
     	std::size_t start = 0;
@@ -461,8 +546,8 @@ namespace {
         	if (c == '#') { if (err) *err = "Fragment ('#') not allowed"; return false; }
         	if (c == '%') {
             	if (!valid_pct(s, i)) { if (err) *err = "Bad percent-encoding"; return false; }
-            		i += 2;
-            		continue;
+            	i += 2;
+            	continue;
         	}
         	if (!(std::isalnum(c) || c=='-'||c=='_'||c=='.'||c=='~' ||
 				c==':'||c=='/'||c=='?'||c=='@'||c=='!'||c=='$'||c=='&'||
@@ -519,6 +604,7 @@ static void validate_url_link_core(const std::string& url) {
     	throw std::runtime_error(std::string("Link Error: ") + (err.empty() ? "Invalid URL" : err));
     }
 }
+//--------------
 
 int main(int argc, char** argv) {
 	try {
@@ -553,17 +639,22 @@ int main(int argc, char** argv) {
         	throw std::runtime_error("Image File Error: Invalid file size.");
     	}
     	
-    	constexpr uintmax_t MAX_IMAGE_SIZE = 5ULL * 1024 * 1024;   
-    	
-    	if (image_file_size > MAX_IMAGE_SIZE) {
-			throw std::runtime_error("File Size Error: Image file exceeds maximum size limit.");
+    	constexpr uint32_t 
+    		MAX_IMAGE_SIZE_BEFORE_ENCODE  	= 8 * 1024 * 1024,	// 8 MB.
+			MAX_IMAGE_SIZE_AFTER_ENCODE		= 4 * 1024 * 1024,	// 4 MB.
+    		MAX_IMAGE_SIZE_BLUESKY 			= 912 * 1024;		// 912 KB.
+    		
+    	if (image_file_size > MAX_IMAGE_SIZE_BEFORE_ENCODE) {
+			throw std::runtime_error("Image File Error: Cover image file exceeds maximum size limit.");
 		}
-		
+    		
 		std::vector<uint8_t> image_file_vec(image_file_size);
 	
 		image_file_ifs.read(reinterpret_cast<char*>(image_file_vec.data()), image_file_size);
 		image_file_ifs.close();
 	
+		// Make sure JPG cover image has both "Start Of Image" & "End Of Image" markers.
+		// Also, remove any trailing data after EOI marker.
 		constexpr uint8_t 
 			SOI0 = 0xFF, 
 			SOI1 = 0xD8,
@@ -575,23 +666,107 @@ int main(int argc, char** argv) {
     	}
 
     	const std::array<uint8_t,2> EOI{EOI0, EOI1};
-
+		
     	auto last_eoi = std::find_end(image_file_vec.begin() + 2, image_file_vec.end(), EOI.begin(), EOI.end());
+		
     	if (last_eoi == image_file_vec.end()) {
         	throw std::runtime_error("Image File Error: Missing EOI marker.");
     	}
-
-    	// Erase any trailing data after EOI
+	
     	auto after_eoi = last_eoi + 2;
     	if (after_eoi != image_file_vec.end()) {
         	image_file_vec.erase(after_eoi, image_file_vec.end());
     	}
-		
-		int img_width = 0, img_height = 0;
-		
-		encode_image(image_file_vec, img_width, img_height, args.option);
+
+		/*
+		To improve compatibility, default re-encode image.
+		The following code takes the JPG cover image already loaded into image_file_vec, decodes it with libjpeg-turbo, then re-encodes it with different settings
+		depending on argument option settings. It starts by creating a decompressor (tjInitDecompress) and reading the JPG header (tjDecompressHeader3) to get 
+		image width & height, chroma subsampling, and colorspace; Failure throws with a readable error.
 			
-		// Remove superfluous segments from cover image. (EXIF, ICC color profile, etc).
+		It allocates an RGB buffer of width * height * 3 bytes and decompresses the JPG into that buffer via tjDecompress2.
+			
+		Call the exif_orientation function to first check for an EXIF segment, then search it for an Orientation tag. 
+		If found, use normalize_orientation and its helpers to normalize the pixels, so that when we later remove the EXIF segment, 
+		viewers should still dislpay the image with correct orientation.
+			
+		For re-encode, it chooses a quality (85 for Bluesky option; 97 for anything else), a subsampling mode (space-saving 4:2:0 for Bluesky; full-quality 4:4:4 for anything else),
+		flags: progressive JPGs default, and a DCT speed/quality tradeoff where high quality uses TJFLAG_FASTDCT (faster and fine at ≥90) and lower quality (Bluesky) 
+		uses TJFLAG_ACCURATEDCT (slower, slightly more precise). 
+			
+		The new, re-encoded image is stored in a temporary vector before it is swapped into vector image_file_vec, 
+		replacing the old cover image. Temporary vectors are cleared to free memory. 
+		*/
+		tjhandle decompressor = tjInitDecompress();
+		if (!decompressor) throw std::runtime_error("tjInitDecompress() failed.");
+
+		int 
+			width = 0, 
+			height = 0, 
+			jpegSubsamp = 0, 
+			jpegColorspace = 0;
+		
+		if (tjDecompressHeader3(decompressor, image_file_vec.data(), (unsigned long)image_file_vec.size(), &width, &height, &jpegSubsamp, &jpegColorspace) != 0) {
+    		tjDestroy(decompressor);
+    		throw std::runtime_error(std::string("tjDecompressHeader3: ") + tjGetErrorStr());
+		}
+
+		std::vector<uint8_t> decoded_image_vec((size_t)width * (size_t)height * 3);
+		if (tjDecompress2(decompressor, image_file_vec.data(), (unsigned long)image_file_vec.size(), decoded_image_vec.data(), width, 0, height, TJPF_RGB, 0) != 0) {
+    		tjDestroy(decompressor);
+    		throw std::runtime_error(std::string("tjDecompress2: ") + tjGetErrorStr());
+		}
+			
+		auto ori = exif_orientation(image_file_vec);
+		if (ori && *ori != 1) {
+    		normalize_orientation(decoded_image_vec, width, height, *ori);
+		}
+			
+		tjDestroy(decompressor);
+
+		const bool isBluesky = (args.option == Option::Bluesky);
+		const int JPG_QUALITY_VAL = isBluesky ? 85 : 97;
+
+		const int subsamp = isBluesky ? TJSAMP_420 : TJSAMP_444;
+		int flags = 0;
+		if (!isBluesky) flags |= TJFLAG_PROGRESSIVE; 
+		
+		flags |= (JPG_QUALITY_VAL >= 90 ? TJFLAG_FASTDCT : TJFLAG_ACCURATEDCT);
+
+		tjhandle compressor = tjInitCompress();
+		if (!compressor) throw std::runtime_error("tjInitCompress() failed.");
+
+		uint8_t* jpegBuf = nullptr;
+		unsigned long jpegSize = 0;
+
+		if (tjCompress2(compressor, decoded_image_vec.data(), width, 0, height, TJPF_RGB, &jpegBuf, &jpegSize, subsamp, JPG_QUALITY_VAL, flags) != 0) {
+    		tjDestroy(compressor);
+    		throw std::runtime_error(std::string("tjCompress2: ") + tjGetErrorStr());
+		}	
+		tjDestroy(compressor);
+
+		std::vector<uint8_t> output_image_vec(jpegBuf, jpegBuf + jpegSize);
+		tjFree(jpegBuf);
+
+		image_file_vec.swap(output_image_vec);
+		
+		std::vector<uint8_t>().swap(output_image_vec);
+		std::vector<uint8_t>().swap(decoded_image_vec);
+		// ------------
+			
+		// Save some space. Remove superfluous segments from cover image. (EXIF, ICC color profile, etc).
+		auto eraseAppSegment = [](std::vector<uint8_t>& v, std::span<const uint8_t> sig) {
+    		auto pos = searchSig(v, sig);
+    		if (!pos) return;
+    		if (*pos + 3 >= v.size()) return;
+
+    		uint16_t block_len = (static_cast<uint16_t>(v[*pos + 2]) << 8) | static_cast<uint16_t>(v[*pos + 3]);
+    		size_t erase_end = *pos + 2 + block_len;
+    		if (erase_end > v.size()) return;
+
+    		v.erase(v.begin() + *pos, v.begin() + erase_end);
+		};
+			
 		constexpr std::array<uint8_t, 2>
 			APP1_EXIF_SIG { 0xFF, 0xE1 }, 
 			APP2_ICC_SIG  { 0xFF, 0xE2 }; 
@@ -600,11 +775,11 @@ int main(int argc, char** argv) {
 			DQT1_SIG { 0xFF, 0xDB, 0x00, 0x43 },	// Define Quantization Tables SIG.
 			DQT2_SIG { 0xFF, 0xDB, 0x00, 0x84 };
 				
-		erase_app_segment_if_present(image_file_vec, std::span<const uint8_t>(APP1_EXIF_SIG));
-		erase_app_segment_if_present(image_file_vec, std::span<const uint8_t>(APP2_ICC_SIG));
+		eraseAppSegment(image_file_vec, std::span<const uint8_t>(APP1_EXIF_SIG));
+		eraseAppSegment(image_file_vec, std::span<const uint8_t>(APP2_ICC_SIG));
 
-    	auto dqt1 = find_sig(image_file_vec, std::span<const uint8_t>(DQT1_SIG));
-    	auto dqt2 = find_sig(image_file_vec, std::span<const uint8_t>(DQT2_SIG));
+    	auto dqt1 = searchSig(image_file_vec, std::span<const uint8_t>(DQT1_SIG));
+    	auto dqt2 = searchSig(image_file_vec, std::span<const uint8_t>(DQT2_SIG));
 
 		if (!dqt1 && !dqt2) {
     		throw std::runtime_error("Image File Error: No DQT segment found (corrupt or unsupported JPEG).");
@@ -613,51 +788,54 @@ int main(int argc, char** argv) {
 		const size_t NPOS = static_cast<size_t>(-1);
 		size_t dqt_pos = std::min(dqt1.value_or(NPOS), dqt2.value_or(NPOS));
 		image_file_vec.erase(image_file_vec.begin(), image_file_vec.begin() + static_cast<std::ptrdiff_t>(dqt_pos));
+		// ------------
+		
+		image_file_size = image_file_vec.size();  // Get updated cover image size after image re-encode, removing superfluous segments & trailing data.
+		
+		if (image_file_size > MAX_IMAGE_SIZE_AFTER_ENCODE) {
+			throw std::runtime_error("Image File Error: Image exceeds maximum size limit.");
+		}
+			
+		if (isBluesky && image_file_size > MAX_IMAGE_SIZE_BLUESKY) {
+			throw std::runtime_error("Image File Error: Image exceeds maximum size limit for Bluesky.");
+		}
 		
 		std::cout << "\n*** imgprmt v1.2 ***\n";
 
 		#ifdef _WIN32
+			// Try to give std::wcin a larger buffer
 			constexpr int WIN_BUFFER_SIZE = 65535;
    			static std::vector<wchar_t> win_inbuf(WIN_BUFFER_SIZE);
     		std::wcin.rdbuf()->pubsetbuf(win_inbuf.data(), win_inbuf.size());
-
+			
+			// Flushes pending output. Ensures nothing buffered is stuck before switching modes.
    			std::wcout.flush();
    			std::cout.flush();
 
+			// Detects TTY vs pipe. Chooses text mode.
+			// TTY ⇒ _O_U16TEXT: the MSVCRT will read/write UTF-16 to/from the Windows console API (best for correct Unicode at the console).
+			// Pipe/file ⇒ _O_BINARY: avoids CR/LF translation and lets you control encoding at the byte level (good for piping).
+			// Applies the modes and remembers old ones, which are restored later at end of program.
    			bool stdin_is_tty  = (_isatty(_fileno(stdin))  != 0);
   			bool stdout_is_tty = (_isatty(_fileno(stdout)) != 0);
-
+			
     		int desired_in_mode  = stdin_is_tty  ? _O_U16TEXT : _O_BINARY;
     		int desired_out_mode = stdout_is_tty ? _O_U16TEXT : _O_BINARY;
 
     		int old_stdin_mode  = _setmode(_fileno(stdin),  desired_in_mode);
     		int old_stdout_mode = _setmode(_fileno(stdout), desired_out_mode);
 		#else
-			try {
-   				if (!std::setlocale(LC_ALL, "")) {
-				}
-				
-    			std::locale loc("");              
-    			std::locale::global(loc);
-    			std::wcin.imbue(loc);
-    			std::wcout.imbue(loc);
-    			std::wcerr.imbue(loc);
-			}
-			catch (const std::exception&) { 	
-    			try {
-        			std::locale loc("C.UTF-8");
-        			std::locale::global(loc);
-        			std::wcin.imbue(loc);
-        			std::wcout.imbue(loc);
-        			std::wcerr.imbue(loc);
-    			} catch (...) {
-        			std::locale loc("en_US.UTF-8");
-        			std::locale::global(loc);
-        			std::wcin.imbue(loc);
-        			std::wcout.imbue(loc);
-        			std::wcerr.imbue(loc);
-    			}
-			}	
+			if (!force_utf8_locale()) {
+        		throw std::runtime_error(
+           			"UTF-8 locale is required. Please install/enable a UTF-8 locale "
+					"(e.g., C.UTF-8 or en_US.UTF-8) and try again.");
+   			}
+
+   			// Imbue wide streams with the (now UTF-8) global locale
+    		const std::locale loc("");   // current global
+    		std::wcin.imbue(loc);
+    		std::wcout.imbue(loc);
+    		std::wcerr.imbue(loc);
 		#endif
 	
 		std::wstring
@@ -689,7 +867,6 @@ int main(int argc, char** argv) {
 		
 		std::wcout << L"\nType or paste in your prompt as one long sentence."; 
 		std::wcout << L"\nIf required, add <br> tags to your text for new lines.\n\nPrompt: ";
-
 		#ifdef _WIN32 
 			std::getline(std::wcin, wprompt); 
 		#else 
@@ -706,7 +883,7 @@ int main(int argc, char** argv) {
 		std::string utf8_prompt = convert_string(wprompt);
 		std::wstring().swap(wprompt);
 		
-		// Color Profile (X-Twitter, Mastodon, Tumblr & Flickr). Vector content will be inserted into the main default segment vector.
+		// Color Profile (X-Twitter, Mastodon, Tumblr & Flickr). The vector is inserted into the main default segment vector.
 		std::vector<uint8_t>profile_vec {
 			0xFF, 0xE2, 0x00, 0x00, 0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46, 0x49, 0x4C, 0x45, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x3C, 0x21,
 			0x2D, 0x2D, 0x04, 0x20, 0x00, 0x00, 0x6D, 0x6E, 0x74, 0x72, 0x52, 0x47, 0x42, 0x20, 0x58, 0x59, 0x5A, 0x20, 0x07, 0xE5, 0x00, 0x04, 0x00, 0x1B,
@@ -731,8 +908,8 @@ int main(int argc, char** argv) {
 			0x33, 0x33, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x0E, 0x41
 		};
 		
-		// Use if option -b selected. This vector contains the basic EXIF segment required for BlueSky. Color profile not supported by BlueSky.
-		// Currently without webpage, user's image prompt & URL, which is inserted later. The contents of segment_vec (not including JPG header) is inserted
+		// If option -b selected. This vector contains the basic EXIF segment required for BlueSky. Color profile not supported by BlueSky.
+		// Currently without webpage, user's image prompt & URL; which is inserted later. The contents of segment_vec (not including JPG header) is inserted
 		// into this vector.
 		std::vector<uint8_t>bluesky_vec {
 			0xFF, 0xD8, 0xFF, 0xE1, 0x1A, 0xDC, 0x45, 0x78, 0x69, 0x66, 0x00, 0x00, 0x4D, 0x4D, 0x00, 0x2A, 0x00, 0x00, 0x00, 0x08, 0x00, 0x06, 0x01, 0x12,
@@ -750,7 +927,7 @@ int main(int argc, char** argv) {
 		};
 		
 		// Main segment vector containing JPG header and basic webpage to display user's image prompt. This vector is either inserted into bluesky_vec, if
-		// -b option selected (not including JPG header bytes), or profile_vec is inserted into this vector, the default (no option selected).
+		// -b option selected (not including JPG header bytes), or profile_vec is inserted into this vector, default (no option selected).
 		std::vector<uint8_t>segment_vec {
 			0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x48, 0x00, 0x48, 0x00, 0x00, 0x2D, 0x2D, 0x3E, 0x3C,
 			0x21, 0x44, 0x4F, 0x43, 0x54, 0x59, 0x50, 0x45, 0x20, 0x68, 0x74, 0x6D, 0x6C, 0x3E, 0x3C, 0x68, 0x74, 0x6D, 0x6C, 0x20, 0x6C, 0x61, 0x6E, 0x67,
@@ -1102,8 +1279,8 @@ int main(int argc, char** argv) {
 				BLUESKY_VEC_HEIGHT_INDEX = 0x10D,
 				BLUESKY_VEC_WIDTH_INDEX  = 0x101;
 				
-			update_value(bluesky_vec, BLUESKY_VEC_HEIGHT_INDEX, img_height, bits);
-			update_value(bluesky_vec, BLUESKY_VEC_WIDTH_INDEX, img_width, bits);
+			update_value(bluesky_vec, BLUESKY_VEC_HEIGHT_INDEX, height, bits);
+			update_value(bluesky_vec, BLUESKY_VEC_WIDTH_INDEX, width, bits);
 			
 			constexpr uint8_t	
 				SEGMENT_VEC_INSERT_INDEX = 0xE3,
@@ -1120,8 +1297,8 @@ int main(int argc, char** argv) {
 		constexpr std::array<uint8_t, 10> PROMPT_INSERT_MARKER	{'%','%','P','R','O','M','P','T','%','%'};
 		constexpr std::array<uint8_t, 7>  URL_INSERT_MARKER		{'%','%','U','R','L','%','%'};
 		
-		auto prompt_pos = find_sig(segment_vec, std::span(PROMPT_INSERT_MARKER));
-		auto url_pos 	= find_sig(segment_vec, std::span(URL_INSERT_MARKER));
+		auto prompt_pos = searchSig(segment_vec, std::span(PROMPT_INSERT_MARKER));
+		auto url_pos 	= searchSig(segment_vec, std::span(URL_INSERT_MARKER));
 
 		segment_vec.insert(segment_vec.begin() + *prompt_pos, utf8_prompt.begin(), utf8_prompt.end());
 		segment_vec.erase(segment_vec.begin() + *prompt_pos + utf8_prompt.size(), segment_vec.begin() + *prompt_pos + utf8_prompt.size() + PROMPT_INSERT_MARKER.size());
@@ -1133,12 +1310,12 @@ int main(int argc, char** argv) {
 		std::string().swap(utf8_url);
 		
 		constexpr uint16_t 
-			MAX_SEGMENT_SIZE 		= 65535,     // ~64KB
+			MAX_SEGMENT_SIZE 		= 65534,     // ~64KB
 			TWITTER_SEGMENT_LIMIT	= 10 * 1024; // X-Twitter 10KB.
 		
 		uint32_t segment_size = static_cast<uint32_t>(segment_vec.size());
 		
-		if (segment_size > TWITTER_SEGMENT_LIMIT) {
+		if (args.option == Option::None && segment_size > TWITTER_SEGMENT_LIMIT) {
 			std::wcerr << "\n\nWarning: Data content exceeds the maximum segment size limit for X-Twitter.\n\t Image will not be compatible for posting on that platform.\n";
 		}
 		
@@ -1147,8 +1324,8 @@ int main(int argc, char** argv) {
 		}
 		
 		#ifdef _WIN32
-			 if (old_stdin_mode  != -1) (void)_setmode(_fileno(stdin),  old_stdin_mode);
-    		 if (old_stdout_mode != -1) (void)_setmode(_fileno(stdout), old_stdout_mode);		
+			if (old_stdin_mode  != -1) (void)_setmode(_fileno(stdin),  old_stdin_mode);
+    		if (old_stdout_mode != -1) (void)_setmode(_fileno(stdout), old_stdout_mode);		
 		#endif
 	
 		if (args.option == Option::Bluesky) {
@@ -1176,10 +1353,10 @@ int main(int argc, char** argv) {
 			update_value(segment_vec, EXIF_ARTIST_SIZE_FIELD_INDEX, EXIF_ARTIST_SIZE, bits); 
 			update_value(segment_vec, EXIF_SUBIFD_OFFSET_FIELD_INDEX, EXIF_SUBIFD_OFFSET, bits);
 		} else {
-			// Update JPG segment size field for APP_2 (icc color_profile) (FFE2xxxx) 2 bytes.
+			// Update color profile segment size field (FFE2xxxx)
 			update_value(segment_vec, SEGMENT_VEC_SIZE_FIELD_INDEX, segment_size - PROFILE_VEC_MAIN_DIFF, bits);
 
-			// Update internal color profile size field, 4 bytes.
+			// Update internal color profile size field
 			update_value(segment_vec, PROFILE_VEC_SIZE_FIELD_INDEX, segment_size - PROFILE_VEC_INTERNAL_DIFF, bits);
 		}	
 
