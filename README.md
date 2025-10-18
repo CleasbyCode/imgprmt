@@ -1,6 +1,6 @@
 # imgprmt
 
-***imgprmt*** is a command-line tool for storing and sharing your favorite image text prompts. The tool embeds your prompt into a ***JPG*** image and creates a unique ***JPG-HTML*** polyglot file, combining image, prompt text & html in a single output.  
+***imgprmt*** is a command-line tool for storing and sharing your favorite image text prompts/descriptions or even small articles. The tool embeds your prompt into a ***JPG*** image and creates a unique ***JPG-HTML*** polyglot file, combining image, prompt text & html in a single output.  
 
 Any issues with configuring ***imgprmt***, then please just ask: [***@cleasbycode***](https://x.com/CleasbyCode).
 
