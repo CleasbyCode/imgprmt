@@ -66,7 +66,7 @@ It outputs a unique JPG-HTML polyglot file, combining image, prompt text & html.
 
 Share the resulting image on compatible social media platforms like:-
 		
-X-Twitter, Tumblr, Mastodon, Flickr, or *Bluesky.
+X-Twitter, Tumblr, Mastodon, Pixelfed, Flickr & *Bluesky.
 		
 The embedded prompt is preserved for anyone who downloads the image.
 
@@ -97,7 +97,7 @@ ________________________
   imgprmt --info
 
 With the default command-line arguments without any option(s), 
-the embedded image can be posted on X-Twitter, Tumblr, Mastodon & Flickr.
+the embedded image can be posted on X-Twitter, Tumblr, Mastodon Pixelfed & Flickr.
 		
 The default prompt limit is 57140 bytes (minus URL address length).
 		
@@ -883,7 +883,7 @@ int main(int argc, char** argv) {
 		std::string utf8_prompt = convert_string(wprompt);
 		std::wstring().swap(wprompt);
 		
-		// Color Profile (X-Twitter, Mastodon, Tumblr & Flickr). The vector is inserted into the main default segment vector.
+		// Color Profile (X-Twitter, Mastodon, Pixelfed, Tumblr & Flickr). The vector is inserted into the main default segment vector.
 		std::vector<uint8_t>profile_vec {
 			0xFF, 0xE2, 0x00, 0x00, 0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46, 0x49, 0x4C, 0x45, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x3C, 0x21,
 			0x2D, 0x2D, 0x04, 0x20, 0x00, 0x00, 0x6D, 0x6E, 0x74, 0x72, 0x52, 0x47, 0x42, 0x20, 0x58, 0x59, 0x5A, 0x20, 0x07, 0xE5, 0x00, 0x04, 0x00, 0x1B,
