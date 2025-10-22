@@ -4,7 +4,7 @@
 
 Any issues with configuring ***imgprmt***, then please just ask: [***@cleasbycode***](https://x.com/CleasbyCode).
 
-Share the image on compatible social media platforms like ***X-Twitter***, ***Tumblr***, ***Mastodon***, ***Flickr*** or ****Bluesky***, where the embedded prompt remains intact for anyone who downloads the image.  
+Share the image on compatible social media platforms: ***X-Twitter***, ***Tumblr***, ***Mastodon***, ***Pixelfed***, ***Flickr*** & ****Bluesky***, where the embedded prompt remains intact for anyone who downloads the image.  
 
 To view the stored prompt locally, simply rename the image file extension to "*.htm*" and open it in a web browser to display it as a basic webpage.
 
