@@ -44,7 +44,7 @@ Prompt: A woman dressed as a nurse with a syringe in her hand...
 Saved "prompt-embedded" JPG image: imgprmt_32097.jpg (330511 bytes).
 
 ```
-Using the default command-line arguments (no option), the embedded image can only be posted on ***Twitter***, ***Tumblr***, ***Mastodon*** & ***Flickr***.  
+Using the default command-line arguments (no option), the embedded image can only be posted on ***Twitter***, ***Tumblr***, ***Mastodon***, ***Pixelfed*** & ***Flickr***.  
 
 The default prompt limit is **57140** bytes (minus URL address length).
 		
