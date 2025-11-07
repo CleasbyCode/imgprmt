@@ -657,31 +657,6 @@ int main(int argc, char** argv) {
 		image_file_ifs.read(reinterpret_cast<char*>(image_file_vec.data()), image_file_size);
 		image_file_ifs.close();
 	
-		// Make sure JPG cover image has both "Start Of Image" & "End Of Image" markers.
-		// Also, remove any trailing data after EOI marker.
-		constexpr uint8_t 
-			SOI0 = 0xFF, 
-			SOI1 = 0xD8,
-   			EOI0 = 0xFF, 
-   			EOI1 = 0xD9;
-
-	    if (!(image_file_vec[0] == SOI0 && image_file_vec[1] == SOI1)) {
-        	throw std::runtime_error("Image File Error: Missing SOI marker.");
-    	}
-
-    	const std::array<uint8_t,2> EOI{EOI0, EOI1};
-		
-    	auto last_eoi = std::find_end(image_file_vec.begin() + 2, image_file_vec.end(), EOI.begin(), EOI.end());
-		
-    	if (last_eoi == image_file_vec.end()) {
-        	throw std::runtime_error("Image File Error: Missing EOI marker.");
-    	}
-	
-    	auto after_eoi = last_eoi + 2;
-    	if (after_eoi != image_file_vec.end()) {
-        	image_file_vec.erase(after_eoi, image_file_vec.end());
-    	}
-
 		/* 	To improve compatibility,default re-encode image.
 			The following code takes the JPG cover image already loaded into image_file_vec, decodes it with libjpeg-turbo, then re-encodes it with different settings
 			depending on argument option settings. It starts by creating a decompressor (tjInitDecompress) and reading the JPG header (tjDecompressHeader3) to get 
@@ -767,33 +742,13 @@ int main(int argc, char** argv) {
 		std::vector<uint8_t>().swap(decoded_image_vec);
 			
 		// ------------
-			
-		// Save some space. Remove superfluous segments from cover image. (EXIF, ICC color profile, etc).
-		auto eraseAppSegment = [](std::vector<uint8_t>& v, std::span<const uint8_t> sig) {
-    		auto pos = searchSig(v, sig);
-    		if (!pos) return;
-    		if (*pos + 3 >= v.size()) return;
-
-    		uint16_t block_len = (static_cast<uint16_t>(v[*pos + 2]) << 8) | static_cast<uint16_t>(v[*pos + 3]);
-    		size_t erase_end = *pos + 2 + block_len;
-    		if (erase_end > v.size()) return;
-
-    		v.erase(v.begin() + *pos, v.begin() + erase_end);
-		};
-			
-		constexpr std::array<uint8_t, 2>
-			APP1_EXIF_SIG { 0xFF, 0xE1 }, 
-			APP2_ICC_SIG  { 0xFF, 0xE2 }; 
-
 		constexpr std::array<uint8_t, 4>
 			DQT1_SIG { 0xFF, 0xDB, 0x00, 0x43 },	// Define Quantization Tables SIG.
 			DQT2_SIG { 0xFF, 0xDB, 0x00, 0x84 };
 				
-		eraseAppSegment(image_file_vec, std::span<const uint8_t>(APP1_EXIF_SIG));
-		eraseAppSegment(image_file_vec, std::span<const uint8_t>(APP2_ICC_SIG));
-
-    	auto dqt1 = searchSig(image_file_vec, std::span<const uint8_t>(DQT1_SIG));
-    	auto dqt2 = searchSig(image_file_vec, std::span<const uint8_t>(DQT2_SIG));
+    	auto 
+			dqt1 = searchSig(image_file_vec, std::span<const uint8_t>(DQT1_SIG)),
+    		dqt2 = searchSig(image_file_vec, std::span<const uint8_t>(DQT2_SIG));
 
 		if (!dqt1 && !dqt2) {
     		throw std::runtime_error("Image File Error: No DQT segment found (corrupt or unsupported JPEG).");
@@ -804,7 +759,7 @@ int main(int argc, char** argv) {
 		image_file_vec.erase(image_file_vec.begin(), image_file_vec.begin() + static_cast<std::ptrdiff_t>(dqt_pos));
 		// ------------
 		
-		image_file_size = image_file_vec.size();  // Get updated cover image size after image re-encode, removing superfluous segments & trailing data.
+		image_file_size = image_file_vec.size();  // Get updated cover image size after image re-encode.
 		
 		if (image_file_size > MAX_IMAGE_SIZE_AFTER_ENCODE) {
 			throw std::runtime_error("Image File Error: Image exceeds maximum size limit.");
@@ -1401,4 +1356,3 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
-
