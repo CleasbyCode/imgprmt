@@ -29,17 +29,17 @@ Usage: imgprmt [-b] <jpg_image>
 
 user1@mx:~/Desktop$ imgprmt nurse.jpg
 
-*** imgprmt v1.2 ***
+*** imgprmt v1.3 ***
 
 Enter a web address (Your site, social media page, etc).
-Full URL: https://x.com/_virtualvisions/status/1907586383285301504
+Full URL: https://bsky.app/profile/novakynth.bsky.social/post/3m3n3kgenuk2a
 
 Default byte limit: 57,084 | X-Twitter byte limit: 1,800.
 
 Type or paste in your prompt as one long sentence.
 If required, add <br> tags to your text for new lines.
 
-Prompt: A woman dressed as a nurse with a syringe in her hand...
+Prompt: A serene winter night landscape in a forested area, under a starry dark blue sky...
 
 Saved "prompt-embedded" JPG image: imgprmt_32097.jpg (330511 bytes).
 
