@@ -27,7 +27,7 @@ user1@mx:~/Desktop$ imgprmt
 Usage: imgprmt [-b] <jpg_image> 
        imgprmt --info
 
-user1@mx:~/Desktop$ imgprmt nurse.jpg
+user1@mx:~/Desktop$ imgprmt winters_night.jpg
 
 *** imgprmt v1.3 ***
 
