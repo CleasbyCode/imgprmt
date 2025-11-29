@@ -2,7 +2,7 @@
 
 # compile_imgprmt.sh
 
-g++ -std=c++20 imgprmt.cpp -Wall -O3 -lturbojpeg -s -o imgprmt
+g++ -std=c++23 -O3 -march=native -pipe -Wall -Wextra -Wpedantic -DNDEBUG -s -flto=auto -fuse-linker-plugin imgprmt.cpp -lturbojpeg -o imgprmt
 
 if [ $? -eq 0 ]; then
     echo "Compilation successful. Executable 'imgprmt' created."
