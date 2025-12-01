@@ -219,7 +219,7 @@ static void updateValue(vBytes& vec, std::size_t index, std::size_t value, Byte 
 }
 
 [[nodiscard]] static std::optional<uint16_t> exifOrientation(const vBytes& jpg) {
-	constexpr size_t EXIF_SEARCH_LIMIT = 4096ULL;
+	constexpr size_t EXIF_SEARCH_LIMIT = 4096;
 	constexpr auto APP1_SIG = std::to_array<Byte>({0xFF, 0xE1});
 
 	auto app1_pos_opt = searchSig(jpg, std::span<const Byte>(APP1_SIG), EXIF_SEARCH_LIMIT);
@@ -368,7 +368,7 @@ static constexpr auto STD_LUMA_QTABLE = std::to_array<Byte>({
 static int estimateImageQuality(const vBytes& jpg) {
 	constexpr auto DQT_SIG = std::to_array<Byte>({0xFF, 0xDB});
     
-    constexpr size_t DQT_SEARCH_LIMIT = 32768ULL;
+    constexpr std::size_t DQT_SEARCH_LIMIT = 32768;
 
     auto dqt_pos_opt = searchSig(jpg, std::span<const Byte>(DQT_SIG), DQT_SEARCH_LIMIT);
     if (!dqt_pos_opt) return 80; 
@@ -454,7 +454,7 @@ static void optimizeImage(vBytes& jpg_vec) {
     std::memset(&xform, 0, sizeof(tjtransform));
     xform.op = xop;
    
-    xform.options = TJXOPT_COPYNONE | TJXOPT_TRIM;
+    xform.options = TJXOPT_COPYNONE | TJXOPT_TRIM | TJXOPT_PROGRESSIVE;
 	
     TJBuffer dstBuffer; 
     unsigned long dstSize = 0;
@@ -790,16 +790,16 @@ int main(int argc, char** argv) {
 
 		std::size_t jpg_vec_size = fs::file_size(args.image_file_path);
 
-    	constexpr std::size_t MINIMUM_IMAGE_SIZE = 134ULL;
+    	constexpr std::size_t MINIMUM_IMAGE_SIZE = 134;
 
     	if (MINIMUM_IMAGE_SIZE > jpg_vec_size) {
         	throw std::runtime_error("Image File Error: Invalid file size.");
     	}
     	
     	constexpr std::size_t
-    		MAX_IMAGE_SIZE_BEFORE_ENCODE  	= 8ULL   * 1024 * 1024,	// 8 MB.
-			MAX_IMAGE_SIZE_AFTER_ENCODE		= 4ULL   * 1024 * 1024,	// 4 MB.
-    		MAX_IMAGE_SIZE_BLUESKY 			= 912ULL * 1024;		// 912 KB.
+    		MAX_IMAGE_SIZE_BEFORE_ENCODE  	= 8   * 1024 * 1024,	// 8 MB.
+			MAX_IMAGE_SIZE_AFTER_ENCODE		= 4   * 1024 * 1024,	// 4 MB.
+    		MAX_IMAGE_SIZE_BLUESKY 			= 912 * 1024;			// 912 KB.
     		
     	if (jpg_vec_size > MAX_IMAGE_SIZE_BEFORE_ENCODE) {
 			throw std::runtime_error("Image File Error: Cover image file exceeds maximum size limit.");
@@ -812,7 +812,7 @@ int main(int argc, char** argv) {
 	
     	optimizeImage(jpg_vec);
     		
-		constexpr size_t DQT_SEARCH_LIMIT = 100ULL;         
+		constexpr std::size_t DQT_SEARCH_LIMIT = 100;         
     	constexpr auto 
         	DQT1_SIG = std::to_array<Byte>({ 0xFF, 0xDB, 0x00, 0x43 }),    
        		DQT2_SIG = std::to_array<Byte>({ 0xFF, 0xDB, 0x00, 0x84 });
@@ -848,7 +848,7 @@ int main(int argc, char** argv) {
 
 		#ifdef _WIN32
 			// Try to give std::wcin a larger buffer
-			constexpr std::size_t WIN_BUFFER_SIZE = 65535ULL;
+			constexpr std::size_t WIN_BUFFER_SIZE = 65535;
    			static std::vector<wchar_t> win_inbuf(WIN_BUFFER_SIZE);
     		std::wcin.rdbuf()->pubsetbuf(win_inbuf.data(), win_inbuf.size());
 			
@@ -888,8 +888,8 @@ int main(int argc, char** argv) {
 			wurl;
 
 		constexpr size_t
-			URL_MIN_CHARS = 12ULL,
-			URL_MAX_CHARS = 200ULL;
+			URL_MIN_CHARS = 12,
+			URL_MAX_CHARS = 200;
 			
 		std::wcout << L"\nEnter a web address (Your site, social media page, etc).\nFull URL: ";
 		std::getline(std::wcin, wurl);
@@ -1310,13 +1310,13 @@ int main(int argc, char** argv) {
 		
 		// For X-Twitter, Mastodon, Tumblr & Flickr.
 		constexpr std::size_t
-			PROFILE_VEC_INTERNAL_DIFF 	 = 38ULL,	// Bytes we don't count as part of internal profile size.
-			PROFILE_VEC_MAIN_DIFF 	 	 = 22ULL,	// Bytes we don't count as part of profile size.
-			PROFILE_VEC_INSERT_INDEX 	 = 0x14ULL, // Insert location within segment_vec for the color profile (profile_vec).
-			PROFILE_VEC_SIZE_FIELD_INDEX = 0x28ULL, // Start index location for internal size field of the image color profile.(Max four bytes, only two used).
-			SEGMENT_VEC_SIZE_FIELD_INDEX = 0x16ULL, // Start index location for size field of the main color profile. (Max two bytes).
-			SEGMENT_VEC_INSERT_INDEX 	 = 0xE3ULL,
-			SEGMENT_VEC_START_INDEX 	 = 0x17ULL;
+			PROFILE_VEC_INTERNAL_DIFF 	 = 38,	 // Bytes we don't count as part of internal profile size.
+			PROFILE_VEC_MAIN_DIFF 	 	 = 22,	 // Bytes we don't count as part of profile size.
+			PROFILE_VEC_INSERT_INDEX 	 = 0x14, // Insert location within segment_vec for the color profile (profile_vec).
+			PROFILE_VEC_SIZE_FIELD_INDEX = 0x28, // Start index location for internal size field of the image color profile.(Max four bytes, only two used).
+			SEGMENT_VEC_SIZE_FIELD_INDEX = 0x16, // Start index location for size field of the main color profile. (Max two bytes).
+			SEGMENT_VEC_INSERT_INDEX 	 = 0xE3,
+			SEGMENT_VEC_START_INDEX 	 = 0x17;
 		
 		Byte bits = 16;
 		
@@ -1346,8 +1346,8 @@ int main(int argc, char** argv) {
 		std::string().swap(utf8_url);
 		
 		constexpr std::size_t
-			MAX_SEGMENT_SIZE 	  = 65534ULL,     // ~64KB
-			TWITTER_SEGMENT_LIMIT = 10ULL * 1024; // X-Twitter 10KB.
+			MAX_SEGMENT_SIZE 	  = 65534,     // ~64KB
+			TWITTER_SEGMENT_LIMIT = 10 * 1024; // X-Twitter 10KB.
 		
 		std::size_t segment_size = segment_vec.size();
 		
@@ -1368,8 +1368,8 @@ int main(int argc, char** argv) {
 			segment_size -= 4; // For Bluesky segment size, don't count the JPG ID + APP ID "FFD8FFE1" (4 bytes).
 		
 			constexpr std::size_t 
-				EXIF_SIZE_FIELD_INDEX 	     = 0x04ULL,  
-				EXIF_ARTIST_SIZE_FIELD_INDEX = 0x4AULL;  
+				EXIF_SIZE_FIELD_INDEX 	     = 0x04,  
+				EXIF_ARTIST_SIZE_FIELD_INDEX = 0x4A;  
 				
 			const std::size_t EXIF_ARTIST_SIZE = segment_size - 0x8C;
 				
