@@ -16,7 +16,7 @@ To view the stored prompt locally, simply rename the image file extension to "*.
 ## Usage Example (Linux)
 
 ```console
-user1@mx:~/Downloads/imgprmt-main/src$ sudo apt-get install libturbojpeg0-dev
+user1@mx:~/Downloads/imgprmt-main/src$ sudo apt install libturbojpeg0-dev
 user1@mx:~/Downloads/imgprmt-main/src$ chmod +x compile_imgprmt.sh
 user1@mx:~/Downloads/imgprmt-main/src$ ./compile_imgprmt.sh
 user1@mx:~/Downloads/imgprmt-main/src$ Compilation successful. Executable 'imgprmt' created.
@@ -24,8 +24,8 @@ user1@mx:~/Downloads/imgprmt-main/src$ sudo cp imgprmt /usr/bin
 
 user1@mx:~/Desktop$ imgprmt 
 
-Usage: imgprmt [-b] <jpg_image> 
-       imgprmt --info
+Usage:  imgprmt [-b] <jpg_image> 
+        imgprmt --info
 
 user1@mx:~/Desktop$ imgprmt winters_night.jpg
 
