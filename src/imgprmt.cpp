@@ -1,8 +1,8 @@
-﻿//  imgprmt v1.3 (Linux / Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
+//  imgprmt v1.3 (Linux / Windows CLI Edition). Created by Nicholas Cleasby (@CleasbyCode) 19/05/2023
 
 // Compile program (Linux):
 
-// $ sudo apt-get install libturbojpeg0-dev
+// $ sudo apt install libturbojpeg0-dev
 
 // $ chmod +x compile_imgprmt.sh
 // $ ./compile_imgprmt.sh
@@ -33,24 +33,29 @@
     #include <turbojpeg.h>
 #endif
 
-#include <string>
-#include <string_view>
-#include <cstring>
+#include <algorithm>
+#include <array>
+#include <bit>
+#include <cstdint>
 #include <cctype>
 #include <cstddef>
-#include <cstdlib>
-#include <cstdint>
+#include <cstring>
+#include <cstdio>
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <iostream>
 #include <initializer_list>
 #include <optional>
+#include <print>
+#include <ranges>
+#include <random>
 #include <span>
 #include <stdexcept>
-#include <iostream>
-#include <fstream>
-#include <array>
+#include <string>
+#include <string_view>
+#include <utility>
 #include <vector>
-#include <filesystem>
-#include <algorithm>
-#include <random>
 
 namespace fs = std::filesystem;
 
@@ -58,7 +63,8 @@ using Byte   = std::uint8_t;
 using vBytes = std::vector<Byte>;
 
 static void display_info() {
-	std::cout << R"(
+	std::print(R"(
+
 Imgprmt v1.3 (CLI Edition).
 Created by Nicholas Cleasby (@CleasbyCode) 25/05/2023.
 
@@ -143,7 +149,7 @@ $ python3 bsky_post.py --handle you.bsky.social --password xxxx-xxxx-xxxx-xxxx
 Images created with the -b option can also be posted on Tumblr (bsky_post.py script not required). 
 Image file size upload limit for Bluesky is ~1MB.
 
-)";
+)");
 }
 
 enum class Option : Byte { None, Bluesky };
@@ -153,15 +159,15 @@ struct program_args {
     fs::path image_file_path;
 
     static std::optional<program_args> parse(int argc, char** argv) {
-    	using std::string_view;
-
-        auto arg = [&](int i) -> string_view {
-            return (i >= 0 && i < argc) ? string_view(argv[i]) : string_view{};
+        auto arg = [&](int i) -> std::string_view {
+            return (i >= 0 && i < argc) ? std::string_view(argv[i]) : std::string_view{};
         };
 
-        const std::string
-        	PROG  = fs::path(argv[0]).filename().string(),
-        	USAGE = "Usage: " + PROG + " [-b] <jpg_image>\n\t\b" + PROG + " --info";
+        const std::string PROG = fs::path(argv[0]).filename().string();
+        const std::string USAGE = std::format(
+            "Usage:  {} [-b] <jpg_image>\n\t{} --info",
+            PROG, PROG
+        );
 
         auto die = [&]() -> void { throw std::runtime_error(USAGE); };
 
@@ -169,7 +175,7 @@ struct program_args {
 
         if (argc == 2 && arg(1) == "--info") {
             display_info();
-            return std::nullopt;  
+            return std::nullopt;
         }
 
         program_args out{};
@@ -180,49 +186,57 @@ struct program_args {
             ++i;
         }
 
+		if (arg(i).empty()) die();
         out.image_file_path = fs::path(arg(i));
         return out;
     }
 };
 
-// Default limit of 0 means "Search Whole File". 
+// Default limit of 0 means "Search Whole File".
 // Any other value means "Search ONLY up to this limit".
-static std::optional<std::size_t> searchSig(const vBytes& v, std::span<const Byte> sig, std::size_t limit = 0) {   
-	auto end_it = (limit == 0 || limit > v.size()) 
-    	? v.end() 
-    	: v.begin() + limit;
+static std::optional<std::size_t> searchSig(std::span<const Byte> v, std::span<const Byte> sig, std::size_t limit = 0) {
+    auto search_span = (limit == 0 || limit > v.size())
+        ? v
+        : v.first(limit);
 
-    auto it = std::search(v.begin(), end_it, sig.begin(), sig.end());
-    
-    if (it == end_it) return std::nullopt;
-    return static_cast<std::size_t>(it - v.begin());
+    auto it = std::ranges::search(search_span, sig);
+
+    if (it.empty()) return std::nullopt;
+    return static_cast<std::size_t>(it.begin() - v.begin());
 }
 
-// Writes updated values (2, 4 or 8 bytes), such as segments lengths, index/offsets values, PIN, etc. into the relevant vector index location.	
-static void updateValue(vBytes& vec, std::size_t index, std::size_t value, Byte bits) {
-    // Allow only 16, 32, or 64 bits.
-    if (bits != 16 && bits != 32 && bits != 64) {
-        throw std::invalid_argument("updateValue: Invalid bit length. Must be 16, 32, or 64.");
-    }
-
-    std::size_t bytes_needed = bits / 8;
-    
-    if (index + bytes_needed > vec.size()) {
+// Writes updated values (2, 4 or 8 bytes), such as segments lengths, index/offsets values, PIN, etc. into the relevant vector index location.
+static void updateValue(vBytes& vec, std::size_t index, std::size_t value, std::size_t length) {
+    if (index + length > vec.size()) {
         throw std::out_of_range("updateValue: Index out of bounds.");
     }
 
-    // Write new value to vector index location (Big Endian).
-    while (bits > 0) {
-        bits -= 8;
-        vec[index++] = static_cast<Byte>((value >> bits) & 0xFF);
+    switch (length) {
+        case 2: {
+            auto be = std::byteswap(static_cast<uint16_t>(value));
+            std::memcpy(vec.data() + index, &be, 2);
+            break;
+        }
+        case 4: {
+            auto be = std::byteswap(static_cast<uint32_t>(value));
+            std::memcpy(vec.data() + index, &be, 4);
+            break;
+        }
+        case 8: {
+            auto be = std::byteswap(static_cast<uint64_t>(value));
+            std::memcpy(vec.data() + index, &be, 8);
+            break;
+        }
+        default:
+            throw std::invalid_argument("updateValue: Invalid byte length. Must be 2, 4, or 8.");
     }
 }
 
-[[nodiscard]] static std::optional<uint16_t> exifOrientation(const vBytes& jpg) {
-	constexpr size_t EXIF_SEARCH_LIMIT = 4096;
-	constexpr auto APP1_SIG = std::to_array<Byte>({0xFF, 0xE1});
+[[nodiscard]] static std::optional<uint16_t> exifOrientation(std::span<const Byte> jpg) {
+	constexpr std::size_t EXIF_SEARCH_LIMIT = 4096;
+    constexpr auto APP1_SIG = std::to_array<Byte>({0xFF, 0xE1});
 
-	auto app1_pos_opt = searchSig(jpg, std::span<const Byte>(APP1_SIG), EXIF_SEARCH_LIMIT);
+    auto app1_pos_opt = searchSig(jpg, APP1_SIG, EXIF_SEARCH_LIMIT);
 
     if (!app1_pos_opt) return std::nullopt;
     std::size_t pos = *app1_pos_opt;
@@ -236,62 +250,54 @@ static void updateValue(vBytes& vec, std::size_t index, std::size_t value, Byte 
 
     std::span<const Byte> payload(jpg.data() + pos + 4, segment_length - 2);
 
-    constexpr std::size_t EXIF_HEADER_SIZE = 6ULL;
+    constexpr std::size_t EXIF_HEADER_SIZE = 6;
     constexpr auto EXIF_SIG = std::to_array<Byte>({'E', 'x', 'i', 'f', '\0', '\0'});
 
-    if (payload.size() < EXIF_HEADER_SIZE || 
-    	std::memcmp(payload.data(), EXIF_SIG.data(), EXIF_HEADER_SIZE) != 0) {
+    if (payload.size() < EXIF_HEADER_SIZE ||
+        !std::ranges::equal(payload.first(EXIF_HEADER_SIZE), EXIF_SIG)) {
         return std::nullopt;
     }
-    
+
     std::span<const Byte> tiff_data = payload.subspan(EXIF_HEADER_SIZE);
-    
-    if (tiff_data.size() < 8) return std::nullopt; 
+
+    if (tiff_data.size() < 8) return std::nullopt;
 
     bool is_le = false;
-    if (tiff_data[0] == 'I' && tiff_data[1] == 'I') is_le = true;      
+    if (tiff_data[0] == 'I' && tiff_data[1] == 'I') is_le = true;
     else if (tiff_data[0] == 'M' && tiff_data[1] == 'M') is_le = false;
     else return std::nullopt;
 
     auto read16 = [&](std::size_t offset) -> uint16_t {
-    	if (offset + 2 > tiff_data.size()) return 0;
-        return is_le ? 
-            static_cast<uint16_t>(tiff_data[offset] | (tiff_data[offset + 1] << 8)) :
-            static_cast<uint16_t>((tiff_data[offset] << 8) | tiff_data[offset + 1]);
+        if (offset + 2 > tiff_data.size()) return 0;
+        uint16_t value;
+        std::memcpy(&value, tiff_data.data() + offset, 2);
+        return is_le ? value : std::byteswap(value);
     };
 
     auto read32 = [&](std::size_t offset) -> uint32_t {
         if (offset + 4 > tiff_data.size()) return 0;
-        if (is_le) {
-            return static_cast<uint32_t>(tiff_data[offset]) | 
-                   (static_cast<uint32_t>(tiff_data[offset + 1]) << 8) | 
-                   (static_cast<uint32_t>(tiff_data[offset + 2]) << 16) | 
-                   (static_cast<uint32_t>(tiff_data[offset + 3]) << 24);
-        } else {
-            return (static_cast<uint32_t>(tiff_data[offset]) << 24) | 
-                   (static_cast<uint32_t>(tiff_data[offset + 1]) << 16) | 
-                   (static_cast<uint32_t>(tiff_data[offset + 2]) << 8) | 
-                   static_cast<uint32_t>(tiff_data[offset + 3]);
-        }
+        uint32_t value;
+        std::memcpy(&value, tiff_data.data() + offset, 4);
+        return is_le ? value : std::byteswap(value);
     };
 
     if (read16(2) != 0x002A) return std::nullopt;
 
     uint32_t ifd_offset = read32(4);
-    
+
     if (ifd_offset < 8 || ifd_offset >= tiff_data.size()) return std::nullopt;
-    
+
     uint16_t entry_count = read16(ifd_offset);
-    std::size_t current_entry = ifd_offset + 2; 
+    std::size_t current_entry = ifd_offset + 2;
 
     constexpr uint16_t TAG_ORIENTATION = 0x0112;
-    constexpr std::size_t ENTRY_SIZE = 12ULL;
+    constexpr std::size_t ENTRY_SIZE = 12;
 
     for (uint16_t i = 0; i < entry_count; ++i) {
     	if (current_entry + ENTRY_SIZE > tiff_data.size()) return std::nullopt;
 
         uint16_t tag_id = read16(current_entry);
-        
+
         if (tag_id == TAG_ORIENTATION) {
             return read16(current_entry + 8);
         }
@@ -326,7 +332,7 @@ struct TJHandle {
     TJHandle(TJHandle&& other) noexcept : handle(other.handle) {
         other.handle = nullptr;
     }
-    
+
     TJHandle& operator=(TJHandle&& other) noexcept {
     	if (this != &other) {
         	reset();
@@ -353,148 +359,155 @@ struct TJHandle {
 };
 
 struct TJBuffer {
-	unsigned char* data = nullptr;
-	~TJBuffer() { if (data) tjFree(data); }
+    unsigned char* data = nullptr;
+
+    TJBuffer() = default;
+    ~TJBuffer() { if (data) tjFree(data); }
+
+    TJBuffer(const TJBuffer&) = delete;
+    TJBuffer& operator=(const TJBuffer&) = delete;
+    TJBuffer(TJBuffer&&) = delete;
+    TJBuffer& operator=(TJBuffer&&) = delete;
 };
 
 // Standard JPEG Luminance Quantization Table (Quality 50) in ZigZag order
 static constexpr auto STD_LUMA_QTABLE = std::to_array<Byte>({
-	16, 11, 12, 14, 12, 10, 16, 14, 13, 14, 18, 17, 16, 19, 24, 40, 
-    26, 24, 22, 22, 24, 49, 35, 37, 29, 40, 58, 51, 61, 60, 57, 51, 
-    56, 55, 64, 72, 92, 78, 64, 68, 87, 69, 55, 56, 80, 109, 81, 87, 
+	16, 11, 12, 14, 12, 10, 16, 14, 13, 14, 18, 17, 16, 19, 24, 40,
+    26, 24, 22, 22, 24, 49, 35, 37, 29, 40, 58, 51, 61, 60, 57, 51,
+    56, 55, 64, 72, 92, 78, 64, 68, 87, 69, 55, 56, 80, 109, 81, 87,
     95, 98, 103, 104, 103, 62, 77, 113, 121, 112, 100, 120, 92, 101, 103, 99
 });
 
-static int estimateImageQuality(const vBytes& jpg) {
-	constexpr auto DQT_SIG = std::to_array<Byte>({0xFF, 0xDB});
-    
+static int estimateImageQuality(std::span<const Byte> jpg) {
+    constexpr auto DQT_SIG = std::to_array<Byte>({0xFF, 0xDB});
     constexpr std::size_t DQT_SEARCH_LIMIT = 32768;
 
-    auto dqt_pos_opt = searchSig(jpg, std::span<const Byte>(DQT_SIG), DQT_SEARCH_LIMIT);
-    if (!dqt_pos_opt) return 80; 
+    auto dqt_pos_opt = searchSig(jpg, DQT_SIG, DQT_SEARCH_LIMIT);
+    if (!dqt_pos_opt) return 80;
 
     std::size_t pos = *dqt_pos_opt;
 
     if (pos + 4 > jpg.size()) return 80;
 
-    std::size_t 
+    std::size_t
 		length = (static_cast<std::size_t>(jpg[pos + 2]) << 8) | jpg[pos + 3],
     	end    = pos + 2 + length;
-    
+
     if (end > jpg.size()) return 80;
 
-    pos += 4; 
+    pos += 4;
 
     while (pos < end) {
-    	if (pos + 65 > end) break; 
-        Byte 
+    	if (pos + 65 > end) break;
+        Byte
 			header 	  = jpg[pos++],
         	precision = (header >> 4) & 0x0F,
         	table_id  = header & 0x0F;
-		
+
         if (precision == 0 && table_id == 0) {
             double total_scale = 0.0;
-            
+
             for (size_t i = 0; i < 64; ++i) {
-				double 
+				double
 					val = static_cast<double>(jpg[pos + i]),
                 	std = static_cast<double>(STD_LUMA_QTABLE[i]);
-				
+
                 total_scale += (val * 100.0) / std;
             }
-        
+
             total_scale /= 64.0;
 
             if (total_scale <= 0.0) return 100;
-            
+
             if (total_scale <= 100.0) {
             	return static_cast<int>(200.0 - total_scale) / 2;
             } else {
             	return static_cast<int>(5000.0 / total_scale);
             }
-        }   
-        pos += 64; 
+        }
+        pos += 64;
     }
-    return 80; 
+    return 80;
 }
 
 static void optimizeImage(vBytes& jpg_vec) {
-	if (jpg_vec.empty()) {
+    if (jpg_vec.empty()) {
         throw std::runtime_error("JPG image is empty!");
     }
 
     TJHandle transformer;
     transformer.handle = tjInitTransform();
-    if (!transformer.handle) {
+    if (!transformer) {
         throw std::runtime_error("tjInitTransform() failed");
     }
-  
+
     int width = 0, height = 0, jpegSubsamp = 0, jpegColorspace = 0;
     if (tjDecompressHeader3(transformer.get(), jpg_vec.data(), static_cast<unsigned long>(jpg_vec.size()), &width, &height, &jpegSubsamp, &jpegColorspace) != 0) {
-        throw std::runtime_error(std::string("Image Error: ") + tjGetErrorStr2(transformer.get()));
+        throw std::runtime_error(std::format("Image Error: {}", tjGetErrorStr2(transformer.get())));
     }
 
-	if (width < 300 && height < 300) {
+	if (width < 300 || height < 300) {
         throw std::runtime_error("Image Error: Dimensions are too small.\nFor platform compatibility, cover image must be at least 300px for both width and height.");
     }
 
     int estimated_quality = estimateImageQuality(jpg_vec);
     if (estimated_quality > 97) {
-        throw std::runtime_error("Image Error: Quality too high. For platform compatibility, cover image quality must be 97 or lower.");
+    	throw std::runtime_error("Image Error: Quality too high. For platform compatibility, cover image quality must be 97 or lower.");
     }
-	
+
     auto ori_opt = exifOrientation(jpg_vec);
     int xop = TJXOP_NONE;
-    
+
     if (ori_opt) {
-        xop = getTransformOp(*ori_opt);
+    	xop = getTransformOp(*ori_opt);
     }
 
     tjtransform xform;
     std::memset(&xform, 0, sizeof(tjtransform));
     xform.op = xop;
-   
+
     xform.options = TJXOPT_COPYNONE | TJXOPT_TRIM | TJXOPT_PROGRESSIVE;
-	
-    TJBuffer dstBuffer; 
+
+    TJBuffer dstBuffer;
     unsigned long dstSize = 0;
 
     if (tjTransform(transformer.get(), jpg_vec.data(), static_cast<unsigned long>(jpg_vec.size()), 1, &dstBuffer.data, &dstSize, &xform, 0) != 0) {
-         throw std::runtime_error(std::string("tjTransform: ") + tjGetErrorStr2(transformer.get()));
+    	throw std::runtime_error(std::format("tjTransform: {}", tjGetErrorStr2(transformer.get())));
     }
 
-    if (xop == TJXOP_ROT90 || xop == TJXOP_ROT270 || xop == TJXOP_TRANSPOSE || xop == TJXOP_TRANSVERSE) {
-        std::swap(width, height);
-    }
     jpg_vec.assign(dstBuffer.data, dstBuffer.data + dstSize);
 }
 
-static bool has_valid_filename(const fs::path& p) {
-	if (p.empty()) {
-    	return false;
-	}		
-    
+static bool hasValidFilename(const fs::path& p) {
+    if (p.empty()) {
+        return false;
+    }
+
     std::string filename = p.filename().string();
     if (filename.empty()) {
-    	return false;
+        return false;
     }
 
-    auto valid_char = [](unsigned char c) {
-    	return std::isalnum(c) || c == '.' || c == '-' || c == '_' || c == '@' || c == '%';
- 	};
+    auto validChar = [](unsigned char c) {
+        return std::isalnum(c) || c == '.' || c == '-' || c == '_' || c == '@' || c == '%';
+    };
 
-    return std::all_of(filename.begin(), filename.end(), valid_char);
+    return std::ranges::all_of(filename, validChar);
 }
 
-static bool has_file_extension(const fs::path& p, std::initializer_list<const char*> exts) {
-	auto e = p.extension().string();
-    std::transform(e.begin(), e.end(), e.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
-    for (const char* cand : exts) {
-    	std::string c = cand;
-        std::transform(c.begin(), c.end(), c.begin(), [](unsigned char x){ return static_cast<char>(std::tolower(x)); });
-        if (e == c) return true;
-    }
-    return false;
+static bool hasFileExtension(const fs::path& p, std::initializer_list<std::string_view> exts) {
+    auto e = p.extension().string();
+    std::ranges::transform(e, e.begin(), [](unsigned char c) {
+        return static_cast<char>(std::tolower(c));
+    });
+
+    return std::ranges::any_of(exts, [&e](std::string_view ext) {
+        std::string c{ext};
+        std::ranges::transform(c, c.begin(), [](unsigned char x) {
+            return static_cast<char>(std::tolower(x));
+        });
+        return e == c;
+    });
 }
 
 // Sanitizes user-supplied (wide) text so it’s safe to drop into an HTML context while still allowing line breaks. 
@@ -636,26 +649,26 @@ static std::string convert_string(const std::wstring& wide) {
 
 // Validate URL.
 namespace {
-	static bool is_dec(char c) noexcept { return c >= '0' && c <= '9'; }
-	static bool is_hex(char c) noexcept {
-    	unsigned char u = static_cast<unsigned char>(c);
-    	return std::isxdigit(u) != 0;
+	bool is_dec(char c) noexcept {
+		return c >= '0' && c <= '9';
 	}
-	
-	static bool valid_pct(const std::string& s, std::size_t i) noexcept {
+	bool is_hex(char c) noexcept {
+		return std::isxdigit(static_cast<unsigned char>(c)) != 0;
+	}
+	bool valid_pct(const std::string& s, std::size_t i) noexcept {
     	return i + 2 < s.size() && is_hex(s[i+1]) && is_hex(s[i+2]);
 	}
 
-	static bool valid_ipv4(const std::string& s) noexcept {
+	bool valid_ipv4(const std::string& s) noexcept {
     	int dots = 0, val = 0, digits = 0;
     	for (char c : s) {
         	if (c == '.') {
             	if (digits == 0 || val > 255) return false;
-            		++dots; val = 0; digits = 0;
+				++dots; val = 0; digits = 0;
         	} else if (is_dec(c)) {
 				val = val * 10 + (c - '0');
             	if (val > 255) return false;
-            		++digits;
+				++digits;
         	} else {
             	return false;
         	}
@@ -664,16 +677,16 @@ namespace {
     	return dots == 3;
 	}	
 
-	static bool valid_dns_label(const std::string& lbl) noexcept {
-    	if (lbl.empty() || lbl.size() > 63) return false;
-    	auto alnum = [](unsigned char c){ return std::isalnum(c) != 0; };
-    	if (!alnum(lbl.front()) || !alnum(lbl.back())) return false;
-    	for (unsigned char c : lbl)
-        if (!(alnum(c) || c == '-')) return false;
-    	return true;
+	bool valid_dns_label(const std::string& lbl) noexcept {
+		if (lbl.empty() || lbl.size() > 63) return false;
+		auto alnum = [](unsigned char c){ return std::isalnum(c) != 0; };
+		if (!alnum(lbl.front()) || !alnum(lbl.back())) return false;
+		for (unsigned char c : lbl) {
+			if (!(alnum(c) || c == '-')) return false;
+		}
+		return true;
 	}
-
-	static bool valid_hostname_ascii(const std::string& host) noexcept {
+	bool valid_hostname_ascii(const std::string& host) noexcept {
     	if (host.empty() || host.size() > 253) return false;
     	if (host.find("..") != std::string::npos) return false;
     	if (host.back() == '.') return false;
@@ -696,7 +709,7 @@ namespace {
     	return true;
 	}
 
-	static bool valid_path_query_ascii(const std::string& s, std::string* err) {
+	bool valid_path_query_ascii(const std::string& s, std::string* err) {
     	for (std::size_t i = 0; i < s.size(); ++i) {
         	unsigned char c = static_cast<unsigned char>(s[i]);
         	if (c < 0x20 || c == 0x7F) { if (err) *err = "Control char in path/query"; return false; }
@@ -718,12 +731,13 @@ namespace {
 }
 
 static bool validate_url_link(const std::string& url, std::string* err = nullptr) {
-	auto bad = [&](const char* e){ if (err) *err = e; return false; };
+	auto bad = [&err](const char* e) { if (err) *err = e; return false; };
 	
  	constexpr char kScheme[] = "https://";
  	
-    for (unsigned char c : url)
-    	if (c < 0x20 || c == 0x7F) return bad("Control/whitespace not allowed");
+    for (unsigned char c : url) {
+		if (c < 0x20 || c == 0x7F) return bad("Control/whitespace not allowed");
+	}
     std::size_t pos = sizeof(kScheme) - 1;
     std::size_t slash = url.find('/', pos);
     std::string authority = url.substr(pos, (slash == std::string::npos) ? std::string::npos : slash - pos);
@@ -748,7 +762,6 @@ static bool validate_url_link(const std::string& url, std::string* err = nullptr
     } else {
         host = authority;
     }
-
     if (!valid_hostname_ascii(host)) return bad("Invalid host");
     if (slash == std::string::npos) return true;
 
@@ -758,7 +771,7 @@ static bool validate_url_link(const std::string& url, std::string* err = nullptr
 static void validate_url_link_core(const std::string& url) {
 	std::string err;
     if (!validate_url_link(url, &err)) {
-    	throw std::runtime_error(std::string("Link Error: ") + (err.empty() ? "Invalid URL" : err));
+    	throw std::runtime_error(std::format("Link Error: {}", err.empty() ? "Invalid URL" : err));
     }
 }
 //--------------
@@ -774,11 +787,11 @@ int main(int argc, char** argv) {
         	throw std::runtime_error("Image File Error: File not found.");
     	}
 			
-		if (!has_valid_filename(args.image_file_path)) {
+		if (!hasValidFilename(args.image_file_path)) {
     		throw std::runtime_error("Invalid Input Error: Unsupported characters in filename arguments.");
 		}
 
-		if (!has_file_extension(args.image_file_path, {".jpg", ".jpeg", ".jfif"})) {
+		if (!hasFileExtension(args.image_file_path, {".jpg", ".jpeg", ".jfif"})) {
         	throw std::runtime_error("File Type Error: Invalid image extension. Only expecting \".jpg\", \".jpeg\", or \".jfif\".");
     	}
     			
@@ -797,9 +810,9 @@ int main(int argc, char** argv) {
     	}
     	
     	constexpr std::size_t
-    		MAX_IMAGE_SIZE_BEFORE_ENCODE  	= 8   * 1024 * 1024,	// 8 MB.
-			MAX_IMAGE_SIZE_AFTER_ENCODE		= 4   * 1024 * 1024,	// 4 MB.
-    		MAX_IMAGE_SIZE_BLUESKY 			= 912 * 1024;			// 912 KB.
+    		MAX_IMAGE_SIZE_BEFORE_ENCODE = 8   * 1024 * 1024,	// 8 MB.
+			MAX_IMAGE_SIZE_AFTER_ENCODE	 = 4   * 1024 * 1024,	// 4 MB.
+    		MAX_IMAGE_SIZE_BLUESKY 		 = 912 * 1024;			// 912 KB.
     		
     	if (jpg_vec_size > MAX_IMAGE_SIZE_BEFORE_ENCODE) {
 			throw std::runtime_error("Image File Error: Cover image file exceeds maximum size limit.");
@@ -812,20 +825,21 @@ int main(int argc, char** argv) {
 	
     	optimizeImage(jpg_vec);
     		
-		constexpr std::size_t DQT_SEARCH_LIMIT = 100;         
+		constexpr std::size_t DQT_SEARCH_LIMIT = 100;
+
     	constexpr auto 
         	DQT1_SIG = std::to_array<Byte>({ 0xFF, 0xDB, 0x00, 0x43 }),    
        		DQT2_SIG = std::to_array<Byte>({ 0xFF, 0xDB, 0x00, 0x84 });
                 
     	auto
-    		dqt1 = searchSig(jpg_vec, std::span<const Byte>(DQT1_SIG), DQT_SEARCH_LIMIT),
-        	dqt2 = searchSig(jpg_vec, std::span<const Byte>(DQT2_SIG), DQT_SEARCH_LIMIT);
+    		dqt1 = searchSig(jpg_vec, DQT1_SIG, DQT_SEARCH_LIMIT),
+			dqt2 = searchSig(jpg_vec, DQT2_SIG, DQT_SEARCH_LIMIT);
 
     	if (!dqt1 && !dqt2) {
     		throw std::runtime_error("Image File Error: No DQT segment found (corrupt or unsupported JPG).");
     	}
 
-    	const std::size_t NPOS = static_cast<std::size_t>(-1);
+		constexpr std::size_t NPOS = static_cast<std::size_t>(-1);
             
     	std::size_t dqt_pos = std::min(dqt1.value_or(NPOS), dqt2.value_or(NPOS));
             
@@ -835,7 +849,9 @@ int main(int argc, char** argv) {
     	jpg_vec.erase(jpg_vec.begin(), jpg_vec.begin() + static_cast<std::ptrdiff_t>(dqt_pos));
 
     	jpg_vec_size = jpg_vec.size(); 
-			const bool isBluesky = (args.option == Option::Bluesky);
+
+		bool isBluesky = (args.option == Option::Bluesky);
+
 		if (jpg_vec_size > MAX_IMAGE_SIZE_AFTER_ENCODE) {
 			throw std::runtime_error("Image File Error: Image exceeds maximum size limit.");
 		}
@@ -844,11 +860,12 @@ int main(int argc, char** argv) {
 			throw std::runtime_error("Image File Error: Image exceeds maximum size limit for Bluesky.");
 		}
 		
-		std::cout << "\n*** imgprmt v1.3 ***\n";
+		std::println("\n*** imgprmt v1.3 ***");
 
 		#ifdef _WIN32
 			// Try to give std::wcin a larger buffer
 			constexpr std::size_t WIN_BUFFER_SIZE = 65535;
+
    			static std::vector<wchar_t> win_inbuf(WIN_BUFFER_SIZE);
     		std::wcin.rdbuf()->pubsetbuf(win_inbuf.data(), win_inbuf.size());
 			
@@ -875,7 +892,6 @@ int main(int argc, char** argv) {
            			"UTF-8 locale is required. Please install/enable a UTF-8 locale "
 					"(e.g., C.UTF-8 or en_US.UTF-8) and try again.");
    			}
-
    			// Imbue wide streams with the (now UTF-8) global locale
     		const std::locale loc("");   // current global
     		std::wcin.imbue(loc);
@@ -891,28 +907,31 @@ int main(int argc, char** argv) {
 			URL_MIN_CHARS = 12,
 			URL_MAX_CHARS = 200;
 			
-		std::wcout << L"\nEnter a web address (Your site, social media page, etc).\nFull URL: ";
+		std::print("\nEnter a web address (Your site, social media page, etc).\nFull URL: ");
+		std::fflush(stdout);
+
 		std::getline(std::wcin, wurl);
-	
+
 		const std::wstring prefix = L"https://";
-		
+
 		if (URL_MIN_CHARS > wurl.length() || wurl.substr(0, prefix.length()) != prefix || wurl.length() > URL_MAX_CHARS) {
-			throw std::runtime_error("Link Error: URL must start with 'https://', have a minimun length of 12 characters and not exceed 200 characters.");
+			throw std::runtime_error("Link Error: URL must start with 'https://', have a minimum length of 12 characters and not exceed 200 characters.");
 		}
-		
-		uint16_t 
+
+		uint16_t
 			default_max_bytes = static_cast<uint16_t>(57140 - wurl.length()),
 			twitter_max_bytes = static_cast<uint16_t>(1845 - wurl.length());
-			
-		if (args.option == Option::None) { 
-			std::wcout << L"\nDefault byte limit: " << default_max_bytes << " | X-Twitter byte limit: " << twitter_max_bytes << ".\n";
+
+		if (args.option == Option::None) {
+			std::println("\nDefault byte limit: {} | X-Twitter byte limit: {}.", default_max_bytes, twitter_max_bytes);
 		} else {
-			std::wcout << L"\nDefault byte limit: " << default_max_bytes << ".\n";
+			std::println("\nDefault byte limit: {}.", default_max_bytes);
 		}
-		
-		std::wcout << L"\nType or paste in your prompt as one long sentence."; 
-		std::wcout << L"\nIf required, add <br> tags to your text for new lines.\n\nPrompt: ";
-		
+
+		std::print("\nType or paste in your prompt as one long sentence.");
+		std::print("\nIf required, add <br> tags to your text for new lines.\n\nPrompt: ");
+		std::fflush(stdout);
+
 		#ifdef _WIN32 
 			std::getline(std::wcin, wprompt); 
 		#else 
@@ -924,10 +943,7 @@ int main(int argc, char** argv) {
 		std::string utf8_url = convert_string(wurl);
 		validate_url_link_core(utf8_url);
 		
-		std::wstring().swap(wurl);
-		
 		std::string utf8_prompt = convert_string(wprompt);
-		std::wstring().swap(wprompt);
 		
 		// Color Profile (X-Twitter, Mastodon, Pixelfed, Tumblr & Flickr). The vector is inserted into the main default segment vector.
 		vBytes profile_vec {
@@ -1318,8 +1334,6 @@ int main(int argc, char** argv) {
 			SEGMENT_VEC_INSERT_INDEX 	 = 0xE3,
 			SEGMENT_VEC_START_INDEX 	 = 0x17;
 		
-		Byte bits = 16;
-		
 		if (args.option == Option::None) { 
 			segment_vec.insert(segment_vec.begin() + PROFILE_VEC_INSERT_INDEX, profile_vec.begin(), profile_vec.end());
 		} else {		
@@ -1329,12 +1343,13 @@ int main(int argc, char** argv) {
 
 		vBytes().swap(bluesky_vec);
 		vBytes().swap(profile_vec);
+
 		constexpr auto PROMPT_INSERT_MARKER = std::to_array<Byte>({'%','%','P','R','O','M','P','T','%','%'});
-		constexpr auto URL_INSERT_MARKER = std::to_array<Byte>({'%','%','U','R','L','%','%'});
+		constexpr auto URL_INSERT_MARKER 	= std::to_array<Byte>({'%','%','U','R','L','%','%'});
 	
 		auto 
-			prompt_pos = searchSig(segment_vec, std::span<const Byte>(PROMPT_INSERT_MARKER)),
-			url_pos    = searchSig(segment_vec, std::span<const Byte>(URL_INSERT_MARKER));
+			prompt_pos = searchSig(segment_vec, PROMPT_INSERT_MARKER),
+			url_pos    = searchSig(segment_vec, URL_INSERT_MARKER);
 
 		segment_vec.insert(segment_vec.begin() + *prompt_pos, utf8_prompt.begin(), utf8_prompt.end());
 		segment_vec.erase(segment_vec.begin()  + *prompt_pos + utf8_prompt.size(), segment_vec.begin() + *prompt_pos + utf8_prompt.size() + PROMPT_INSERT_MARKER.size());
@@ -1352,7 +1367,7 @@ int main(int argc, char** argv) {
 		std::size_t segment_size = segment_vec.size();
 		
 		if (args.option == Option::None && segment_size > TWITTER_SEGMENT_LIMIT) {
-			std::wcerr << "\n\nWarning: Data content exceeds the maximum segment size limit for X-Twitter.\n\t Image will not be compatible for posting on that platform.\n";
+			std::println(std::cerr, "\n\nWarning: Data content exceeds the maximum segment size limit for X-Twitter.\n\t Image will not be compatible for posting on that platform.");
 		}
 		
 		if (segment_size > MAX_SEGMENT_SIZE) {
@@ -1360,29 +1375,38 @@ int main(int argc, char** argv) {
 		}
 		
 		#ifdef _WIN32
-			if (old_stdin_mode  != -1) (void)_setmode(_fileno(stdin),  old_stdin_mode);
-    		if (old_stdout_mode != -1) (void)_setmode(_fileno(stdout), old_stdout_mode);		
+			struct ModeGuard {
+				int fd, old_mode;
+				ModeGuard(int f, int new_mode) : fd(f), old_mode(_setmode(f, new_mode)) {}
+				~ModeGuard() { if (old_mode != -1) _setmode(fd, old_mode); }
+			};
+
+			ModeGuard stdin_guard(_fileno(stdin), desired_in_mode);
+			ModeGuard stdout_guard(_fileno(stdout), desired_out_mode);
 		#endif
 	
+		std::size_t value_byte_length = 2;
+
 		if (args.option == Option::Bluesky) {
 			segment_size -= 4; // For Bluesky segment size, don't count the JPG ID + APP ID "FFD8FFE1" (4 bytes).
 		
 			constexpr std::size_t 
-				EXIF_SIZE_FIELD_INDEX 	     = 0x04,  
-				EXIF_ARTIST_SIZE_FIELD_INDEX = 0x4A;  
+				EXIF_SIZE_FIELD_INDEX 	      = 0x04,
+				EXIF_ARTIST_SIZE_FIELD_INDEX  = 0x4A,
+				EXIF_SEGMENT_ARTIST_SIZE_DIFF = 0x8C;
 				
-			const std::size_t EXIF_ARTIST_SIZE = segment_size - 0x8C;
-				
-			updateValue(segment_vec, EXIF_SIZE_FIELD_INDEX , segment_size, bits);
+			const std::size_t EXIF_ARTIST_SIZE = segment_size - EXIF_SEGMENT_ARTIST_SIZE_DIFF;
+
+			updateValue(segment_vec, EXIF_SIZE_FIELD_INDEX , segment_size, value_byte_length);
 		
-			bits = 32;
+			value_byte_length = 4;
 			
-			updateValue(segment_vec, EXIF_ARTIST_SIZE_FIELD_INDEX, EXIF_ARTIST_SIZE, bits); 
+			updateValue(segment_vec, EXIF_ARTIST_SIZE_FIELD_INDEX, EXIF_ARTIST_SIZE, value_byte_length);
 		} else {
 			// Update color profile segment size field (FFE2xxxx)
-			updateValue(segment_vec, SEGMENT_VEC_SIZE_FIELD_INDEX, segment_size - PROFILE_VEC_MAIN_DIFF, bits);
+			updateValue(segment_vec, SEGMENT_VEC_SIZE_FIELD_INDEX, segment_size - PROFILE_VEC_MAIN_DIFF, value_byte_length);
 			// Update internal color profile size field
-			updateValue(segment_vec, PROFILE_VEC_SIZE_FIELD_INDEX, segment_size - PROFILE_VEC_INTERNAL_DIFF, bits);
+			updateValue(segment_vec, PROFILE_VEC_SIZE_FIELD_INDEX, segment_size - PROFILE_VEC_INTERNAL_DIFF, value_byte_length);
 		}	
 
 		jpg_vec.insert(jpg_vec.begin(), segment_vec.begin(), segment_vec.end());
@@ -1392,9 +1416,9 @@ int main(int argc, char** argv) {
 
 		std::random_device rd;
     	std::mt19937 gen(rd());
-    	std::uniform_int_distribution<> dist(10000, 99999);
+    	std::uniform_int_distribution<int> dist(10000, 99999);
 	
-		const std::string OUTPUT_FILENAME = "imgprmt_" + std::to_string(dist(gen)) + ".jpg";
+		const std::string OUTPUT_FILENAME = std::format("imgprmt_{}.jpg", dist(gen));
 
 		std::ofstream write_file_fs(OUTPUT_FILENAME, std::ios::binary);
 		if (!write_file_fs) {
@@ -1404,11 +1428,11 @@ int main(int argc, char** argv) {
 		write_file_fs.write(reinterpret_cast<const char*>(jpg_vec.data()), jpg_vec_size);
 		
 		vBytes().swap(jpg_vec);
-		std::cout << "\nSaved \"prompt-embedded\" JPG image: " << OUTPUT_FILENAME << " (" << jpg_vec_size << " bytes).\n\n";
+		std::println("\nSaved \"prompt-embedded\" JPG image: {} ({} bytes).\n", OUTPUT_FILENAME, jpg_vec_size);
 		return 0;
 	}
 	catch (const std::runtime_error& e) {
-    	std::cerr << "\n" << e.what() << "\n\n";
+    	std::println(std::cerr, "\n{}\n", e.what());
     	return 1;
     }
 }
