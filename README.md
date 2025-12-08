@@ -31,8 +31,10 @@ user1@mx:~/Desktop$ imgprmt winters_night.jpg
 
 *** imgprmt v1.3 ***
 
-Enter a web address (Your site, social media page, etc).
-Full URL: https://bsky.app/profile/novakynth.bsky.social/post/3m3n3kgenuk2a
+Enter a complete web address
+(e.g., image source, your website or social media profile)
+
+URL: https://bsky.app/profile/novakynth.bsky.social/post/3m3n3kgenuk2a
 
 Default byte limit: 57,084 | X-Twitter byte limit: 1,800.
 
