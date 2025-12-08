@@ -907,7 +907,7 @@ int main(int argc, char** argv) {
 			URL_MIN_CHARS = 12,
 			URL_MAX_CHARS = 200;
 			
-		std::print("\nEnter a web address (Your site, social media page, etc).\nFull URL: ");
+		std::print("\nEnter a complete web address\n(e.g., image source, your website or social media profile)\n\nURL: ");
 		std::fflush(stdout);
 
 		std::getline(std::wcin, wurl);
@@ -923,13 +923,13 @@ int main(int argc, char** argv) {
 			twitter_max_bytes = static_cast<uint16_t>(1845 - wurl.length());
 
 		if (args.option == Option::None) {
-			std::println("\nDefault byte limit: {} | X-Twitter byte limit: {}.", default_max_bytes, twitter_max_bytes);
+			std::println("\nDefault byte limit: {} | X-Twitter byte limit: {}", default_max_bytes, twitter_max_bytes);
 		} else {
-			std::println("\nDefault byte limit: {}.", default_max_bytes);
+			std::println("\nDefault byte limit: {}", default_max_bytes);
 		}
 
-		std::print("\nType or paste in your prompt as one long sentence.");
-		std::print("\nIf required, add <br> tags to your text for new lines.\n\nPrompt: ");
+		std::print("\nType or paste in your image description as one long sentence");
+		std::print("\nIf required, add <br> tags to your text for new lines\n\nPrompt: ");
 		std::fflush(stdout);
 
 		#ifdef _WIN32 
@@ -1436,3 +1436,4 @@ int main(int argc, char** argv) {
     	return 1;
     }
 }
+
