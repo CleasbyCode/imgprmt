@@ -52,7 +52,21 @@ Using the default command-line arguments (no option), the embedded image can onl
 The default prompt limit is **57140** bytes (minus URL address length).
 		
 ***X-Twitter***, for compatibility reasons, is limited to **1845** bytes (minus URL address length).  
-Considerably smaller than the default size, but should be adequate for most prompts.
+Considerably smaller than the default size, but should be adequate for most prompts.  
+
+\******************
+Note: ***Bluesky*** now saves images as ***WEBP*** by default. 
+
+To save an image as ***JPG***, so that you can still recover concealed data with ***jdvrif***,  
+right-click on an image that you want to save. From the menu, select ***Open image in new tab***.  
+
+Select the new tab and within the address bar, move to the end of the address and add ***@jpg*** then hit enter.  
+Right-click the image and from the menu select ***Save image...***  
+
+Your image should now be downloaded as a ***JPG***, which will now work with ***jdvrif***.
+         
+If you want a tool to conceal data using ***WEBP*** images to post on ***Bluesky*** you can use my ***WEBP*** steganography CLI tool ***[wbpdv](https://github.com/CleasbyCode/wbpdv)***  
+\******************
 
 If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***must*** first add the ***-b*** option to the command-line arguments:  
 
