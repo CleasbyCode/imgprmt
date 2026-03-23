@@ -54,7 +54,7 @@ The default prompt limit is **57140** bytes (minus URL address length).
 ***X-Twitter***, for compatibility reasons, is limited to **1845** bytes (minus URL address length).  
 Considerably smaller than the default size, but should be adequate for most prompts.  
 
-\******************
+\******************  
 Note: ***Bluesky*** now saves images as ***WEBP*** by default. 
 
 To save an image as ***JPG***, so that you can still recover concealed data with ***jdvrif***,  
