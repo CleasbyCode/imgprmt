@@ -57,7 +57,8 @@ Considerably smaller than the default size, but should be adequate for most prom
 \******************  
 Note: ***Bluesky*** now saves images as ***WEBP*** by default. 
 
-To save an image as ***JPG***, right-click on an image that you want to save. From the menu, select ***Open image in new tab***.  
+To save an image as ***JPG***, right-click on an image that you want to save.  
+From the menu, select ***Open image in new tab***.  
 
 Select the new tab and within the address bar, move to the end of the address and add ***@jpg*** then hit enter.  
 Right-click the image and from the menu select ***Save image...***  
