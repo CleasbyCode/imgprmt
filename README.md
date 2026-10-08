@@ -92,7 +92,7 @@ $ python3 bsky_post.py --handle you.bsky.social --password xxxx-xxxx-xxxx-xxxx -
 ```
 
 Images created with the ***-b*** option can also be posted on ***Tumblr***, (bsky_post script not required).
-Image file size limit for ***Bluesky*** is **1MB**.  
+Image file size limit for ***Bluesky*** is **2,000,000 bytes (~1.9MiB)**.  
 
 https://github.com/user-attachments/assets/e27f81f2-9573-4995-8308-f446795af1cf
 
