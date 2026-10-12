@@ -69,27 +69,26 @@ If you intend to share your *prompt-embedded* image on ***Bluesky***, you ***mus
 ```console
 user1@mx:~/Desktop$ imgprmt -b my_image.jpg
 ```
-Secondly, to post the image on ***Bluesky***, you will need to use the ***bsky_post.py*** script, *located in the repo ***src*** folder*. To run this script, you need ***Python3*** and the ***'requests'*** and ***'bs4' (BeautifulSoup) Python*** packages installed.  
+You are also required to use the Python script [create_bsky_post.py](https://github.com/CleasbyCode/imgprmt/blob/main/src/bsky/create_bsky_post.py) (found in the repo ***src/bsky*** folder) to post the image to ***Bluesky***.
+  It will not work if you post images to ***Bluesky*** via the browser site or mobile app.  
 
-An ***app-password*** is also required, to use with the ***Python*** script, which you can create from your ***Bluesky*** account (*https://bsky.app/settings/app-passwords*).  
+  To use the script, you will need to create an [***app password***](https://bsky.app/settings/app-passwords) from your ***Bluesky*** account. Pass your credentials through the environment rather than on the command line, where they would be visible to other local users via tools such as `ps`:
 
-Here are some basic usage examples for the bsky_post.py Python script:  
+  ```console
+  $ pip install -r bsky/requirements.txt
 
-Standard image post to your profile/account.
+  $ export ATP_AUTH_HANDLE='you.bsky.social'
+  $ read -rsp 'Bluesky app password: ' ATP_AUTH_PASSWORD && export ATP_AUTH_PASSWORD
 
-```console
-$ python3 bsky_post.py --handle you.bsky.social --password xxxx-xxxx-xxxx-xxxx --image your_image.jpg --alt-text "alt-text here (optional)" "standard post text here (required)"
+  $ python3 bsky/create_bsky_post.py \
+      --image your_imgprmt_image.jpg \
+      --alt-text "alt-text here [optional]" \
+      "standard post text here [required]"
+
+  $ unset ATP_AUTH_PASSWORD
 ```
-If you want to post multiple images (Max. 4).  
 
-```console
-$ python3 bsky_post.py --handle you.bsky.social --password xxxx-xxxx-xxxx-xxxx --image img1.jpg --image img2.jpg --alt-text "alt_here" "standard post text..."
-```
-If you want to post an image as a reply to another thread.  
-
-```console
-$ python3 bsky_post.py --handle you.bsky.social --password xxxx-xxxx-xxxx-xxxx --image your_image.jpg --alt-text "alt_here" --reply-to https://bsky.app/profile/someone.bsky.social/post/8m2tgw6cgi23i "standard post text..."
-```
+  See [src/bsky/README.md](https://github.com/CleasbyCode/imgprmt/blob/main/src/bsky/README.md) for the full set of options (*multiple images, replies, quote posts, link cards*) and for what the hardened fork of the script protects against.
 
 Images created with the ***-b*** option can also be posted on ***Tumblr***, (bsky_post script not required).
 Image file size limit for ***Bluesky*** is **2,000,000 bytes (~1.9MiB)**.  
